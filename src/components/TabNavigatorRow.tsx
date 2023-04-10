@@ -19,6 +19,11 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
 		}
 	}
 
+	getTabNotificationStyle() {
+		// TODO: Return extra styling to display notification if needed
+		return null;
+	}
+
 	render(): ReactNode {
 		const { state, descriptors, navigation } = this.props;
 		return (
@@ -67,10 +72,19 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
 								onPress={onPress}
 								onLongPress={onLongPress}
 								style={styles.buttonContainer}>
-								<Icon
-									asset={this.getAssetForLabel(label)}
-									color={tabColor}
-								/>
+								<View>
+									<Icon
+										asset={this.getAssetForLabel(label)}
+										color={tabColor}
+									/>
+									<View
+										style={[
+											this.getTabNotificationStyle(),
+											styles.tabNotification,
+										]}
+									/>
+								</View>
+
 								<Text
 									style={{
 										color: tabColor,
@@ -89,13 +103,20 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
 
 const styles = StyleSheet.create({
 	row: {
+		paddingTop: 4,
 		flexDirection: 'row',
-		height: 40,
-		width: '100%',
 	},
 
 	buttonContainer: {
 		flex: 1,
 		alignItems: 'center',
+	},
+	tabNotification: {
+		width: 8,
+		height: 8,
+		borderRadius: 20,
+		position: 'absolute',
+		top: 0,
+		left: 24,
 	},
 });
