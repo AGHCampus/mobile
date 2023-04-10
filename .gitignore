@@ -1,0 +1,77 @@
+# OSX
+#
+.DS_Store
+
+# Xcode
+#
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+ios/Pods/
+ios/*.d
+ios/*.dia
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+release.keystore
+android/.project
+android/app/.project
+android/app/.classpath
+# node.js
+#
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# BUCK
+buck-out/
+\.buckd/
+#*.keystore
+
+# Android Studio
+.navigation
+captures/
+output.json
+
+# npm
+package-lock.json
+
+# Bundle artifact
+*.jsbundle
+
+# VSCode Debugger
+.vscode/.react/
+
+# CI
+# Jest/ESLint/TSLint/TSC/TSGEN results
+*.result
+E2E_SUITES.env
+.artifacts/
+
+# Jest
+coverage/
+
+# Environment
+.env
+.ruby-version
+
+# tmux
+.swp

@@ -1,0 +1,15 @@
+{
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	// The default value of "first" orders imports in a wierd way (e.g. suggests 'react-native-gesture-handler' over 'react-native').
+	// This mitigates that issue somewhat as more commonly used suggestions have better chance of being correct (especially in the case above).
+	"editor.suggestSelection": "recentlyUsed",
+	"[json]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode" // vscode by default don't apply defaultFormatter value to json
+	},
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"eslint.validate": ["typescript", "typescriptreact"],
+	"[yaml]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
+}
