@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import MapView from 'react-native-maps';
 
 export default class MapScreen extends Component {
 	render(): React.ReactNode {
 		return (
-			<View>
-				<Text>MapScreen</Text>
+			<View style={styles.container}>
+				<MapView style={styles.map} provider="google" />
 			</View>
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+	container: { flex: 1 },
+	map: { flex: 1 },
+});
