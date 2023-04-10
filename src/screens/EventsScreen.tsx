@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
+import SafeView from './SafeView';
 
 export default class EventsScreen extends Component {
 	render(): React.ReactNode {
 		return (
-			<View>
-				<Text>EventsScreen</Text>
-			</View>
+			<SafeView>
+				<View>
+					<Text>EventsScreen</Text>
+				</View>
+			</SafeView>
 		);
 	}
 }
