@@ -1,5 +1,11 @@
 # AGH Campus Map - Mobile App
 
+## Useful links
+
+-   [Figma](https://www.figma.com/file/s7x8MfdS1nx6CYL5Y5kN8o/AGH-Campus-Map)
+-   [Docs](https://drive.google.com/drive/u/1/folders/1dJXYR1SrkNV0vLjG3GqZmN2w2KQmWJ-j)
+-   [Github Project](https://github.com/orgs/AGHCampus/projects/1)
+
 ## Getting Started
 
 To get the react native project running on your mac, follow the following steps.
