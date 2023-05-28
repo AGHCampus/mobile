@@ -69,6 +69,7 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
 									options.tabBarAccessibilityLabel
 								}
 								testID={options.tabBarTestID}
+								key={`tabButton_${index}`}
 								onPress={onPress}
 								onLongPress={onLongPress}
 								style={styles.buttonContainer}>
