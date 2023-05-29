@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, ImageStyle, StyleProp, StyleSheet, View } from 'react-native';
 import { icons } from '../Icons';
 
 export type IconType = keyof typeof icons;
@@ -7,9 +7,10 @@ export type IconType = keyof typeof icons;
 interface Props {
 	asset: IconType;
 	color: string;
+	style?: StyleProp<ImageStyle>;
 }
 
-const Icon = ({ asset, color }: Props) => {
+const Icon = ({ asset, color, style }: Props) => {
 	const iconData = icons[asset];
 
 	if (!iconData) {
@@ -20,7 +21,7 @@ const Icon = ({ asset, color }: Props) => {
 	return (
 		<View>
 			<Image
-				style={[styles.icon, { tintColor: color }]}
+				style={[styles.icon, { tintColor: color }, style]}
 				source={iconData.src}
 			/>
 		</View>
