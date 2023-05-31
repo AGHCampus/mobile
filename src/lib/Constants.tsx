@@ -4,12 +4,12 @@ export const Constants = {
     MARGIN_UNIT_24: 24,
     SPACING_UNIT_16: 16,
     DEFAULT_REGION_DELTA: {
-        latitudeDelta: 0.02,
-        longitudeDelta: 0.02,
+        latitudeDelta: 0.002,
+        longitudeDelta: 0.005,
     },
     DEFAULT_ZOOMED_IN_REGION_DELTA: {
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
+        latitudeDelta: 0.002,
+        longitudeDelta: 0.002,
     },
 } as const;
 

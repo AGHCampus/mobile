@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react';
+import React, { Dispatch, RefObject, SetStateAction } from 'react';
 import MapView, { LatLng, Marker } from 'react-native-maps';
 import { icons } from '../Icons';
 import { Image, StyleSheet } from 'react-native';
@@ -40,19 +40,19 @@ interface Props {
     coordinate: LatLng;
     mapViewRef: RefObject<MapView>;
     isSelected: boolean;
-    selectMarker: () => void;
+    selectMarker: Dispatch<SetStateAction<string>>;
 }
 
 function MapMarker({ data, mapViewRef, isSelected, selectMarker }: Props) {
     const { coordinate, id, type } = data;
-
     return (
         <Marker
             coordinate={coordinate}
             id={id}
+            stopPropagation
             key={`marker_${id}`}
             onPress={() => {
-                selectMarker();
+                selectMarker(id);
                 if (mapViewRef.current != null) {
                     mapViewRef.current.animateToRegion(
                         {
@@ -63,12 +63,15 @@ function MapMarker({ data, mapViewRef, isSelected, selectMarker }: Props) {
                     );
                 }
             }}
-            style={styles.markerSelected}>
+            style={
+                isSelected ? styles.selectedMarker : styles.markerNotSelected
+            }>
             <Image
                 source={getMarkerImage(type)}
+                resizeMode="contain"
                 style={
                     isSelected
-                        ? styles.markerSelected
+                        ? styles.selectedMarker
                         : styles.markerNotSelected
                 }
             />
@@ -78,14 +81,8 @@ function MapMarker({ data, mapViewRef, isSelected, selectMarker }: Props) {
 
 const styles = StyleSheet.create({
     selectedMarker: {
-        width: 48,
-        height: 48,
-    },
-    markerSelected: {
-        width: 32,
-        height: 32,
-        justifyContent: 'center',
-        alignContent: 'center',
+        width: 36,
+        height: 36,
     },
     markerNotSelected: {
         width: 24,

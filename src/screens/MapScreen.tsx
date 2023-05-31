@@ -170,7 +170,7 @@ export default function MapScreen() {
                         mapViewRef={mapViewRef}
                         key={`marker_${marker.id}`}
                         isSelected={selectedMarkerID === marker.id}
-                        selectMarker={() => setSelectedMarkerID(marker.id)}
+                        selectMarker={setSelectedMarkerID}
                     />
                 ))}
             </MapView>
