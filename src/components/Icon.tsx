@@ -5,35 +5,35 @@ import { icons } from '../Icons';
 export type IconType = keyof typeof icons;
 
 interface Props {
-	asset: IconType;
-	color: string;
-	style?: StyleProp<ImageStyle>;
+    asset: IconType;
+    color: string;
+    style?: StyleProp<ImageStyle>;
 }
 
 const Icon = ({ asset, color, style }: Props) => {
-	const iconData = icons[asset];
+    const iconData = icons[asset];
 
-	if (!iconData) {
-		console.warn(`Missing icon for: ${asset}`);
-		return null;
-	}
+    if (!iconData) {
+        console.warn(`Missing icon for: ${asset}`);
+        return null;
+    }
 
-	return (
-		<View>
-			<Image
-				style={[styles.icon, { tintColor: color }, style]}
-				source={iconData.src}
-			/>
-		</View>
-	);
+    return (
+        <View>
+            <Image
+                style={[styles.icon, { tintColor: color }, style]}
+                source={iconData.src}
+            />
+        </View>
+    );
 };
 
 export default Icon;
 
 const styles = StyleSheet.create({
-	icon: {
-		width: 22,
-		height: 22,
-	},
-	container: {},
+    icon: {
+        width: 22,
+        height: 22,
+    },
+    container: {},
 });
