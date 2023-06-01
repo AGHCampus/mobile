@@ -1,20 +1,15 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { Component } from 'react';
+import { Text, View } from 'react-native';
 import SafeView from './SafeView';
 
-export default function InfoScreen() {
-    return (
-        <SafeView>
-            <View style={styles.container}>
-                <Text>InfoScreen</Text>
-            </View>
-        </SafeView>
-    );
+export default class InfoScreen extends Component {
+    render(): React.ReactNode {
+        return (
+            <SafeView>
+                <View>
+                    <Text>InfoScreen</Text>
+                </View>
+            </SafeView>
+        );
+    }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        height: '100%',
-        backgroundColor: '#000',
-    },
-});
