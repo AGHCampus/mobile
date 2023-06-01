@@ -1,5 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { PortalProvider } from '@gorhom/portal';
 import MapScreen from './src/screens/MapScreen';
 import EventsScreen from './src/screens/EventsScreen';
 import OffersScreen from './src/screens/OffersScreen';
@@ -9,6 +11,7 @@ import {
     createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import TabNavigationRow from './src/components/TabNavigatorRow';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,17 +34,32 @@ export default class App extends React.Component {
 
     render(): React.ReactNode {
         return (
-            <NavigationContainer>
-                <Tab.Navigator
-                    tabBar={this.renderTabBar}
-                    screenOptions={navigationOptions}
-                    initialRouteName="Map">
-                    <Tab.Screen name="Map" component={MapScreen} />
-                    <Tab.Screen name="Events" component={EventsScreen} />
-                    <Tab.Screen name="Offers" component={OffersScreen} />
-                    <Tab.Screen name="Info" component={InfoScreen} />
-                </Tab.Navigator>
-            </NavigationContainer>
+            <SafeAreaProvider>
+                <PortalProvider>
+                    <BottomSheetModalProvider>
+                        <NavigationContainer>
+                            <Tab.Navigator
+                                tabBar={this.renderTabBar}
+                                screenOptions={navigationOptions}
+                                initialRouteName="Map">
+                                <Tab.Screen name="Map" component={MapScreen} />
+                                <Tab.Screen
+                                    name="Events"
+                                    component={EventsScreen}
+                                />
+                                <Tab.Screen
+                                    name="Offers"
+                                    component={OffersScreen}
+                                />
+                                <Tab.Screen
+                                    name="Info"
+                                    component={InfoScreen}
+                                />
+                            </Tab.Navigator>
+                        </NavigationContainer>
+                    </BottomSheetModalProvider>
+                </PortalProvider>
+            </SafeAreaProvider>
         );
     }
 }

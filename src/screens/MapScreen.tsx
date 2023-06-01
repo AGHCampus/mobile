@@ -1,7 +1,22 @@
-import React, { useRef, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import React, { useRef, useState, useCallback, useMemo } from 'react';
+import {
+    StyleSheet,
+    View,
+    TouchableOpacity,
+    Text,
+    Button,
+    useWindowDimensions,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MapView from 'react-native-maps';
 import type { Region } from 'react-native-maps';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { Portal } from '@gorhom/portal';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    interpolate,
+} from 'react-native-reanimated';
 import {
     areRegionsMatching,
     getCurrentLocation,
@@ -9,9 +24,11 @@ import {
 } from '../geolocation';
 import { Constants } from '../lib/Constants';
 import { Colors } from '../lib/Colors';
+import BottomSheetFullScreenHeader from '../components/BottomSheetFullScreenHeader';
 import Icon from '../components/Icon';
 
 export default function MapScreen() {
+    // MapView
     const mapViewRef = useRef<MapView>(null);
     const [region, setRegion] = useState<Region>({
         latitude: 50.065638899794024,
@@ -71,6 +88,55 @@ export default function MapScreen() {
         }
     };
 
+    // BottomSheet
+    const { height } = useWindowDimensions();
+    const insets = useSafeAreaInsets();
+    const bottomSheetTopOffset = insets.top + 30;
+    const bottomSheetMaxHeight = height - bottomSheetTopOffset;
+
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+    const animatedPosition = useSharedValue(height);
+    const snapPoints = useMemo(
+        () => [135, 350, bottomSheetMaxHeight],
+        [bottomSheetMaxHeight],
+    );
+
+    const [showBottomSheet, setShowBottomSheet] = useState(false);
+    const [bottomSheetFullScreen, setBottomSheetFullScreen] = useState(false);
+
+    const handleSheetCollapsePress = useCallback(() => {
+        bottomSheetModalRef.current!.snapToIndex(1);
+    }, []);
+
+    const handleSheetChanges = useCallback((index: number) => {
+        setShowBottomSheet(index !== -1);
+        setBottomSheetFullScreen(index === 2);
+        // console.log('handleSheetChanges', index);
+    }, []);
+
+    const headerAnimatedStyles = useAnimatedStyle(() => {
+        const opacity = interpolate(
+            animatedPosition.value,
+            [bottomSheetTopOffset + 120, bottomSheetTopOffset + 20],
+            [0, 1],
+        );
+        const y = Math.min(-animatedPosition.value + bottomSheetTopOffset, 0);
+
+        return {
+            opacity,
+            transform: [{ translateY: y }],
+        };
+    });
+
+    // just for demo purpose these methods will be used in the map component
+    const handleSheetPresentPress = () => {
+        if (showBottomSheet) {
+            bottomSheetModalRef.current!.dismiss();
+        } else {
+            bottomSheetModalRef.current!.present();
+        }
+    };
+
     return (
         <View style={styles.container}>
             <MapView
@@ -85,6 +151,51 @@ export default function MapScreen() {
                 showsUserLocation
                 style={styles.map}
             />
+
+            <BottomSheetModal
+                ref={bottomSheetModalRef}
+                index={1}
+                snapPoints={snapPoints}
+                animatedPosition={animatedPosition}
+                onChange={handleSheetChanges}
+                enablePanDownToClose={false}
+                enableHandlePanningGesture={!bottomSheetFullScreen}
+                enableContentPanningGesture={!bottomSheetFullScreen}>
+                <View>
+                    <Text>BottomSheetModal</Text>
+                </View>
+            </BottomSheetModal>
+
+            <Portal>
+                <Animated.View
+                    style={[
+                        styles.bottomSheetFullScreenHeader,
+                        headerAnimatedStyles,
+                    ]}>
+                    <BottomSheetFullScreenHeader
+                        onCollapsePress={handleSheetCollapsePress}
+                    />
+                </Animated.View>
+
+                {/* Just for testing purposes remove later */}
+                <View style={styles.testButtons}>
+                    <Button
+                        title="open/hide bottom sheet"
+                        onPress={handleSheetPresentPress}
+                    />
+                    <Button
+                        title="print state"
+                        onPress={() => {
+                            console.log('showBottomSheet: ', showBottomSheet);
+                            console.log(
+                                'bottomSheetFullScreen: ',
+                                bottomSheetFullScreen,
+                            );
+                        }}
+                    />
+                </View>
+            </Portal>
+
             <View style={styles.opacityOverlay}>
                 <TouchableOpacity onPress={animateToUserRegion}>
                     <View style={styles.locationButton}>
@@ -131,4 +242,20 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     locationIcon: { width: 28, height: 28 },
+    bottomSheetFullScreenHeader: {
+        position: 'absolute',
+        zIndex: 1,
+        top: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: Colors.bgWhite,
+    },
+
+    // Just for testing purposes remove later
+    testButtons: {
+        position: 'absolute',
+        zIndex: 1,
+        top: 150,
+        left: 80,
+    },
 });
