@@ -16,7 +16,7 @@ const BottomSheetFullScreenHeader = ({ onCollapsePress }: Props) => {
             <View style={styles.parentRow}>
                 <View style={styles.leftRow}>
                     <TouchableOpacity onPress={onCollapsePress}>
-                        <View>
+                        <View style={styles.iconContainer}>
                             <Icon
                                 asset={'AngleDown'}
                                 color={Colors.black}
@@ -27,7 +27,7 @@ const BottomSheetFullScreenHeader = ({ onCollapsePress }: Props) => {
                 </View>
                 <View style={styles.rightRow}>
                     <TouchableOpacity onPress={() => {}}>
-                        <View>
+                        <View style={styles.iconContainer}>
                             <Icon
                                 asset={'Search'}
                                 color={Colors.black}
@@ -36,7 +36,7 @@ const BottomSheetFullScreenHeader = ({ onCollapsePress }: Props) => {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {}}>
-                        <View>
+                        <View style={styles.iconContainer}>
                             <Icon
                                 asset={'MenuDots'}
                                 color={Colors.black}
@@ -55,7 +55,7 @@ export default BottomSheetFullScreenHeader;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: Constants.SPACING_UNIT_16,
+        paddingHorizontal: Constants.SPACING_UNIT_8,
     },
     parentRow: {
         flexDirection: 'row',
@@ -66,16 +66,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        gap: Constants.SPACING_UNIT_16,
     },
     rightRow: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        gap: Constants.SPACING_UNIT_16,
     },
     button: {
         flex: 1,
+    },
+    iconContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: Constants.TAP_UNIT_48,
+        height: Constants.TAP_UNIT_48,
     },
     icon: {
         width: 18,
