@@ -45,7 +45,13 @@ interface Props {
     selectMarker: Dispatch<SetStateAction<string>>;
 }
 
-function MapMarker({ data, mapViewRef, isSelected, selectMarker }: Props) {
+function MapMarker({
+    data,
+    mapViewRef,
+    bottomSheetModalRef,
+    isSelected,
+    selectMarker,
+}: Props) {
     const { coordinate, id, type } = data;
     return (
         <Marker
@@ -63,6 +69,9 @@ function MapMarker({ data, mapViewRef, isSelected, selectMarker }: Props) {
                         },
                         500,
                     );
+                }
+                if (bottomSheetModalRef.current != null) {
+                    bottomSheetModalRef.current.present();
                 }
             }}
             style={

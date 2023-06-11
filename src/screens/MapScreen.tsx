@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Button } from 'react-native';
 import {
     StyleSheet,
     View,
@@ -8,7 +7,6 @@ import {
     TextInput,
 } from 'react-native';
 import type { Region } from 'react-native-maps';
-import { Portal } from '@gorhom/portal';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import {
     areRegionsMatching,
