@@ -10,6 +10,11 @@ import MenuDots from '../assets/Menu_dots.png';
 import Website from '../assets/Website.png';
 import Phone from '../assets/Phone.png';
 import Share from '../assets/Share.png';
+import Faculty from '../assets/Faculty.png';
+import Dorm from '../assets/Dorm.png';
+import Shop from '../assets/Shop.png';
+import Club from '../assets/Club.png';
+import Restaurant from '../assets/Info.png';
 
 export const icons = {
     Calendar: {
@@ -47,5 +52,20 @@ export const icons = {
     },
     Share: {
         src: Share,
+    },
+    Faculty: {
+        src: Faculty,
+    },
+    Dorm: {
+        src: Dorm,
+    },
+    Shop: {
+        src: Shop,
+    },
+    Club: {
+        src: Club,
+    },
+    Restaurant: {
+        src: Restaurant,
     },
 };
