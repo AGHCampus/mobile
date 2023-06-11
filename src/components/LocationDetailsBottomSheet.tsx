@@ -27,7 +27,7 @@ import TabViewExample from './LocationDetailsTabView';
 
 interface Props {
     bottomSheetModalRef: RefObject<BottomSheetModal>;
-    selectedLocation: string | null;
+    selectedLocation: string;
 }
 
 const springConfig: WithSpringConfig = {

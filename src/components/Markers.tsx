@@ -1,5 +1,6 @@
 import React, { Dispatch, RefObject, SetStateAction } from 'react';
 import MapView, { LatLng, Marker } from 'react-native-maps';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { icons } from '../Icons';
 import { Image, StyleSheet } from 'react-native';
 import { Constants } from '../lib/Constants';
@@ -39,6 +40,7 @@ interface Props {
     data: MarkerData;
     coordinate: LatLng;
     mapViewRef: RefObject<MapView>;
+    bottomSheetModalRef: RefObject<BottomSheetModal>;
     isSelected: boolean;
     selectMarker: Dispatch<SetStateAction<string>>;
 }
