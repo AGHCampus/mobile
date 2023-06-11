@@ -1,17 +1,19 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import React, { useState, createContext, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PortalProvider } from '@gorhom/portal';
-import MapScreen from './src/screens/MapScreen';
-import EventsScreen from './src/screens/EventsScreen';
-import OffersScreen from './src/screens/OffersScreen';
-import InfoScreen from './src/screens/InfoScreen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { NavigationContainer } from '@react-navigation/native';
 import {
     BottomTabBarProps,
     createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+import MapScreen from './src/screens/MapScreen';
+import EventsScreen from './src/screens/EventsScreen';
+import OffersScreen from './src/screens/OffersScreen';
+import InfoScreen from './src/screens/InfoScreen';
 import TabNavigationRow from './src/components/TabNavigatorRow';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,10 +21,27 @@ const navigationOptions = {
     headerShown: false,
 };
 
-export default class App extends React.Component {
-    componentDidMount() {}
+export interface Dimensions {
+    height: number;
+    width: number;
+}
 
-    renderTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+const initialDimensions = {
+    height: 0,
+    width: 0,
+};
+
+export const AppDimensionsContext =
+    createContext<Dimensions>(initialDimensions);
+
+export default function App() {
+    const [dimensions, setDimensions] = useState<Dimensions>(initialDimensions);
+
+    const renderTabBar = ({
+        state,
+        descriptors,
+        navigation,
+    }: BottomTabBarProps) => {
         return (
             <TabNavigationRow
                 state={state}
@@ -30,36 +49,57 @@ export default class App extends React.Component {
                 navigation={navigation}
             />
         );
-    }
+    };
 
-    render(): React.ReactNode {
-        return (
-            <SafeAreaProvider>
-                <PortalProvider>
+    useEffect(() => {
+        console.log('App dimensions: ', dimensions);
+    }, [dimensions]);
+
+    return (
+        <SafeAreaProvider
+            onLayout={event => {
+                setDimensions({
+                    height: event.nativeEvent.layout.height,
+                    width: event.nativeEvent.layout.width,
+                });
+            }}>
+            <PortalProvider>
+                <GestureHandlerRootView style={styles.container}>
                     <BottomSheetModalProvider>
-                        <NavigationContainer>
-                            <Tab.Navigator
-                                tabBar={this.renderTabBar}
-                                screenOptions={navigationOptions}
-                                initialRouteName="Map">
-                                <Tab.Screen name="Map" component={MapScreen} />
-                                <Tab.Screen
-                                    name="Events"
-                                    component={EventsScreen}
-                                />
-                                <Tab.Screen
-                                    name="Offers"
-                                    component={OffersScreen}
-                                />
-                                <Tab.Screen
-                                    name="Info"
-                                    component={InfoScreen}
-                                />
-                            </Tab.Navigator>
-                        </NavigationContainer>
+                        <AppDimensionsContext.Provider value={dimensions}>
+                            <NavigationContainer>
+                                <Tab.Navigator
+                                    tabBar={renderTabBar}
+                                    screenOptions={navigationOptions}
+                                    initialRouteName="Map">
+                                    <Tab.Screen
+                                        name="Map"
+                                        component={MapScreen}
+                                    />
+                                    <Tab.Screen
+                                        name="Events"
+                                        component={EventsScreen}
+                                    />
+                                    <Tab.Screen
+                                        name="Offers"
+                                        component={OffersScreen}
+                                    />
+                                    <Tab.Screen
+                                        name="Info"
+                                        component={InfoScreen}
+                                    />
+                                </Tab.Navigator>
+                            </NavigationContainer>
+                        </AppDimensionsContext.Provider>
                     </BottomSheetModalProvider>
-                </PortalProvider>
-            </SafeAreaProvider>
-        );
-    }
+                </GestureHandlerRootView>
+            </PortalProvider>
+        </SafeAreaProvider>
+    );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+});

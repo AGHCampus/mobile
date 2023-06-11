@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import TopSpacer from './TopSpacer';
 import Icon from '../components/Icon';
 import { Constants } from '../lib/Constants';

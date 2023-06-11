@@ -7,6 +7,9 @@ import EmptyLocation from '../assets/Location_empty.png';
 import AngleDown from '../assets/Angle_down.png';
 import Search from '../assets/Search.png';
 import MenuDots from '../assets/Menu_dots.png';
+import Website from '../assets/Website.png';
+import Phone from '../assets/Phone.png';
+import Share from '../assets/Share.png';
 
 export const icons = {
     Calendar: {
@@ -35,5 +38,14 @@ export const icons = {
     },
     MenuDots: {
         src: MenuDots,
+    },
+    Website: {
+        src: Website,
+    },
+    Phone: {
+        src: Phone,
+    },
+    Share: {
+        src: Share,
     },
 };
