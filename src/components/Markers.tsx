@@ -1,9 +1,20 @@
-import React, { Dispatch, RefObject, SetStateAction } from 'react';
+import React, {
+    Dispatch,
+    RefObject,
+    SetStateAction,
+    useCallback,
+    useEffect,
+} from 'react';
 import MapView, { LatLng, Marker } from 'react-native-maps';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { icons } from '../Icons';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { Constants } from '../lib/Constants';
+import Animated, {
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
+} from 'react-native-reanimated';
 
 export enum MarkerType {
     FACULTY,
@@ -45,6 +56,8 @@ interface Props {
     selectMarker: Dispatch<SetStateAction<string>>;
 }
 
+const AnimatedImage = Animated.createAnimatedComponent(Image);
+
 function MapMarker({
     data,
     mapViewRef,
@@ -53,6 +66,36 @@ function MapMarker({
     selectMarker,
 }: Props) {
     const { coordinate, id, type } = data;
+    const markerSize = useSharedValue(24);
+
+    const focusMarker = useCallback(() => {
+        markerSize.value = withSpring(36, {
+            mass: 0.2,
+            stiffness: 200,
+            damping: 5,
+        });
+    }, [markerSize]);
+
+    const blurMarker = useCallback(() => {
+        markerSize.value = withSpring(24, {
+            mass: 0.2,
+            stiffness: 200,
+            damping: 5,
+        });
+    }, [markerSize]);
+
+    useEffect(() => {
+        isSelected ? focusMarker() : blurMarker();
+    }, [blurMarker, focusMarker, isSelected]);
+
+    const markerImageStyle = useAnimatedStyle(() => {
+        return {
+            width: markerSize.value,
+            height: markerSize.value,
+            margin: (36 - markerSize.value) / 2,
+        };
+    }, [markerSize.value]);
+
     return (
         <Marker
             coordinate={coordinate}
@@ -74,23 +117,27 @@ function MapMarker({
                     bottomSheetModalRef.current.present();
                 }
             }}
-            style={
-                isSelected ? styles.selectedMarker : styles.markerNotSelected
-            }>
-            <Image
-                source={getMarkerImage(type)}
-                resizeMode="contain"
-                style={
-                    isSelected
-                        ? styles.selectedMarker
-                        : styles.markerNotSelected
-                }
-            />
+            style={styles.markerTapTarget}>
+            <View style={styles.flexOne}>
+                <AnimatedImage
+                    source={getMarkerImage(type)}
+                    resizeMode="contain"
+                    resizeMethod="resize"
+                    style={markerImageStyle}
+                />
+            </View>
         </Marker>
     );
 }
 
 const styles = StyleSheet.create({
+    flexOne: {
+        flex: 1,
+    },
+    markerTapTarget: {
+        width: 36,
+        height: 36,
+    },
     selectedMarker: {
         width: 36,
         height: 36,
@@ -98,6 +145,7 @@ const styles = StyleSheet.create({
     markerNotSelected: {
         width: 24,
         height: 24,
+        margin: 6,
     },
 });
 
