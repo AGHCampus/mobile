@@ -92,7 +92,7 @@ function MapMarker({
         return {
             width: markerSize.value,
             height: markerSize.value,
-            margin: (36 - markerSize.value) / 2,
+            margin: (38 - markerSize.value) / 2,
         };
     }, [markerSize.value]);
 
@@ -135,17 +135,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     markerTapTarget: {
-        width: 36,
-        height: 36,
-    },
-    selectedMarker: {
-        width: 36,
-        height: 36,
-    },
-    markerNotSelected: {
-        width: 24,
-        height: 24,
-        margin: 6,
+        width: 38,
+        height: 38,
     },
 });
 
