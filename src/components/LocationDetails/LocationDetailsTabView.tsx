@@ -110,7 +110,5 @@ const styles = StyleSheet.create({
         height: 2,
         borderTopLeftRadius: 1,
         borderTopRightRadius: 1,
-        width: '28%',
-        left: '2.66%',
     },
 });

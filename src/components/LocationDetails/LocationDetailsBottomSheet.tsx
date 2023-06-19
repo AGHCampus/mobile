@@ -37,17 +37,12 @@ const LocationDetails = ({
     bottomSheetModalRef,
     selectedLocationID,
 }: Props) => {
-    const [showBottomSheet, setShowBottomSheet] = useState(false);
     const [bottomSheetFullScreen, setBottomSheetFullScreen] = useState(false);
 
     const dimensions = useContext(AppDimensionsContext);
     const insets = useSafeAreaInsets();
     const bottomSheetTopOffset = insets.top + 30;
     const bottomSheetMaxHeight = dimensions.height - bottomSheetTopOffset;
-
-    console.log('selectedLocationID', selectedLocationID);
-    console.log('showBottomSheet', showBottomSheet);
-    console.log('bottomSheetFullScreen', bottomSheetFullScreen);
 
     const animatedPosition = useSharedValue(dimensions.height);
     const snapPoints = useMemo(
@@ -60,7 +55,6 @@ const LocationDetails = ({
     };
 
     const handleSheetChanges = useCallback((index: number) => {
-        setShowBottomSheet(index !== -1);
         setBottomSheetFullScreen(index === 2);
     }, []);
 
@@ -87,10 +81,9 @@ const LocationDetails = ({
                 animatedPosition={animatedPosition}
                 onChange={handleSheetChanges}
                 enablePanDownToClose={false}
-                // enableHandlePanningGesture={!bottomSheetFullScreen}
                 enableContentPanningGesture={!bottomSheetFullScreen}
-                handleStyle={styles.handle1}
-                handleIndicatorStyle={styles.handle2}
+                handleStyle={styles.handle}
+                handleIndicatorStyle={styles.handleIndicator}
                 animationConfigs={springConfig}>
                 <LocationDetailsTabView
                     selectedLocationID={selectedLocationID}
@@ -125,11 +118,11 @@ const styles = StyleSheet.create({
         right: 0,
         backgroundColor: Colors.bgWhite,
     },
-    handle1: {
+    handle: {
         paddingTop: 12,
         paddingBottom: 8,
     },
-    handle2: {
+    handleIndicator: {
         width: 60,
         height: 3,
         backgroundColor: Colors.bottomSheetHandle,

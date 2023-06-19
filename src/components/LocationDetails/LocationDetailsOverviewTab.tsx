@@ -16,21 +16,21 @@ const LocationDetailsOverviewTab = ({ selectedLocationID }: Props) => {
                 <AccentButton
                     variant={ButtonVariant.PRIMARY}
                     icon={'Website'}
-                    color={Colors.accentGreen}>
-                    Website
-                </AccentButton>
+                    color={Colors.accentGreen}
+                    label={'Website'}
+                />
                 <AccentButton
                     variant={ButtonVariant.SECONDARY}
                     icon={'Phone'}
-                    color={Colors.accentGreen}>
-                    Call
-                </AccentButton>
+                    color={Colors.accentGreen}
+                    label={'Call'}
+                />
                 <AccentButton
                     variant={ButtonVariant.SECONDARY}
                     icon={'Share'}
-                    color={Colors.accentGreen}>
-                    Share
-                </AccentButton>
+                    color={Colors.accentGreen}
+                    label={'Share'}
+                />
             </View>
         </View>
     );

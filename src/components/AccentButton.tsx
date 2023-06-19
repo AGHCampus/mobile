@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 import {
     TouchableOpacity,
     ViewStyle,
@@ -20,14 +20,14 @@ function getButtonStyle(buttonVariant: ButtonVariant, accentColor: string) {
         case ButtonVariant.PRIMARY:
             return {
                 textColor: Colors.bgWhite,
-                bgColor: accentColor,
+                backgroundColor: accentColor,
                 borderColor: 'transparent',
                 borderWidth: 0,
             };
         case ButtonVariant.SECONDARY:
             return {
                 textColor: accentColor,
-                bgColor: 'transparent',
+                backgroundColor: 'transparent',
                 borderColor: accentColor,
                 borderWidth: 1,
             };
@@ -38,29 +38,22 @@ interface Props {
     variant: ButtonVariant;
     icon: IconType;
     color: string;
+    label?: string;
     style?: StyleProp<ViewStyle>;
 }
 
-const AccentButton = ({
-    variant,
-    icon,
-    color,
-    style,
-    children,
-}: PropsWithChildren<Props>) => {
-    const { textColor, bgColor, borderColor, borderWidth } = getButtonStyle(
-        variant,
-        color,
-    );
+const AccentButton = ({ variant, icon, color, label, style }: Props) => {
+    const { textColor, backgroundColor, borderColor, borderWidth } =
+        getButtonStyle(variant, color);
 
     return (
         <TouchableOpacity
             style={[
                 styles.container,
                 {
-                    backgroundColor: bgColor,
-                    borderColor: borderColor,
-                    borderWidth: borderWidth,
+                    backgroundColor,
+                    borderColor,
+                    borderWidth,
                 },
                 style,
             ]}>
@@ -72,7 +65,7 @@ const AccentButton = ({
                         color: textColor,
                     },
                 ]}>
-                {children}
+                {label}
             </Text>
         </TouchableOpacity>
     );
