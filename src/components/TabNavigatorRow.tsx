@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon, { IconType } from './Icon';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import BottomSpacer from './BottomSpacer';
+import { Colors } from '../lib/Colors';
 
 export default class TabNavigationRow extends Component<BottomTabBarProps> {
     static defaultProps = {
@@ -33,7 +34,9 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
                         const { options } = descriptors[route.key];
                         const label = options.title ?? route.name;
                         const isFocused = state.index === index;
-                        const tabColor = isFocused ? '#19A561' : 'black';
+                        const tabColor = isFocused
+                            ? Colors.accentGreen
+                            : Colors.black;
 
                         const onPress = () => {
                             const event = navigation.emit({
@@ -104,6 +107,10 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
 
 const styles = StyleSheet.create({
     row: {
+        backgroundColor: Colors.bgWhite,
+        elevation: 4,
+        // TODO: Add shadow/elevation for iOS that will not be visible on the bottom edge on inset bottom area
+        // I think this may be a problem for some android devices as well (?)
         height: 60,
         flexDirection: 'row',
     },

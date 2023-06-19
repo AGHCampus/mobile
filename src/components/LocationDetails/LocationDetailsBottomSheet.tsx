@@ -1,33 +1,28 @@
 import React, {
-    useRef,
     useState,
     useCallback,
     useMemo,
     useContext,
-    useEffect,
     RefObject,
 } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { Portal } from '@gorhom/portal';
 import Animated, {
     useSharedValue,
     useAnimatedStyle,
     interpolate,
     WithSpringConfig,
 } from 'react-native-reanimated';
-import { Colors } from '../lib/Colors';
-import BottomSheetFullScreenHeader from './BottomSheetFullScreenHeader';
-import AccentButton from './AccentButton';
-
-import { AppDimensionsContext } from '../../App';
-import { Constants } from '../lib/Constants';
-import TabViewExample from './LocationDetailsTabView';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { Portal } from '@gorhom/portal';
+import { AppDimensionsContext } from '../../../App';
+import BottomSheetFullScreenHeader from './LocationDetailsFullScreenHeader';
+import LocationDetailsTabView from './LocationDetailsTabView';
+import { Colors } from '../../lib/Colors';
 
 interface Props {
     bottomSheetModalRef: RefObject<BottomSheetModal>;
-    selectedLocation: string;
+    selectedLocationID: string;
 }
 
 const springConfig: WithSpringConfig = {
@@ -38,7 +33,10 @@ const springConfig: WithSpringConfig = {
     stiffness: 500,
 };
 
-const LocationDetails = ({ bottomSheetModalRef, selectedLocation }: Props) => {
+const LocationDetails = ({
+    bottomSheetModalRef,
+    selectedLocationID,
+}: Props) => {
     const [showBottomSheet, setShowBottomSheet] = useState(false);
     const [bottomSheetFullScreen, setBottomSheetFullScreen] = useState(false);
 
@@ -47,28 +45,23 @@ const LocationDetails = ({ bottomSheetModalRef, selectedLocation }: Props) => {
     const bottomSheetTopOffset = insets.top + 30;
     const bottomSheetMaxHeight = dimensions.height - bottomSheetTopOffset;
 
-    console.log('\n\n');
-    console.log('dimensions', dimensions);
-    console.log('insets', insets);
-    console.log('bottomSheetTopOffset', bottomSheetTopOffset);
-    console.log('bottomSheetMaxHeight', bottomSheetMaxHeight);
+    console.log('selectedLocationID', selectedLocationID);
     console.log('showBottomSheet', showBottomSheet);
     console.log('bottomSheetFullScreen', bottomSheetFullScreen);
 
     const animatedPosition = useSharedValue(dimensions.height);
     const snapPoints = useMemo(
-        () => [150, 350, bottomSheetMaxHeight],
+        () => [170, 350, bottomSheetMaxHeight],
         [bottomSheetMaxHeight],
     );
 
-    const handleSheetCollapsePress = useCallback(() => {
+    const handleSheetCollapsePress = () => {
         bottomSheetModalRef.current!.snapToIndex(1);
-    }, [bottomSheetModalRef]);
+    };
 
     const handleSheetChanges = useCallback((index: number) => {
         setShowBottomSheet(index !== -1);
         setBottomSheetFullScreen(index === 2);
-        console.log('handleSheetChanges', index);
     }, []);
 
     const headerAnimatedStyles = useAnimatedStyle(() => {
@@ -94,40 +87,14 @@ const LocationDetails = ({ bottomSheetModalRef, selectedLocation }: Props) => {
                 animatedPosition={animatedPosition}
                 onChange={handleSheetChanges}
                 enablePanDownToClose={false}
-                enableHandlePanningGesture={!bottomSheetFullScreen}
+                // enableHandlePanningGesture={!bottomSheetFullScreen}
                 enableContentPanningGesture={!bottomSheetFullScreen}
+                handleStyle={styles.handle1}
+                handleIndicatorStyle={styles.handle2}
                 animationConfigs={springConfig}>
-                <View style={styles.contentContainer}>
-                    <TabViewExample />
-                    {/* <Text>{selectedLocation}</Text> */}
-                    {/* <View style={styles.buttonsContainer}>
-                        <AccentButton
-                            variant="primary"
-                            icon="Website"
-                            color={Colors.accentGreen}>
-                            Website
-                        </AccentButton>
-                        <AccentButton
-                            variant="secondary"
-                            icon="Phone"
-                            color={Colors.accentGreen}>
-                            Call
-                        </AccentButton>
-                        <AccentButton
-                            variant="secondary"
-                            icon="Share"
-                            color={Colors.accentGreen}>
-                            Share
-                        </AccentButton>
-                        <TouchableOpacity
-                            onPress={() => {
-                                console.log('close');
-                                setShowBottomSheet(!showBottomSheet);
-                            }}>
-                            <Text>Close</Text>
-                        </TouchableOpacity>
-                    </View> */}
-                </View>
+                <LocationDetailsTabView
+                    selectedLocationID={selectedLocationID}
+                />
             </BottomSheetModal>
 
             <Portal>
@@ -137,7 +104,9 @@ const LocationDetails = ({ bottomSheetModalRef, selectedLocation }: Props) => {
                         headerAnimatedStyles,
                     ]}>
                     <BottomSheetFullScreenHeader
-                        onCollapsePress={handleSheetCollapsePress}
+                        onCollapseButtonPress={handleSheetCollapsePress}
+                        onSearchButtonPress={() => console.log('search')}
+                        onMenuButtonPress={() => console.log('menu')}
                     />
                 </Animated.View>
             </Portal>
@@ -148,17 +117,6 @@ const LocationDetails = ({ bottomSheetModalRef, selectedLocation }: Props) => {
 export default LocationDetails;
 
 const styles = StyleSheet.create({
-    contentContainer: {
-        // padding: Constants.SPACING_UNIT_16,
-        // flexDirection: 'column',
-        // alignItems: 'flex-start',
-        flex: 1,
-    },
-    buttonsContainer: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        gap: Constants.SPACING_UNIT_10,
-    },
     bottomSheetFullScreenHeader: {
         position: 'absolute',
         zIndex: 1,
@@ -166,5 +124,14 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         backgroundColor: Colors.bgWhite,
+    },
+    handle1: {
+        paddingTop: 12,
+        paddingBottom: 8,
+    },
+    handle2: {
+        width: 60,
+        height: 3,
+        backgroundColor: Colors.bottomSheetHandle,
     },
 });
