@@ -4,6 +4,12 @@ import Map from '../assets/Map.png';
 import Offer from '../assets/Offer.png';
 import Location from '../assets/Location.png';
 import EmptyLocation from '../assets/Location_empty.png';
+import AngleDown from '../assets/Angle_down.png';
+import Search from '../assets/Search.png';
+import MenuDots from '../assets/Menu_dots.png';
+import Website from '../assets/Website.png';
+import Phone from '../assets/Phone.png';
+import Share from '../assets/Share.png';
 import Faculty from '../assets/Faculty.png';
 import Dorm from '../assets/Dorm.png';
 import Shop from '../assets/Shop.png';
@@ -28,6 +34,24 @@ export const icons = {
     },
     EmptyLocation: {
         src: EmptyLocation,
+    },
+    AngleDown: {
+        src: AngleDown,
+    },
+    Search: {
+        src: Search,
+    },
+    MenuDots: {
+        src: MenuDots,
+    },
+    Website: {
+        src: Website,
+    },
+    Phone: {
+        src: Phone,
+    },
+    Share: {
+        src: Share,
     },
     Faculty: {
         src: Faculty,

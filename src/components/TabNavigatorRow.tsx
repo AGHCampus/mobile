@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon, { IconType } from './Icon';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import BottomSpacer from './BottomSpacer';
+import { Colors } from '../lib/Colors';
 
 export default class TabNavigationRow extends Component<BottomTabBarProps> {
     static defaultProps = {
@@ -27,13 +28,15 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
     render(): ReactNode {
         const { state, descriptors, navigation } = this.props;
         return (
-            <React.Fragment>
+            <>
                 <View style={styles.row}>
                     {state.routes.map((route, index) => {
                         const { options } = descriptors[route.key];
                         const label = options.title ?? route.name;
                         const isFocused = state.index === index;
-                        const tabColor = isFocused ? '#199517' : 'black';
+                        const tabColor = isFocused
+                            ? Colors.accentGreen
+                            : Colors.black;
 
                         const onPress = () => {
                             const event = navigation.emit({
@@ -97,20 +100,26 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
                     })}
                 </View>
                 <BottomSpacer />
-            </React.Fragment>
+            </>
         );
     }
 }
 
 const styles = StyleSheet.create({
     row: {
-        paddingTop: 4,
+        backgroundColor: Colors.bgWhite,
+        elevation: 4,
+        // TODO: Add shadow/elevation for iOS that will not be visible on the bottom edge on inset bottom area
+        // I think this may be a problem for some android devices as well (?)
+        height: 60,
         flexDirection: 'row',
     },
 
     buttonContainer: {
         flex: 1,
         alignItems: 'center',
+        justifyContent: 'center',
+        gap: 2,
     },
     tabNotification: {
         width: 8,
