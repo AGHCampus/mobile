@@ -88,7 +88,7 @@ const LocationDetailsTabView = ({ selectedLocationID }: Props) => {
             renderScene={renderScene}
             renderTabBar={renderTabBar}
             onIndexChange={setIndex}
-            // swipeEnabled={false}
+            swipeEnabled={false}
         />
     );
 };
