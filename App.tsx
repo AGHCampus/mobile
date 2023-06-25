@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PortalProvider } from '@gorhom/portal';
@@ -51,17 +51,11 @@ export default function App() {
         );
     };
 
-    useEffect(() => {
-        console.log('App dimensions: ', dimensions);
-    }, [dimensions]);
-
     return (
         <SafeAreaProvider
             onLayout={event => {
-                setDimensions({
-                    height: event.nativeEvent.layout.height,
-                    width: event.nativeEvent.layout.width,
-                });
+                const { width, height } = event.nativeEvent.layout;
+                setDimensions({ height, width });
             }}>
             <PortalProvider>
                 <GestureHandlerRootView style={styles.container}>

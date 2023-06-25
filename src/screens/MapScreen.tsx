@@ -7,20 +7,22 @@ import {
     TextInput,
 } from 'react-native';
 import type { Region } from 'react-native-maps';
+import RNMapView from 'react-native-maps';
+import MapView from 'react-native-map-clustering';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+
 import {
     areRegionsMatching,
     getCurrentLocation,
     handleGeolocationError,
 } from '../geolocation';
-import RNMapView from 'react-native-maps';
-import MapView from 'react-native-map-clustering';
+import Icon from '../components/Icon';
+import LocationDetails from '../components/LocationDetails/LocationDetailsBottomSheet';
+import MapMarker, { MarkerType } from '../components/Markers';
+
 import { BASE_MAP_STYLE_LIGHT, Constants } from '../lib/Constants';
 import { Colors } from '../lib/Colors';
-import Icon from '../components/Icon';
-import LocationDetails from '../components/LocationDetailsBottomSheet';
-
-import MapMarker, { MarkerType } from '../components/Markers';
+import { Shadows } from '../lib/Shadows';
 
 const markerData = [
     {
@@ -126,7 +128,6 @@ export default function MapScreen() {
 
     const getInitialRegion = async () => {
         const position = await getCurrentLocation();
-
         if (position) {
             const { latitude, longitude } = position.coords;
             setRegion({
@@ -181,7 +182,7 @@ export default function MapScreen() {
                 ))}
             </MapView>
 
-            <View style={[styles.searchBar, styles.dropShadow]}>
+            <View style={[styles.searchBar, Shadows.depth2]}>
                 <TextInput
                     ref={inputRef}
                     placeholder="Search..."
@@ -191,25 +192,12 @@ export default function MapScreen() {
 
             <LocationDetails
                 bottomSheetModalRef={bottomSheetModalRef}
-                selectedLocation={selectedMarkerID}
+                selectedLocationID={selectedMarkerID}
             />
-
-            {/* <Portal>
-                <View style={styles.testButtons}>
-                    <Button
-                        title="open bottom sheet"
-                        onPress={handleSelectLocation}
-                    />
-                    <Button
-                        title="hide bottom sheet"
-                        onPress={handleUnselectLocation}
-                    />
-                </View>
-            </Portal> */}
 
             <View style={styles.opacityOverlay}>
                 <TouchableOpacity onPress={animateToUserRegion}>
-                    <View style={[styles.locationButton, styles.dropShadow]}>
+                    <View style={[styles.locationButton, Shadows.depth2]}>
                         <Icon
                             asset={
                                 followUserLocation
@@ -262,28 +250,5 @@ const styles = StyleSheet.create({
         borderColor: Colors.accentGreen,
         backgroundColor: Colors.bgWhite,
     },
-    dropShadow: {
-        shadowColor: Colors.shadowGrey,
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        elevation: 2,
-    },
     locationIcon: { width: 28, height: 28 },
-    bottomSheetFullScreenHeader: {
-        position: 'absolute',
-        zIndex: 1,
-        top: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: Colors.bgWhite,
-    },
-
-    // Just for testing purposes remove later
-    testButtons: {
-        position: 'absolute',
-        zIndex: 1,
-        top: 150,
-        left: 80,
-    },
 });
