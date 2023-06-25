@@ -3,9 +3,9 @@ import { LatLng } from 'react-native-maps';
 
 export type TabsParamList = {
     Map: undefined | { eventLocation: LatLng };
-    Events: undefined | { eventLocation: LatLng };
-    Offers: undefined | { eventLocation: LatLng };
-    Info: undefined | { eventLocation: LatLng };
+    Events: undefined;
+    Offers: undefined;
+    Info: undefined;
 };
 
 export type TabNavigation = BottomTabNavigationProp<TabsParamList>;
