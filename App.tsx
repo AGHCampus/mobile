@@ -14,12 +14,13 @@ import EventsScreen from './src/screens/EventsScreen';
 import OffersScreen from './src/screens/OffersScreen';
 import InfoScreen from './src/screens/InfoScreen';
 import TabNavigationRow from './src/components/TabNavigatorRow';
-
-const Tab = createBottomTabNavigator();
+import { TabsParamList } from './src/screens/navigationTypes';
 
 const navigationOptions = {
-    headerShown: false,
+    headerShown: true,
 };
+
+const Tab = createBottomTabNavigator<TabsParamList>();
 
 export interface Dimensions {
     height: number;

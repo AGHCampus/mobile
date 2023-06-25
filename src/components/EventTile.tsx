@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
     Dimensions,
+    Share,
     StyleSheet,
     Text,
     TouchableWithoutFeedback,
@@ -11,7 +12,6 @@ import { Constants } from '../lib/Constants';
 import { Colors } from '../lib/Colors';
 import Animated, {
     FadeInRight,
-    FadeInUp,
     FadeOutRight,
     FadeOutUp,
     interpolate,
@@ -23,16 +23,26 @@ import Animated, {
 import {
     getEventDatetimeRangeString,
     getEventDatetimeStringLong,
-} from '../time';
+} from '../utils/time';
+import { HorizontalSpacer, VerticalSpacer } from './Spacers';
+import AccentButton, { ButtonVariant } from './AccentButton';
+import { Shadows } from '../lib/Shadows';
+import { openURL } from '../utils/linking';
+import { LatLng } from 'react-native-maps';
+import { useNavigation } from '@react-navigation/native';
+import { TabNavigation } from '../screens/navigationTypes';
 
 export interface EventData {
     id: string;
-    locationID: string;
     name: string;
     description: string;
     imageUrl: string;
+    locationName: string;
     startTime: Date;
     endTime?: Date;
+    websiteUrl?: string;
+    locationCoordinate?: LatLng;
+    locationLogoUrl?: string;
 }
 
 interface Props {
@@ -43,22 +53,24 @@ interface Props {
 const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
 
 export default function EventTile({ event }: Props) {
+    const navigation = useNavigation<TabNavigation>();
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [animationStatus, setAnimationStatus] = useState('idle');
+    const [expandHeight, setExpandHeight] = useState(0);
     const animationState = useSharedValue(0);
     const tileWidth =
         Dimensions.get('window').width - 2 * Constants.SPACING_UNIT_24;
 
     const animateFocus = () => {
         setAnimationStatus('expanding');
+        setIsCollapsed(false);
         animationState.value = withTiming(1, { duration: 500 }, () => {
-            runOnJS(setIsCollapsed)(false);
             runOnJS(setAnimationStatus)('idle');
         });
     };
 
     const animateBlur = () => {
-        runOnJS(setAnimationStatus)('collapsing');
+        setAnimationStatus('collapsing');
         animationState.value = withTiming(0, { duration: 500 }, () => {
             runOnJS(setIsCollapsed)(true);
             runOnJS(setAnimationStatus)('idle');
@@ -67,10 +79,14 @@ export default function EventTile({ event }: Props) {
 
     const eventTileStyle = useAnimatedStyle(() => {
         return {
-            minHeight: interpolate(animationState.value, [0, 1], [120, 360]),
+            height: interpolate(
+                animationState.value,
+                [0, 1],
+                [120, 240 + expandHeight],
+            ),
             flex: 1,
         };
-    }, [animationState.value]);
+    }, [animationState.value, expandHeight]);
 
     const eventImageStyle = useAnimatedStyle(() => {
         return {
@@ -97,28 +113,61 @@ export default function EventTile({ event }: Props) {
 
     const eventInfoExpandedStyle = useAnimatedStyle(() => {
         return {
-            opacity: interpolate(animationState.value, [0, 0.25, 1], [0, 0, 1]),
+            opacity: interpolate(
+                animationState.value,
+                [0, 0.5, 0.75, 0.9, 1],
+                [0, 0, 0.2, 0.4, 1],
+            ),
             marginHorizontal: Constants.SPACING_UNIT_8,
         };
     }, [animationState.value]);
 
-    const { name, imageUrl, description, startTime, endTime } = event;
+    const {
+        name,
+        imageUrl,
+        description,
+        websiteUrl,
+        startTime,
+        endTime,
+        locationName,
+        locationCoordinate,
+        locationLogoUrl,
+    } = event;
 
     return (
         <View>
             <View style={styles.topRowContainer}>
-                <Text>TOP ROW</Text>
+                {locationLogoUrl && (
+                    <FastImage
+                        source={{ uri: locationLogoUrl }}
+                        style={styles.locationLogo}
+                    />
+                )}
+                <Text>{locationName}</Text>
+                {locationCoordinate && (
+                    <>
+                        <Text> - </Text>
+                        <TouchableWithoutFeedback
+                            onPress={() =>
+                                navigation.navigate('Map', {
+                                    eventLocation: locationCoordinate,
+                                })
+                            }>
+                            <Text style={{ color: Colors.accentGreen }}>
+                                show on map
+                            </Text>
+                        </TouchableWithoutFeedback>
+                    </>
+                )}
             </View>
 
             <Animated.View
-                style={[
-                    eventTileStyle,
-                    styles.eventContainer,
-                    styles.dropShadow,
-                ]}>
+                style={[eventTileStyle, styles.eventContainer, Shadows.depth2]}>
                 <TouchableWithoutFeedback
                     onPress={() => {
-                        isCollapsed ? animateFocus() : animateBlur();
+                        if (animationStatus === 'idle') {
+                            isCollapsed ? animateFocus() : animateBlur();
+                        }
                     }}>
                     <View style={styles.row}>
                         <AnimatedFastImage
@@ -128,9 +177,9 @@ export default function EventTile({ event }: Props) {
                         {!isCollapsed ||
                         animationStatus === 'expanding' ? null : (
                             <Animated.View
-                                entering={FadeInRight.duration(300)}
+                                entering={FadeInRight.duration(200)}
                                 exiting={FadeOutRight.duration(200)}>
-                                <View style={styles.spacer16} />
+                                <VerticalSpacer height={16} />
                                 <Text style={styles.time}>
                                     {endTime
                                         ? getEventDatetimeRangeString(
@@ -139,7 +188,7 @@ export default function EventTile({ event }: Props) {
                                           )
                                         : getEventDatetimeStringLong(startTime)}
                                 </Text>
-                                <View style={styles.spacer8} />
+                                <VerticalSpacer height={8} />
                                 <Text style={styles.eventName}>{name}</Text>
                             </Animated.View>
                         )}
@@ -147,10 +196,15 @@ export default function EventTile({ event }: Props) {
                 </TouchableWithoutFeedback>
                 {isCollapsed || animationStatus === 'collapsing' ? null : (
                     <Animated.View
+                        onLayout={e => {
+                            const { height } = e.nativeEvent.layout;
+                            if (height > expandHeight) {
+                                setExpandHeight(height);
+                            }
+                        }}
                         style={eventInfoExpandedStyle}
-                        entering={FadeInUp}
-                        exiting={FadeOutUp}>
-                        <View style={styles.spacer8} />
+                        exiting={FadeOutUp.duration(200)}>
+                        <VerticalSpacer height={8} />
                         <Text style={styles.time}>
                             {endTime
                                 ? getEventDatetimeRangeString(
@@ -160,23 +214,39 @@ export default function EventTile({ event }: Props) {
                                 : getEventDatetimeStringLong(startTime)}
                         </Text>
                         <Text style={styles.eventName}>{name}</Text>
-                        <View style={styles.spacer8} />
+                        <VerticalSpacer height={8} />
                         <Text>{description}</Text>
-                        <View style={styles.spacer8} />
-
+                        <VerticalSpacer height={16} />
                         <View style={styles.row}>
-                            <View style={{ flex: 1 }} />
-                            <View style={styles.infoButton}>
-                                <Text>More Info</Text>
-                            </View>
-                            <View style={styles.horizontalSpacer16} />
-
-                            <View style={styles.shareButton}>
-                                <Text>Share</Text>
-                            </View>
-                            <View style={{ flex: 1 }} />
+                            {websiteUrl && (
+                                <>
+                                    <AccentButton
+                                        onPress={() =>
+                                            openURL('https://google.com')
+                                        }
+                                        variant={ButtonVariant.PRIMARY}
+                                        icon={'Info'}
+                                        color={Colors.accentGreen}
+                                        label={'More info'}
+                                        style={styles.infoButton}
+                                    />
+                                    <HorizontalSpacer width={16} />
+                                </>
+                            )}
+                            <AccentButton
+                                onPress={() => Share.share({ message: 'test' })}
+                                variant={ButtonVariant.SECONDARY}
+                                icon={'Share'}
+                                color={Colors.accentGreen}
+                                label={'Share'}
+                                style={
+                                    websiteUrl
+                                        ? styles.shareButton
+                                        : styles.singleButton
+                                }
+                            />
                         </View>
-                        <View style={styles.spacer8} />
+                        <VerticalSpacer height={16} />
                     </Animated.View>
                 )}
             </Animated.View>
@@ -186,8 +256,9 @@ export default function EventTile({ event }: Props) {
 
 const styles = StyleSheet.create({
     eventContainer: {
-        borderWidth: 2,
         borderRadius: Constants.SPACING_UNIT_16,
+        backgroundColor: Colors.bgWhite,
+        marginHorizontal: 24,
     },
 
     time: {
@@ -201,6 +272,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 20,
     },
+
     eventDescription: {
         fontSize: 14,
         lineHeight: 16,
@@ -208,35 +280,24 @@ const styles = StyleSheet.create({
 
     topRowContainer: {
         height: Constants.SPACING_UNIT_24,
+        flexDirection: 'row',
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
     },
 
-    dropShadow: {
-        shadowColor: Colors.shadowGrey,
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        elevation: 2,
-    },
     infoButton: {
         width: '55%',
         height: 32,
-        borderWidth: 2,
-        backgroundColor: 'blue',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     shareButton: {
         width: '40%',
         height: 32,
-        borderWidth: 2,
-        backgroundColor: 'green',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
+    },
+    singleButton: {
+        height: 32,
+        marginHorizontal: 24,
+        flex: 1,
     },
     buttonRow: {
         flexDirection: 'row',
@@ -247,13 +308,13 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
     },
-    spacer16: {
-        height: Constants.SPACING_UNIT_16,
+    flexOne: {
+        flex: 1,
     },
-    spacer8: {
-        height: Constants.SPACING_UNIT_8,
-    },
-    horizontalSpacer16: {
-        width: Constants.SPACING_UNIT_16,
+    locationLogo: {
+        width: 20,
+        height: 20,
+        borderRadius: 12,
+        marginHorizontal: 4,
     },
 });

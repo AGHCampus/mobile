@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     StyleSheet,
     View,
@@ -15,14 +15,18 @@ import {
     areRegionsMatching,
     getCurrentLocation,
     handleGeolocationError,
-} from '../geolocation';
+} from '../utils/geolocation';
 import Icon from '../components/Icon';
 import LocationDetails from '../components/LocationDetails/LocationDetailsBottomSheet';
 import MapMarker, { MarkerType } from '../components/Markers';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 import { BASE_MAP_STYLE_LIGHT, Constants } from '../lib/Constants';
 import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
+import { TabsParamList } from './navigationTypes';
+
+type Props = BottomTabScreenProps<TabsParamList, 'Map'>;
 
 const markerData = [
     {
@@ -75,7 +79,7 @@ const markerData = [
     },
 ] as const;
 
-export default function MapScreen() {
+export default function MapScreen({ route, navigation }: Props) {
     const mapViewRef = useRef<RNMapView>(null);
     const inputRef = useRef<TextInput>(null);
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -90,9 +94,23 @@ export default function MapScreen() {
     const [isAnimating, setIsAnimating] = useState(false);
     const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
 
+    const { eventLocation } = route.params ?? { eventLocation: null };
+
+    useEffect(() => {
+        navigation.setOptions({ headerShown: false });
+        if (eventLocation) {
+            mapViewRef.current?.animateToRegion(
+                {
+                    ...eventLocation,
+                    ...Constants.DEFAULT_REGION_DELTA,
+                },
+                500,
+            );
+        }
+    }, [navigation, eventLocation]);
+
     const onRegionChangeComplete = (newRegion: Region) => {
         setCurrentRegion(newRegion);
-
         setIsAnimating(false);
     };
 

@@ -38,16 +38,25 @@ interface Props {
     variant: ButtonVariant;
     icon: IconType;
     color: string;
+    onPress: () => void;
     label?: string;
     style?: StyleProp<ViewStyle>;
 }
 
-const AccentButton = ({ variant, icon, color, label, style }: Props) => {
+const AccentButton = ({
+    variant,
+    icon,
+    color,
+    onPress,
+    label,
+    style,
+}: Props) => {
     const { textColor, backgroundColor, borderColor, borderWidth } =
         getButtonStyle(variant, color);
 
     return (
         <TouchableOpacity
+            onPress={onPress}
             style={[
                 styles.container,
                 {
