@@ -10,7 +10,7 @@ import Icon, { IconType } from './Icon';
 import { Colors } from '../lib/Colors';
 import { Constants } from '../lib/Constants';
 
-export enum ButtonVariant {
+enum ButtonVariant {
     PRIMARY,
     SECONDARY,
 }
@@ -34,14 +34,15 @@ function getButtonStyle(buttonVariant: ButtonVariant, accentColor: string) {
     }
 }
 
-interface Props {
-    variant: ButtonVariant;
+interface AccentButtonProps {
     icon: IconType;
     color: string;
     onPress: () => void;
     label?: string;
     style?: StyleProp<ViewStyle>;
 }
+
+type Props = AccentButtonProps & { variant: ButtonVariant };
 
 const AccentButton = ({
     variant,
@@ -80,7 +81,14 @@ const AccentButton = ({
     );
 };
 
-export default AccentButton;
+export default {
+    Primary: (props: AccentButtonProps) => (
+        <AccentButton variant={ButtonVariant.PRIMARY} {...props} />
+    ),
+    Secondary: (props: AccentButtonProps) => (
+        <AccentButton variant={ButtonVariant.SECONDARY} {...props} />
+    ),
+};
 
 const styles = StyleSheet.create({
     container: {

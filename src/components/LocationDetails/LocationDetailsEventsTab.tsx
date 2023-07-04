@@ -1,16 +1,62 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, View, FlatList, RefreshControl } from 'react-native';
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
+import ColumnEventTile from '../Events/ColumnEventTile';
+import { TEMP_EVENTS_DATA } from '../../screens/EventsScreen';
+import { VerticalSpacer } from '../Spacers';
+import { EventData } from '../Events/ExpandableEventTile';
 
 interface Props {
     selectedLocationID: string;
+    isBottomSheetFullscreen: boolean;
 }
 
-const LocationDetailsEventsTab = ({ selectedLocationID }: Props) => {
+function ListSpacer() {
+    return <VerticalSpacer height={Constants.SPACING_UNIT_24} />;
+}
+function ListFooter() {
+    return <VerticalSpacer height={44} />;
+}
+
+// TODO: Fetch data from backend
+const LocationDetailsEventsTab = ({
+    selectedLocationID,
+    isBottomSheetFullscreen,
+}: Props) => {
+    const eventsData: ReadonlyArray<EventData> = TEMP_EVENTS_DATA;
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => setRefreshing(false), 1000);
+    }, []);
+
     return (
-        <View style={styles.container}>
-            <Text>Events Tab (selectedLocationID={selectedLocationID})</Text>
+        <View
+            style={[
+                styles.container,
+                isBottomSheetFullscreen
+                    ? styles.fullscreenList
+                    : styles.smallList,
+            ]}>
+            <FlatList
+                data={
+                    parseInt(selectedLocationID) % 2 === 0
+                        ? eventsData.slice(0, 2)
+                        : eventsData.slice(2, 4)
+                }
+                scrollEnabled
+                renderItem={event => <ColumnEventTile event={event.item} />}
+                ItemSeparatorComponent={ListSpacer}
+                ListFooterComponent={ListFooter}
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            />
         </View>
     );
 };
@@ -19,9 +65,13 @@ export default LocationDetailsEventsTab;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: Colors.bgLightGray,
-        padding: Constants.SPACING_UNIT_16,
-        gap: Constants.SPACING_UNIT_16,
+        marginTop: Constants.SPACING_UNIT_16,
+    },
+    fullscreenList: {
+        height: '100%',
+    },
+    smallList: {
+        height: 300,
     },
 });

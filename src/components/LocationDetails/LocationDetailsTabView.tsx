@@ -16,13 +16,17 @@ import { Shadows } from '../../lib/Shadows';
 
 interface Props {
     selectedLocationID: string;
+    isBottomSheetFullscreen: boolean;
 }
 
 type TabBarProps = SceneRendererProps & {
     navigationState: NavigationState<Route>;
 };
 
-const LocationDetailsTabView = ({ selectedLocationID }: Props) => {
+const LocationDetailsTabView = ({
+    selectedLocationID,
+    isBottomSheetFullscreen,
+}: Props) => {
     const [index, setIndex] = useState(0);
     const [routes] = useState<Route[]>([
         {
@@ -54,6 +58,7 @@ const LocationDetailsTabView = ({ selectedLocationID }: Props) => {
                     return (
                         <LocationDetailsEventsTab
                             selectedLocationID={selectedLocationID}
+                            isBottomSheetFullscreen={isBottomSheetFullscreen}
                         />
                     );
                 case 'offers':
@@ -66,7 +71,7 @@ const LocationDetailsTabView = ({ selectedLocationID }: Props) => {
                     return null;
             }
         },
-        [selectedLocationID],
+        [selectedLocationID, isBottomSheetFullscreen],
     );
 
     const renderTabBar = (props: TabBarProps) => (

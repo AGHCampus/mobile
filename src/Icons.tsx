@@ -5,6 +5,7 @@ import Offer from '../assets/Offer.png';
 import Location from '../assets/Location.png';
 import EmptyLocation from '../assets/Location_empty.png';
 import AngleDown from '../assets/Angle_down.png';
+import AngleUp from '../assets/Angle_up.png';
 import Search from '../assets/Search.png';
 import MenuDots from '../assets/Menu_dots.png';
 import Website from '../assets/Website.png';
@@ -37,6 +38,9 @@ export const icons = {
     },
     AngleDown: {
         src: AngleDown,
+    },
+    AngleUp: {
+        src: AngleUp,
     },
     Search: {
         src: Search,

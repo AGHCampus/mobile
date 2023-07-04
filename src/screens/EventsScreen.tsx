@@ -1,14 +1,18 @@
 import React, { useCallback } from 'react';
-import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 import SafeView from './SafeView';
 
-import EventTile, { EventData } from '../components/EventTile';
+import ExpandableEventTile, {
+    EventData,
+} from '../components/Events/ExpandableEventTile';
+import { VerticalSpacer } from '../components/Spacers';
+import { Constants } from '../lib/Constants';
 
-const TEMP_EVENTS_DATA: ReadonlyArray<EventData> = [
+export const TEMP_EVENTS_DATA: ReadonlyArray<EventData> = [
     {
         id: '1',
         name: 'Event 1',
-        description: `Event 1 description  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam odio nisl, iaculis non tempor quis, efficitur egestas est. In tortor ligula, imperdiet sed lorem eget, euismod lacinia arcu. Phasellus lobortis enim fermentum, molestie dolor vitae, pellentesque arcu. Mauris ac tortor vel ex semper blandit. Suspendisse in finibus augue, sit amet suscipit purus. Curabitur euismod, odio vitae pretium posuere, orci ante tempor orci, ut fringilla nibh mi et erat. Integer porttitor purus a dui faucibus, et hendrerit neque vestibulum. Ut quis ex finibus lorem bibendum gravida. Donec eget congue risus, ultricies mattis lacus. Aliquam erat volutpat. In sit amet sollicitudin nisl.`,
+        description: `Event 1 description  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam odio nisl, iaculis non tempor quis, efficitur egestas est. In tortor ligula, imperdiet sed lorem eget, euismod lacinia arcu. Phasellus lobortis enim fermentum, molestie dolor vitae, pellentesque arcu. Mauris ac tortor vel ex semper blandit. Suspendisse in finibus augue, sit amet suscipit purus. Curabitur euismod, odio vitae pretium posuere, orci ante tempor orci, ut fringilla nibh mi et erat. Integer porttitor purus a dui faucibus, et hendrerit neque vestibulum. Ut quis ex finibus lorem bibendum gravida. Donec eget congue risus, ultricies mattis lacus. Aliquam erat volutpat. In sit amet sollicitudin nisl. `,
         imageUrl: 'https://picsum.photos/500',
         websiteUrl: 'https://www.google.com',
         startTime: new Date('2023-06-20T10:00:00+02:00'),
@@ -46,11 +50,42 @@ const TEMP_EVENTS_DATA: ReadonlyArray<EventData> = [
         locationLogoUrl:
             'https://www.lodplanner.com/wp-content/uploads/AGH-University-of-Science-and-Technology-Logo.png',
     },
+
+    {
+        id: '4',
+        name: 'Event 4',
+        description: 'Event 4 description',
+        imageUrl: 'https://picsum.photos/847',
+        startTime: new Date('2023-06-29T11:30:00+02:00'),
+        locationCoordinate: {
+            latitude: 50.0680619382141,
+            longitude: 19.912568786594342,
+        },
+        locationName: 'SWFiS AGH',
+        locationLogoUrl:
+            'https://www.lodplanner.com/wp-content/uploads/AGH-University-of-Science-and-Technology-Logo.png',
+    },
+
+    {
+        id: '5',
+        name: 'Event 5',
+        description: 'Event 5 description',
+        imageUrl: 'https://picsum.photos/1632',
+        startTime: new Date('2023-07-04T16:00:00+02:00'),
+        locationCoordinate: {
+            latitude: 50.0680619382141,
+            longitude: 19.912568786594342,
+        },
+        locationName: 'Wydział Matematyki Stosowanej',
+        locationLogoUrl:
+            'https://www.lodplanner.com/wp-content/uploads/AGH-University-of-Science-and-Technology-Logo.png',
+    },
 ] as const;
 
 function ListSpacer() {
-    return <View style={styles.listSpacer} />;
+    return <VerticalSpacer height={Constants.SPACING_UNIT_24} />;
 }
+
 export default function EventsScreen() {
     // TODO: Fetch events data from server
     const eventsData: ReadonlyArray<EventData> = TEMP_EVENTS_DATA;
@@ -64,7 +99,7 @@ export default function EventsScreen() {
         <SafeView style={styles.container}>
             <FlatList
                 data={eventsData}
-                renderItem={event => <EventTile event={event.item} />}
+                renderItem={event => <ExpandableEventTile event={event.item} />}
                 ItemSeparatorComponent={ListSpacer}
                 showsVerticalScrollIndicator={false}
                 refreshControl={
@@ -81,8 +116,5 @@ export default function EventsScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    listSpacer: {
-        height: 24,
     },
 });

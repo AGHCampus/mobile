@@ -1,5 +1,5 @@
 import React, { useState, createContext } from 'react';
-import { StyleSheet } from 'react-native';
+import { LogBox, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PortalProvider } from '@gorhom/portal';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -15,6 +15,9 @@ import OffersScreen from './src/screens/OffersScreen';
 import InfoScreen from './src/screens/InfoScreen';
 import TabNavigationRow from './src/components/TabNavigatorRow';
 import { TabsParamList } from './src/screens/navigationTypes';
+
+// TODO: Investigate the warnings or move this somewhere else
+LogBox.ignoreLogs(['Overriding previous layout']);
 
 const navigationOptions = {
     headerShown: true,

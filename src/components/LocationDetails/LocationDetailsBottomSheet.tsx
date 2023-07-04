@@ -1,6 +1,6 @@
 import React, {
-    // useState,
-    // useCallback,
+    useState,
+    useCallback,
     useMemo,
     useContext,
     RefObject,
@@ -37,7 +37,7 @@ const LocationDetails = ({
     bottomSheetModalRef,
     selectedLocationID,
 }: Props) => {
-    // const [bottomSheetFullScreen, setBottomSheetFullScreen] = useState(false);
+    const [bottomSheetFullScreen, setBottomSheetFullScreen] = useState(false);
 
     const dimensions = useContext(AppDimensionsContext);
     const insets = useSafeAreaInsets();
@@ -54,9 +54,9 @@ const LocationDetails = ({
         bottomSheetModalRef.current!.snapToIndex(1);
     };
 
-    // const handleSheetChanges = useCallback((index: number) => {
-    //     setBottomSheetFullScreen(index === 2);
-    // }, []);
+    const handleSheetChanges = useCallback((index: number) => {
+        setBottomSheetFullScreen(index === 2);
+    }, []);
 
     const headerAnimatedStyles = useAnimatedStyle(() => {
         const opacity = interpolate(
@@ -79,13 +79,14 @@ const LocationDetails = ({
                 index={1}
                 snapPoints={snapPoints}
                 animatedPosition={animatedPosition}
-                // onChange={handleSheetChanges}
+                onChange={handleSheetChanges}
                 enablePanDownToClose={false}
                 // enableContentPanningGesture={!bottomSheetFullScreen}
                 handleStyle={styles.handle}
                 handleIndicatorStyle={styles.handleIndicator}
                 animationConfigs={springConfig}>
                 <LocationDetailsTabView
+                    isBottomSheetFullscreen={bottomSheetFullScreen}
                     selectedLocationID={selectedLocationID}
                 />
             </BottomSheetModal>
