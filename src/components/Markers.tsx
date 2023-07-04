@@ -56,6 +56,8 @@ interface Props {
     selectMarker: Dispatch<SetStateAction<string>>;
 }
 
+const SPRING_CONFIG = { mass: 0.2, stiffness: 200, damping: 5 };
+
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 function MapMarker({
@@ -69,19 +71,11 @@ function MapMarker({
     const markerSize = useSharedValue(24);
 
     const focusMarker = useCallback(() => {
-        markerSize.value = withSpring(36, {
-            mass: 0.2,
-            stiffness: 200,
-            damping: 5,
-        });
+        markerSize.value = withSpring(36, SPRING_CONFIG);
     }, [markerSize]);
 
     const blurMarker = useCallback(() => {
-        markerSize.value = withSpring(24, {
-            mass: 0.2,
-            stiffness: 200,
-            damping: 5,
-        });
+        markerSize.value = withSpring(24, SPRING_CONFIG);
     }, [markerSize]);
 
     useEffect(() => {
