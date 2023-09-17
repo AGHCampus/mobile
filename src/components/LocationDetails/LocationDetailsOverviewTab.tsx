@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import AccentButton, { ButtonVariant } from '../AccentButton';
+import { StyleSheet, View, Text, Share } from 'react-native';
+import AccentButton from '../AccentButton';
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
+import { openURL } from '../../utils/linking';
 
 interface Props {
     selectedLocationID: string;
@@ -13,23 +14,23 @@ const LocationDetailsOverviewTab = ({ selectedLocationID }: Props) => {
         <View style={styles.container}>
             <Text>Overview Tab (selectedLocationID={selectedLocationID})</Text>
             <View style={styles.buttonsContainer}>
-                <AccentButton
-                    variant={ButtonVariant.PRIMARY}
+                <AccentButton.Primary
                     icon={'Website'}
                     color={Colors.accentGreen}
                     label={'Website'}
+                    onPress={() => openURL('google.com')}
                 />
-                <AccentButton
-                    variant={ButtonVariant.SECONDARY}
+                <AccentButton.Secondary
                     icon={'Phone'}
                     color={Colors.accentGreen}
                     label={'Call'}
+                    onPress={() => {}}
                 />
-                <AccentButton
-                    variant={ButtonVariant.SECONDARY}
+                <AccentButton.Secondary
                     icon={'Share'}
                     color={Colors.accentGreen}
                     label={'Share'}
+                    onPress={() => Share.share({ message: 'test' })}
                 />
             </View>
         </View>

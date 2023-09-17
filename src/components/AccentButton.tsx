@@ -10,7 +10,7 @@ import Icon, { IconType } from './Icon';
 import { Colors } from '../lib/Colors';
 import { Constants } from '../lib/Constants';
 
-export enum ButtonVariant {
+enum ButtonVariant {
     PRIMARY,
     SECONDARY,
 }
@@ -34,20 +34,30 @@ function getButtonStyle(buttonVariant: ButtonVariant, accentColor: string) {
     }
 }
 
-interface Props {
-    variant: ButtonVariant;
+interface AccentButtonProps {
     icon: IconType;
     color: string;
+    onPress: () => void;
     label?: string;
     style?: StyleProp<ViewStyle>;
 }
 
-const AccentButton = ({ variant, icon, color, label, style }: Props) => {
+type Props = AccentButtonProps & { variant: ButtonVariant };
+
+const AccentButton = ({
+    variant,
+    icon,
+    color,
+    onPress,
+    label,
+    style,
+}: Props) => {
     const { textColor, backgroundColor, borderColor, borderWidth } =
         getButtonStyle(variant, color);
 
     return (
         <TouchableOpacity
+            onPress={onPress}
             style={[
                 styles.container,
                 {
@@ -71,7 +81,14 @@ const AccentButton = ({ variant, icon, color, label, style }: Props) => {
     );
 };
 
-export default AccentButton;
+export default {
+    Primary: (props: AccentButtonProps) => (
+        <AccentButton variant={ButtonVariant.PRIMARY} {...props} />
+    ),
+    Secondary: (props: AccentButtonProps) => (
+        <AccentButton variant={ButtonVariant.SECONDARY} {...props} />
+    ),
+};
 
 const styles = StyleSheet.create({
     container: {
