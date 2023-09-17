@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { TabNavigation } from '../../screens/navigationTypes';
 import { LatLng } from 'react-native-maps';
 import TextButton from '../TextButton';
+import i18n from '../../utils/i18n';
 
 interface Props {
     name: string;
@@ -31,7 +32,7 @@ export default function EventButtonRow({ logoUrl, name, coordinate }: Props) {
                     <Text> - </Text>
                     <TextButton
                         color={Colors.accentGreen}
-                        label={'show on map'}
+                        label={i18n.t('events.show_on_map')}
                         onPress={() =>
                             navigation.navigate('Map', {
                                 eventLocation: coordinate,

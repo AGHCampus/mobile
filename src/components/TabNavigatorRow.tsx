@@ -4,11 +4,13 @@ import Icon, { IconType } from './Icon';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import BottomSpacer from './BottomSpacer';
 import { Colors } from '../lib/Colors';
+import i18n from '../utils/i18n';
 
 export default class TabNavigationRow extends Component<BottomTabBarProps> {
     static defaultProps = {
         insets: {},
     };
+
     getAssetForLabel(label: string): IconType {
         switch (label) {
             case 'Offers':
@@ -33,6 +35,9 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
                     {state.routes.map((route, index) => {
                         const { options } = descriptors[route.key];
                         const label = options.title ?? route.name;
+                        const translatedLabel = i18n.t(
+                            `tabs.${label.toLowerCase()}`,
+                        );
                         const isFocused = state.index === index;
                         const tabColor = isFocused
                             ? Colors.accentGreen
@@ -93,7 +98,7 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
                                     style={{
                                         color: tabColor,
                                     }}>
-                                    {label}
+                                    {translatedLabel}
                                 </Text>
                             </TouchableOpacity>
                         );
