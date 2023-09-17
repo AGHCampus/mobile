@@ -17,7 +17,7 @@ import TabNavigationRow from './src/components/TabNavigatorRow';
 import { TabsParamList } from './src/screens/navigationTypes';
 
 // TODO: Investigate the warnings or move this somewhere else
-LogBox.ignoreLogs(['Overriding previous layout']);
+LogBox.ignoreLogs(['Overriding previous layout', 'Encountered']);
 
 const navigationOptions = {
     headerShown: true,

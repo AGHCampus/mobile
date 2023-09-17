@@ -1,11 +1,17 @@
-import React, { useCallback, useState } from 'react';
-import { StyleSheet, View, FlatList, RefreshControl } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, FlatList, RefreshControl } from 'react-native';
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
 import ColumnEventTile from '../Events/ColumnEventTile';
 import { TEMP_EVENTS_DATA } from '../../screens/EventsScreen';
 import { VerticalSpacer } from '../Spacers';
 import { EventData } from '../Events/ExpandableEventTile';
+import Animated, {
+    interpolate,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming,
+} from 'react-native-reanimated';
 
 interface Props {
     selectedLocationID: string;
@@ -26,29 +32,45 @@ const LocationDetailsEventsTab = ({
 }: Props) => {
     const eventsData: ReadonlyArray<EventData> = TEMP_EVENTS_DATA;
     const [refreshing, setRefreshing] = useState(false);
+    const animationState = useSharedValue(0);
+
+    const listPadding = useAnimatedStyle(() => {
+        return {
+            paddingBottom: interpolate(animationState.value, [0, 1], [400, 0]),
+        };
+    }, [animationState.value]);
+
+    const animateFullscreen = () => {
+        animationState.value = withTiming(1, { duration: 200 });
+    };
+
+    useEffect(() => {
+        if (isBottomSheetFullscreen) {
+            animateFullscreen();
+        } else {
+            animationState.value = 0;
+        }
+    });
+
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         setTimeout(() => setRefreshing(false), 1000);
     }, []);
 
     return (
-        <View
-            style={[
-                styles.container,
-                isBottomSheetFullscreen
-                    ? styles.fullscreenList
-                    : styles.smallList,
-            ]}>
+        <Animated.View
+            style={[styles.container, styles.fullscreenList, listPadding]}>
             <FlatList
                 data={
                     parseInt(selectedLocationID) % 2 === 0
                         ? eventsData.slice(0, 2)
-                        : eventsData.slice(2, 4)
+                        : eventsData.slice(0, 4)
                 }
                 scrollEnabled
                 renderItem={event => <ColumnEventTile event={event.item} />}
                 ItemSeparatorComponent={ListSpacer}
                 ListFooterComponent={ListFooter}
+                nestedScrollEnabled
                 showsVerticalScrollIndicator={false}
                 refreshControl={
                     <RefreshControl
@@ -57,7 +79,7 @@ const LocationDetailsEventsTab = ({
                     />
                 }
             />
-        </View>
+        </Animated.View>
     );
 };
 
@@ -72,6 +94,6 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     smallList: {
-        height: 300,
+        paddingBottom: 400,
     },
 });
