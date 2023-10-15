@@ -153,13 +153,23 @@ export default function MapScreen({ route, navigation }: Props) {
                         />
                     ))}
             </MapView>
-
-            <View style={[styles.searchBar, Shadows.depth2]}>
-                <TextInput
-                    ref={inputRef}
-                    placeholder="Search..."
-                    style={styles.searchBarInput}
-                />
+            <View style={styles.topBar}>
+                <TouchableOpacity
+                    onPress={() => {}}
+                    style={[styles.menuIcon, Shadows.depth2]}>
+                    <Icon
+                        asset="MenuDots"
+                        color={Colors.black}
+                        // style={styles.menuIcon}
+                    />
+                </TouchableOpacity>
+                <View style={[styles.searchBar, Shadows.depth2]}>
+                    <TextInput
+                        ref={inputRef}
+                        placeholder="Search..."
+                        style={styles.searchBarInput}
+                    />
+                </View>
             </View>
 
             <LocationDetails
@@ -195,15 +205,32 @@ export default function MapScreen({ route, navigation }: Props) {
 const styles = StyleSheet.create({
     container: { flex: 1 },
     map: { flex: 1 },
-    searchBar: {
+    topBar: {
         position: 'absolute',
-        width: Dimensions.get('window').width - 2 * Constants.MARGIN_UNIT_24,
+        top: 48,
+        flexDirection: 'row',
+    },
+    menuIcon: {
+        width: Constants.MARGIN_UNIT_24 + Constants.SPACING_UNIT_16,
+        marginLeft: Constants.MARGIN_UNIT_24,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: Constants.MARGIN_UNIT_24 + Constants.SPACING_UNIT_16,
+        borderRadius: Constants.BORDER_UNIT_8,
+        backgroundColor: 'white',
+    },
+    searchBar: {
+        width:
+            Dimensions.get('window').width -
+            2 * Constants.TAP_UNIT_48 -
+            Constants.SPACING_UNIT_8,
         backgroundColor: 'white',
         height: Constants.MARGIN_UNIT_24 + Constants.SPACING_UNIT_16,
         top: 48,
         borderRadius: Constants.BORDER_RADIUS_MEDIUM,
         paddingHorizontal: Constants.BORDER_UNIT_8,
-        marginHorizontal: Constants.MARGIN_UNIT_24,
+        marginRight: Constants.MARGIN_UNIT_24,
+        marginLeft: Constants.SPACING_UNIT_16,
         justifyContent: 'center',
     },
     searchBarInput: {
