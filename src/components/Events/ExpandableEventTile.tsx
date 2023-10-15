@@ -44,6 +44,7 @@ export interface EventData {
 
 interface Props {
     event: EventData;
+    collapsed?: boolean;
 }
 
 enum AnimationState {
@@ -55,11 +56,11 @@ enum AnimationState {
 // @ts-ignore TS reports an error, but it works fine 🤷‍♂️
 const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
 
-export default function EventTile({ event }: Props) {
-    const [isCollapsed, setIsCollapsed] = useState(true);
+export default function EventTile({ event, collapsed = true }: Props) {
+    const [isCollapsed, setIsCollapsed] = useState(collapsed);
     const [animationStatus, setAnimationStatus] = useState(AnimationState.IDLE);
     const [expandHeight, setExpandHeight] = useState(0);
-    const animationState = useSharedValue(0);
+    const animationState = useSharedValue(collapsed ? 0 : 1);
     const tileWidth =
         Dimensions.get('window').width - 2 * Constants.SPACING_UNIT_24;
 
@@ -173,7 +174,13 @@ export default function EventTile({ event }: Props) {
                                 <VerticalSpacer
                                     height={Constants.SPACING_UNIT_8}
                                 />
-                                <Text style={styles.eventName}>{name}</Text>
+                                <Text
+                                    style={[
+                                        styles.eventName,
+                                        styles.eventNameCollapsed,
+                                    ]}>
+                                    {name}
+                                </Text>
                             </Animated.View>
                         )}
                     </View>
@@ -233,6 +240,10 @@ const styles = StyleSheet.create({
         fontWeight: 'normal',
         fontSize: 16,
         lineHeight: 20,
+    },
+
+    eventNameCollapsed: {
+        maxWidth: '80%',
     },
 
     eventDescription: {
