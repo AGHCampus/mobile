@@ -84,14 +84,23 @@ export default function App() {
                                     <Tab.Screen
                                         name="Events"
                                         component={EventsScreen}
+                                        options={{
+                                            headerTitle: i18n.t('tabs.events'),
+                                        }}
                                     />
                                     <Tab.Screen
                                         name="Offers"
                                         component={OffersScreen}
+                                        options={{
+                                            headerTitle: i18n.t('tabs.offers'),
+                                        }}
                                     />
                                     <Tab.Screen
                                         name="Info"
                                         component={InfoScreen}
+                                        options={{
+                                            headerTitle: i18n.t('tabs.info'),
+                                        }}
                                     />
                                 </Tab.Navigator>
                             </NavigationContainer>

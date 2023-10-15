@@ -3,7 +3,7 @@ export default {
         map: 'Mapa',
         events: 'Wydarzenia',
         offers: 'Oferty',
-        info: 'Info',
+        info: 'Informacje',
     },
     events: {
         show_on_map: 'pokaż na mapie',
