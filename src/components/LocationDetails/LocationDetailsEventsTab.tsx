@@ -62,7 +62,7 @@ const LocationDetailsEventsTab = ({
             style={[styles.container, styles.fullscreenList, listPadding]}>
             <FlatList
                 data={
-                    parseInt(selectedLocationID) % 2 === 0
+                    parseInt(selectedLocationID, 10) % 2 === 0
                         ? eventsData.slice(0, 2)
                         : eventsData.slice(0, 4)
                 }
