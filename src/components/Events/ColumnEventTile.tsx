@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     eventContainer: {
         borderRadius: Constants.SPACING_UNIT_16,
         backgroundColor: Colors.bgWhite,
-        marginHorizontal: 24,
+        marginHorizontal: Constants.SPACING_UNIT_16,
         flex: 1,
     },
 

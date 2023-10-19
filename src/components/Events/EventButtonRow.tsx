@@ -12,6 +12,7 @@ import { Colors } from '../../lib/Colors';
 import { HorizontalSpacer } from '../Spacers';
 import { Constants } from '../../lib/Constants';
 import Animated from 'react-native-reanimated';
+import i18n from '../../utils/i18n';
 
 interface Props {
     shareContent: ShareContent;
@@ -28,7 +29,7 @@ export default function EventButtonRow({ url, shareContent, style }: Props) {
                         onPress={() => openURL(url)}
                         icon={'Info'}
                         color={Colors.accentGreen}
-                        label={'More info'}
+                        label={i18n.t('events.more_info')}
                         style={styles.infoButton}
                     />
                     <HorizontalSpacer width={Constants.SPACING_UNIT_16} />
@@ -38,7 +39,7 @@ export default function EventButtonRow({ url, shareContent, style }: Props) {
                 onPress={() => Share.share(shareContent)}
                 icon={'Share'}
                 color={Colors.accentGreen}
-                label={'Share'}
+                label={i18n.t('events.share')}
                 style={url ? styles.shareButton : styles.singleButton}
             />
         </Animated.View>

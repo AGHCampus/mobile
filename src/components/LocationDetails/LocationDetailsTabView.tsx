@@ -13,6 +13,7 @@ import LocationDetailsEventsTab from './LocationDetailsEventsTab';
 import LocationDetailsOffersTab from './LocationDetailsOffersTab';
 import { Colors } from '../../lib/Colors';
 import { Shadows } from '../../lib/Shadows';
+import i18n from '../../utils/i18n';
 
 interface Props {
     selectedLocationID: string;
@@ -31,15 +32,15 @@ const LocationDetailsTabView = ({
     const [routes] = useState<Route[]>([
         {
             key: 'overview',
-            title: 'Overview',
+            title: i18n.t('location.overview'),
         },
         {
             key: 'events',
-            title: 'Events',
+            title: i18n.t('location.events'),
         },
         {
             key: 'offers',
-            title: 'Offers',
+            title: i18n.t('location.offers'),
         },
     ]);
 

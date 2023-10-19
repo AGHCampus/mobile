@@ -1,5 +1,5 @@
 import React, { useState, createContext } from 'react';
-import { LogBox, StyleSheet } from 'react-native';
+import { LogBox, StyleSheet, NativeModules, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PortalProvider } from '@gorhom/portal';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -15,6 +15,7 @@ import OffersScreen from './src/screens/OffersScreen';
 import InfoScreen from './src/screens/InfoScreen';
 import TabNavigationRow from './src/components/TabNavigatorRow';
 import { TabsParamList } from './src/screens/navigationTypes';
+import i18n from './src/utils/i18n';
 
 // TODO: Investigate the warnings or move this somewhere else
 LogBox.ignoreLogs(['Overriding previous layout', 'Encountered']);
@@ -35,12 +36,18 @@ const initialDimensions = {
     width: 0,
 };
 
+const locale =
+    Platform.OS === 'ios'
+        ? NativeModules.SettingsManager.settings.AppleLocale ||
+          NativeModules.SettingsManager.settings.AppleLanguages[0]
+        : NativeModules.I18nManager.localeIdentifier;
+
 export const AppDimensionsContext =
     createContext<Dimensions>(initialDimensions);
 
 export default function App() {
     const [dimensions, setDimensions] = useState<Dimensions>(initialDimensions);
-
+    i18n.locale = locale;
     const renderTabBar = ({
         state,
         descriptors,
@@ -77,14 +84,23 @@ export default function App() {
                                     <Tab.Screen
                                         name="Events"
                                         component={EventsScreen}
+                                        options={{
+                                            headerTitle: i18n.t('tabs.events'),
+                                        }}
                                     />
                                     <Tab.Screen
                                         name="Offers"
                                         component={OffersScreen}
+                                        options={{
+                                            headerTitle: i18n.t('tabs.offers'),
+                                        }}
                                     />
                                     <Tab.Screen
                                         name="Info"
                                         component={InfoScreen}
+                                        options={{
+                                            headerTitle: i18n.t('tabs.info'),
+                                        }}
                                     />
                                 </Tab.Navigator>
                             </NavigationContainer>
