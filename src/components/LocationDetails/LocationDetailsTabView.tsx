@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, Dispatch, SetStateAction } from 'react';
 import { StyleSheet } from 'react-native';
 import {
     TabView,
@@ -7,7 +7,6 @@ import {
     SceneRendererProps,
     NavigationState,
 } from 'react-native-tab-view';
-
 import LocationDetailsOverviewTab from './LocationDetailsOverviewTab';
 import LocationDetailsEventsTab from './LocationDetailsEventsTab';
 import LocationDetailsOffersTab from './LocationDetailsOffersTab';
@@ -17,7 +16,9 @@ import i18n from '../../utils/i18n';
 
 interface Props {
     selectedLocationID: string;
-    isBottomSheetFullscreen: boolean;
+    expandBottomSheet: () => void;
+    selectedTabViewIndex: number;
+    setSelectedTabViewIndex: Dispatch<SetStateAction<number>>;
 }
 
 type TabBarProps = SceneRendererProps & {
@@ -26,9 +27,10 @@ type TabBarProps = SceneRendererProps & {
 
 const LocationDetailsTabView = ({
     selectedLocationID,
-    isBottomSheetFullscreen,
+    expandBottomSheet,
+    selectedTabViewIndex,
+    setSelectedTabViewIndex,
 }: Props) => {
-    const [index, setIndex] = useState(0);
     const [routes] = useState<Route[]>([
         {
             key: 'overview',
@@ -44,8 +46,6 @@ const LocationDetailsTabView = ({
         },
     ]);
 
-    console.log('LocationDetailsTabView rerender');
-
     const renderScene = useCallback(
         ({ route }: { route: Route }) => {
             switch (route.key) {
@@ -53,13 +53,13 @@ const LocationDetailsTabView = ({
                     return (
                         <LocationDetailsOverviewTab
                             selectedLocationID={selectedLocationID}
+                            expandBottomSheet={expandBottomSheet}
                         />
                     );
                 case 'events':
                     return (
                         <LocationDetailsEventsTab
                             selectedLocationID={selectedLocationID}
-                            isBottomSheetFullscreen={isBottomSheetFullscreen}
                         />
                     );
                 case 'offers':
@@ -72,7 +72,7 @@ const LocationDetailsTabView = ({
                     return null;
             }
         },
-        [selectedLocationID, isBottomSheetFullscreen],
+        [selectedLocationID, expandBottomSheet],
     );
 
     const renderTabBar = (props: TabBarProps) => (
@@ -85,15 +85,20 @@ const LocationDetailsTabView = ({
             indicatorStyle={styles.indicator}
             pressColor="rgba(0, 0, 0, 0.1)" // ripple effect color (Android >= 5.0)
             pressOpacity={0.3} // press opacity (iOS and Android < 5.0)
+            onTabPress={({ route }) => {
+                if (route.key !== 'overview') {
+                    expandBottomSheet();
+                }
+            }}
         />
     );
 
     return (
         <TabView
-            navigationState={{ index, routes }}
+            navigationState={{ index: selectedTabViewIndex, routes }}
             renderScene={renderScene}
             renderTabBar={renderTabBar}
-            onIndexChange={setIndex}
+            onIndexChange={setSelectedTabViewIndex}
             swipeEnabled={false}
         />
     );

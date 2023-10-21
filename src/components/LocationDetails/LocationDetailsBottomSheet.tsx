@@ -1,10 +1,4 @@
-import React, {
-    useState,
-    useCallback,
-    useMemo,
-    useContext,
-    RefObject,
-} from 'react';
+import React, { useState, useMemo, useContext, RefObject } from 'react';
 import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
@@ -15,10 +9,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Portal } from '@gorhom/portal';
-import { AppDimensionsContext } from '../../../App';
 import BottomSheetFullScreenHeader from './LocationDetailsFullScreenHeader';
 import LocationDetailsTabView from './LocationDetailsTabView';
 import { Colors } from '../../lib/Colors';
+import { AppDimensionsContext } from '../../../App';
 
 interface Props {
     bottomSheetModalRef: RefObject<BottomSheetModal>;
@@ -37,7 +31,7 @@ const LocationDetails = ({
     bottomSheetModalRef,
     selectedLocationID,
 }: Props) => {
-    const [bottomSheetFullScreen, setBottomSheetFullScreen] = useState(false);
+    const [selectedTabViewIndex, setSelectedTabViewIndex] = useState(0);
 
     const dimensions = useContext(AppDimensionsContext);
     const insets = useSafeAreaInsets();
@@ -50,13 +44,14 @@ const LocationDetails = ({
         [bottomSheetMaxHeight],
     );
 
-    const handleSheetCollapsePress = () => {
-        bottomSheetModalRef.current!.snapToIndex(1);
+    const expandBottomSheet = () => {
+        bottomSheetModalRef.current!.snapToIndex(2);
     };
 
-    const handleSheetChanges = useCallback((index: number) => {
-        setBottomSheetFullScreen(index === 2);
-    }, []);
+    const handleSheetCollapsePress = () => {
+        setSelectedTabViewIndex(0);
+        bottomSheetModalRef.current!.snapToIndex(1);
+    };
 
     const headerAnimatedStyles = useAnimatedStyle(() => {
         const opacity = interpolate(
@@ -79,18 +74,18 @@ const LocationDetails = ({
                 index={1}
                 snapPoints={snapPoints}
                 animatedPosition={animatedPosition}
-                onChange={handleSheetChanges}
                 enablePanDownToClose={false}
                 enableContentPanningGesture={false}
                 handleStyle={styles.handle}
                 handleIndicatorStyle={styles.handleIndicator}
                 animationConfigs={springConfig}>
                 <LocationDetailsTabView
-                    isBottomSheetFullscreen={bottomSheetFullScreen}
+                    expandBottomSheet={expandBottomSheet}
                     selectedLocationID={selectedLocationID}
+                    selectedTabViewIndex={selectedTabViewIndex}
+                    setSelectedTabViewIndex={setSelectedTabViewIndex}
                 />
             </BottomSheetModal>
-
             <Portal>
                 <Animated.View
                     style={[

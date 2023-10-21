@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Colors } from '../../lib/Colors';
-import { Constants } from '../../lib/Constants';
 import FastImage from 'react-native-fast-image';
-import { useNavigation } from '@react-navigation/native';
-import { TabNavigation } from '../../screens/navigationTypes';
 import { LatLng } from 'react-native-maps';
+import { useNavigation } from '@react-navigation/native';
 import TextButton from '../TextButton';
+import { TabNavigation } from '../../screens/navigationTypes';
+import { Constants } from '../../lib/Constants';
+import { Colors } from '../../lib/Colors';
 import i18n from '../../utils/i18n';
 
 interface Props {
@@ -26,21 +26,24 @@ export default function EventButtonRow({ logoUrl, name, coordinate }: Props) {
                     style={styles.locationLogo}
                 />
             )}
-            <Text>{name}</Text>
-            {coordinate && (
-                <>
-                    <Text> - </Text>
-                    <TextButton
-                        color={Colors.accentGreen}
-                        label={i18n.t('events.show_on_map')}
-                        onPress={() =>
-                            navigation.navigate('Map', {
-                                eventLocation: coordinate,
-                            })
-                        }
-                    />
-                </>
-            )}
+            <View style={styles.row}>
+                <Text style={styles.text}>{name}</Text>
+                {coordinate && (
+                    <>
+                        <Text style={styles.text}>-</Text>
+                        <TextButton
+                            color={Colors.textLink}
+                            fontSize={13}
+                            label={i18n.t('events.show_on_map')}
+                            onPress={() =>
+                                navigation.navigate('Map', {
+                                    eventLocation: coordinate,
+                                })
+                            }
+                        />
+                    </>
+                )}
+            </View>
         </View>
     );
 }
@@ -52,11 +55,22 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
+        marginBottom: 5,
     },
+
+    row: {
+        flexDirection: 'row',
+        gap: Constants.SPACING_UNIT_8,
+    },
+
+    text: {
+        fontSize: 13,
+    },
+
     locationLogo: {
         width: 20,
         height: 20,
-        borderRadius: 12,
+        borderRadius: 10,
         marginHorizontal: 4,
     },
 });

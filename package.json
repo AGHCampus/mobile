@@ -5,6 +5,7 @@
     "scripts": {
         "start": "react-native start",
         "ios": "react-native run-ios --simulator 'iPhone 14'",
+        "ios_device": "yarn react-native run-ios --device 'Dariusz’s iPhone'",
         "android": "react-native run-android",
         "pod": "cd ios && pod install",
         "lint": "eslint .",
@@ -24,6 +25,7 @@
         "@gorhom/bottom-sheet": "^4",
         "@gorhom/portal": "^1.0.14",
         "@react-native-community/geolocation": "^3.0.6",
+        "@react-native-masked-view/masked-view": "^0.3.0",
         "@react-navigation/bottom-tabs": "^6.5.7",
         "@react-navigation/native": "^6.1.6",
         "i18n-js": "^4.3.2",

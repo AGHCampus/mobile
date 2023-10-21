@@ -32,7 +32,7 @@ export default function EventButtonRow({ url, shareContent, style }: Props) {
                         label={i18n.t('events.more_info')}
                         style={styles.infoButton}
                     />
-                    <HorizontalSpacer width={Constants.SPACING_UNIT_16} />
+                    <HorizontalSpacer width={Constants.SPACING_UNIT_10} />
                 </>
             )}
             <AccentButton.Secondary
@@ -48,12 +48,12 @@ export default function EventButtonRow({ url, shareContent, style }: Props) {
 
 const styles = StyleSheet.create({
     infoButton: {
-        flexGrow: 5,
+        flexGrow: 3,
         height: 32,
     },
     shareButton: {
         height: 32,
-        flexGrow: 4,
+        flexGrow: 2,
     },
     singleButton: {
         height: 32,

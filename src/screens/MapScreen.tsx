@@ -214,7 +214,9 @@ export default function MapScreen({ route, navigation }: Props) {
             />
 
             <View style={styles.opacityOverlay}>
-                <TouchableOpacity onPress={animateToUserRegion}>
+                <TouchableOpacity
+                    activeOpacity={Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY}
+                    onPress={animateToUserRegion}>
                     <View style={[styles.locationButton, Shadows.depth2]}>
                         <Icon
                             asset={
@@ -245,7 +247,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: Constants.MARGIN_UNIT_24 + Constants.SPACING_UNIT_16,
         top: 48,
-        borderRadius: Constants.BORDER_UNIT_8,
+        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
         paddingHorizontal: Constants.BORDER_UNIT_8,
         marginHorizontal: Constants.MARGIN_UNIT_24,
         justifyContent: 'center',
@@ -264,7 +266,7 @@ const styles = StyleSheet.create({
         height: Constants.TAP_UNIT_48,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 16,
+        borderRadius: Constants.BORDER_RADIUS_LARGE,
         borderColor: Colors.accentGreen,
         backgroundColor: Colors.bgWhite,
     },

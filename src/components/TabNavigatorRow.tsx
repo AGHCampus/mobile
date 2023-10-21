@@ -1,9 +1,10 @@
 import React, { Component, ReactNode } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Icon, { IconType } from './Icon';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import Icon, { IconType } from './Icon';
 import BottomSpacer from './BottomSpacer';
 import { Colors } from '../lib/Colors';
+import { Constants } from '../lib/Constants';
 import i18n from '../utils/i18n';
 
 export default class TabNavigationRow extends Component<BottomTabBarProps> {
@@ -69,6 +70,9 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
 
                         return (
                             <TouchableOpacity
+                                activeOpacity={
+                                    Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY
+                                }
                                 accessibilityRole="button"
                                 accessibilityState={
                                     isFocused ? { selected: true } : {}

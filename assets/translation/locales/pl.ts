@@ -7,6 +7,7 @@ export default {
     },
     events: {
         show_on_map: 'pokaż na mapie',
+        show_more: 'Czytaj dalej',
         more_info: 'Więcej informacji',
         share: 'Udostępnij',
     },

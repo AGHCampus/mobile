@@ -1,5 +1,12 @@
 import React, { useState, createContext } from 'react';
-import { LogBox, StyleSheet, NativeModules, Platform } from 'react-native';
+import {
+    LogBox,
+    StyleSheet,
+    NativeModules,
+    Platform,
+    View,
+    Text,
+} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PortalProvider } from '@gorhom/portal';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -16,6 +23,9 @@ import InfoScreen from './src/screens/InfoScreen';
 import TabNavigationRow from './src/components/TabNavigatorRow';
 import { TabsParamList } from './src/screens/navigationTypes';
 import i18n from './src/utils/i18n';
+import Icon from './src/components/Icon';
+import { Colors } from './src/lib/Colors';
+import { Constants } from './src/lib/Constants';
 
 // TODO: Investigate the warnings or move this somewhere else
 LogBox.ignoreLogs(['Overriding previous layout', 'Encountered']);
@@ -41,6 +51,33 @@ const locale =
         ? NativeModules.SettingsManager.settings.AppleLocale ||
           NativeModules.SettingsManager.settings.AppleLanguages[0]
         : NativeModules.I18nManager.localeIdentifier;
+
+const EventsHeader = () => {
+    return (
+        <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>{i18n.t('tabs.events')}</Text>
+            <Icon asset={'Calendar'} color={Colors.accentGreen} />
+        </View>
+    );
+};
+
+const OffersHeader = () => {
+    return (
+        <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>{i18n.t('tabs.offers')}</Text>
+            <Icon asset={'Offer'} color={Colors.accentGreen} />
+        </View>
+    );
+};
+
+const InfoHeader = () => {
+    return (
+        <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>{i18n.t('tabs.info')}</Text>
+            <Icon asset={'Info'} color={Colors.accentGreen} />
+        </View>
+    );
+};
 
 export const AppDimensionsContext =
     createContext<Dimensions>(initialDimensions);
@@ -85,21 +122,21 @@ export default function App() {
                                         name="Events"
                                         component={EventsScreen}
                                         options={{
-                                            headerTitle: i18n.t('tabs.events'),
+                                            headerTitle: EventsHeader,
                                         }}
                                     />
                                     <Tab.Screen
                                         name="Offers"
                                         component={OffersScreen}
                                         options={{
-                                            headerTitle: i18n.t('tabs.offers'),
+                                            headerTitle: OffersHeader,
                                         }}
                                     />
                                     <Tab.Screen
                                         name="Info"
                                         component={InfoScreen}
                                         options={{
-                                            headerTitle: i18n.t('tabs.info'),
+                                            headerTitle: InfoHeader,
                                         }}
                                     />
                                 </Tab.Navigator>
@@ -115,5 +152,15 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    headerContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: Constants.SPACING_UNIT_10,
+    },
+    headerText: {
+        fontWeight: '500',
+        fontSize: 22,
     },
 });
