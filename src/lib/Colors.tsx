@@ -1,6 +1,8 @@
 export const Colors = {
     bgWhite: '#ffffff',
-    bgLightGray: '##fcfcfc',
+    bgLightGray: '#fcfcfc',
+    bgGray: '#f6f6f6',
+    bgDivider: '#dfdfdf',
     accentGreen: '#1C7951',
     black: '#000000',
     gray: '#C4C4C4',

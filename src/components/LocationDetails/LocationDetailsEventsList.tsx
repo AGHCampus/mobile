@@ -42,7 +42,6 @@ const LocationDetailsEventsList = ({
                 renderItem={event => (
                     <ColumnEventTile
                         event={event.item}
-                        showLocation={false}
                         showEventButtonRow={showEventButtonRow}
                     />
                 )}

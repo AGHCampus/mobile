@@ -5,7 +5,12 @@ import SafeView from './SafeView';
 import { VerticalSpacer } from '../components/Spacers';
 import ColumnEventTile from '../components/Events/ColumnEventTile';
 import { Constants } from '../lib/Constants';
-import { EventData, TEMP_OFFER_DATA } from '../lib/MockedData';
+import {
+    EventData,
+    LocationsMap,
+    TEMP_OFFER_DATA,
+    TEMP_LOCATIONS_DATA,
+} from '../lib/MockedData';
 
 function ListHeader() {
     return <VerticalSpacer height={Constants.SPACING_UNIT_16} />;
@@ -22,6 +27,8 @@ function ListFooter() {
 export default function OffersScreen() {
     // TODO: Fetch offer data from server
     const offerData: ReadonlyArray<EventData> = TEMP_OFFER_DATA;
+    const locationsData: LocationsMap = TEMP_LOCATIONS_DATA;
+
     const [refreshing, setRefreshing] = React.useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -34,8 +41,8 @@ export default function OffersScreen() {
                 data={offerData}
                 renderItem={event => (
                     <ColumnEventTile
+                        location={locationsData[event.item.locationId]}
                         event={event.item}
-                        showLocation={true}
                         showEventButtonRow={false}
                     />
                 )}

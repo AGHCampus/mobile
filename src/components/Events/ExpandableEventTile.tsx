@@ -22,10 +22,11 @@ import {
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
 import { Shadows } from '../../lib/Shadows';
-import { EventData } from '../../lib/MockedData';
+import { LocationData, EventData } from '../../lib/MockedData';
 import { AppDimensionsContext } from '../../../App';
 
 interface Props {
+    location: LocationData;
     event: EventData;
     collapsed?: boolean;
 }
@@ -39,7 +40,11 @@ enum AnimationState {
 // @ts-ignore TS reports an error, but it works fine 🤷‍♂️
 const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
 
-export default function EventTile({ event, collapsed = true }: Props) {
+export default function EventTile({
+    location,
+    event,
+    collapsed = true,
+}: Props) {
     const [isCollapsed, setIsCollapsed] = useState(collapsed);
     const [animationStatus, setAnimationStatus] = useState(AnimationState.IDLE);
     const [expandHeight, setExpandHeight] = useState(0);
@@ -99,24 +104,15 @@ export default function EventTile({ event, collapsed = true }: Props) {
         };
     }, [animationState.value]);
 
-    const {
-        title,
-        imageUrl,
-        description,
-        websiteUrl,
-        startTime,
-        endTime,
-        locationName,
-        locationCoordinate,
-        locationLogoUrl,
-    } = event;
+    const { title, imageUrl, description, websiteUrl, startTime, endTime } =
+        event;
 
     return (
         <View>
             <EventLocation
-                name={locationName}
-                logoUrl={locationLogoUrl}
-                coordinate={locationCoordinate}
+                name={location.name}
+                coordinate={location.coordinate}
+                logoUrl={location.logoUrl}
             />
             <Animated.View
                 style={[
@@ -242,10 +238,6 @@ const styles = StyleSheet.create({
 
     row: {
         flexDirection: 'row',
-    },
-
-    flexOne: {
-        flex: 1,
     },
 
     collapsedEventDetails: {

@@ -13,6 +13,15 @@ import BottomSheetFullScreenHeader from './LocationDetailsFullScreenHeader';
 import LocationDetailsTabView from './LocationDetailsTabView';
 import { Colors } from '../../lib/Colors';
 import { AppDimensionsContext } from '../../../App';
+import {
+    LocationData,
+    LocationDetailsData,
+    EventData,
+    TEMP_LOCATIONS_DATA,
+    TEMP_EXAMPLE_LOCATION_DETAILS_DATA,
+    TEMP_EVENTS_DATA,
+    TEMP_OFFER_DATA,
+} from '../../lib/MockedData';
 
 interface Props {
     bottomSheetModalRef: RefObject<BottomSheetModal>;
@@ -27,7 +36,7 @@ const springConfig: WithSpringConfig = {
     stiffness: 500,
 };
 
-const LocationDetails = ({
+const LocationDetailsBottomSheet = ({
     bottomSheetModalRef,
     selectedLocationID,
 }: Props) => {
@@ -67,6 +76,12 @@ const LocationDetails = ({
         };
     });
 
+    const locationData: LocationData = TEMP_LOCATIONS_DATA[selectedLocationID];
+    const locationDetailsData: LocationDetailsData =
+        TEMP_EXAMPLE_LOCATION_DETAILS_DATA;
+    const eventsData: ReadonlyArray<EventData> = TEMP_EVENTS_DATA;
+    const offersData: ReadonlyArray<EventData> = TEMP_OFFER_DATA;
+
     return (
         <>
             <BottomSheetModal
@@ -79,12 +94,20 @@ const LocationDetails = ({
                 handleStyle={styles.handle}
                 handleIndicatorStyle={styles.handleIndicator}
                 animationConfigs={springConfig}>
-                <LocationDetailsTabView
-                    expandBottomSheet={expandBottomSheet}
-                    selectedLocationID={selectedLocationID}
-                    selectedTabViewIndex={selectedTabViewIndex}
-                    setSelectedTabViewIndex={setSelectedTabViewIndex}
-                />
+                {locationData &&
+                    locationDetailsData &&
+                    eventsData &&
+                    offersData && (
+                        <LocationDetailsTabView
+                            locationData={locationData}
+                            locationDetailsData={locationDetailsData}
+                            eventsData={eventsData}
+                            offersData={offersData}
+                            expandBottomSheet={expandBottomSheet}
+                            selectedTabViewIndex={selectedTabViewIndex}
+                            setSelectedTabViewIndex={setSelectedTabViewIndex}
+                        />
+                    )}
             </BottomSheetModal>
             <Portal>
                 <Animated.View
@@ -103,7 +126,7 @@ const LocationDetails = ({
     );
 };
 
-export default LocationDetails;
+export default LocationDetailsBottomSheet;
 
 const styles = StyleSheet.create({
     bottomSheetFullScreenHeader: {

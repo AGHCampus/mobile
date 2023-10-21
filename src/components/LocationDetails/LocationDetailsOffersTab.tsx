@@ -1,20 +1,16 @@
 import React from 'react';
 import LocationDetailsEventsList from './LocationDetailsEventsList';
-import { EventData, TEMP_OFFER_DATA } from '../../lib/MockedData';
+import { EventData } from '../../lib/MockedData';
 
 interface Props {
-    selectedLocationID: string;
+    offersData: ReadonlyArray<EventData>;
 }
 
 // TODO: Fetch data from backend
-const LocationDetailsOffersTab = ({ selectedLocationID }: Props) => {
-    const eventsData: ReadonlyArray<EventData> = TEMP_OFFER_DATA;
-
-    console.log('selectedLocationID', selectedLocationID);
-
+const LocationDetailsOffersTab = ({ offersData }: Props) => {
     return (
         <LocationDetailsEventsList
-            eventsData={eventsData}
+            eventsData={offersData}
             showEventButtonRow={false}
         />
     );

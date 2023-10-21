@@ -5,7 +5,12 @@ import SafeView from './SafeView';
 import { VerticalSpacer } from '../components/Spacers';
 import ExpandableEventTile from '../components/Events/ExpandableEventTile';
 import { Constants } from '../lib/Constants';
-import { EventData, TEMP_EVENTS_DATA } from '../lib/MockedData';
+import {
+    EventData,
+    LocationsMap,
+    TEMP_EVENTS_DATA,
+    TEMP_LOCATIONS_DATA,
+} from '../lib/MockedData';
 
 function ListHeader() {
     return <VerticalSpacer height={Constants.SPACING_UNIT_16} />;
@@ -22,6 +27,8 @@ function ListFooter() {
 export default function EventsScreen() {
     // TODO: Fetch events data from server
     const eventsData: ReadonlyArray<EventData> = TEMP_EVENTS_DATA;
+    const locationsData: LocationsMap = TEMP_LOCATIONS_DATA;
+
     const [refreshing, setRefreshing] = React.useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -32,7 +39,12 @@ export default function EventsScreen() {
         <SafeView style={styles.container}>
             <FlatList
                 data={eventsData}
-                renderItem={event => <ExpandableEventTile event={event.item} />}
+                renderItem={event => (
+                    <ExpandableEventTile
+                        location={locationsData[event.item.locationId]}
+                        event={event.item}
+                    />
+                )}
                 ListHeaderComponent={ListHeader}
                 ItemSeparatorComponent={ListSpacer}
                 ListFooterComponent={ListFooter}

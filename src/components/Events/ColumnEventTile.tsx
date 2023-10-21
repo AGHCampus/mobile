@@ -15,22 +15,22 @@ import { VerticalSpacer } from '../Spacers';
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
 import { Shadows } from '../../lib/Shadows';
-import { EventData } from '../../lib/MockedData';
 import {
     getEventDatetimeRangeString,
     getEventDatetimeStringLong,
 } from '../../utils/time';
 import i18n from '../../utils/i18n';
+import { LocationData, EventData } from '../../lib/MockedData';
 
 interface Props {
+    location?: LocationData;
     event: EventData;
-    showLocation: boolean;
     showEventButtonRow: boolean;
 }
 
 export default function EventTile({
+    location,
     event,
-    showLocation,
     showEventButtonRow,
 }: Props) {
     const [expanded, setExpanded] = React.useState(false);
@@ -60,25 +60,16 @@ export default function EventTile({
         ),
     }));
 
-    const {
-        title,
-        imageUrl,
-        description,
-        websiteUrl,
-        startTime,
-        endTime,
-        locationName,
-        locationCoordinate,
-        locationLogoUrl,
-    } = event;
+    const { title, imageUrl, description, websiteUrl, startTime, endTime } =
+        event;
 
     return (
         <View>
-            {showLocation && (
+            {location && (
                 <EventLocation
-                    name={locationName}
-                    logoUrl={locationLogoUrl}
-                    coordinate={locationCoordinate}
+                    name={location.name}
+                    coordinate={location.coordinate}
+                    logoUrl={location.logoUrl}
                 />
             )}
             <Animated.View style={[styles.eventContainer, Shadows.depth2]}>

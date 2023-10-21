@@ -13,9 +13,17 @@ import LocationDetailsOffersTab from './LocationDetailsOffersTab';
 import { Colors } from '../../lib/Colors';
 import { Shadows } from '../../lib/Shadows';
 import i18n from '../../utils/i18n';
+import {
+    EventData,
+    LocationData,
+    LocationDetailsData,
+} from '../../lib/MockedData';
 
 interface Props {
-    selectedLocationID: string;
+    locationData: LocationData;
+    locationDetailsData: LocationDetailsData;
+    eventsData: ReadonlyArray<EventData>;
+    offersData: ReadonlyArray<EventData>;
     expandBottomSheet: () => void;
     selectedTabViewIndex: number;
     setSelectedTabViewIndex: Dispatch<SetStateAction<number>>;
@@ -26,7 +34,10 @@ type TabBarProps = SceneRendererProps & {
 };
 
 const LocationDetailsTabView = ({
-    selectedLocationID,
+    locationData,
+    locationDetailsData,
+    eventsData,
+    offersData,
     expandBottomSheet,
     selectedTabViewIndex,
     setSelectedTabViewIndex,
@@ -52,27 +63,26 @@ const LocationDetailsTabView = ({
                 case 'overview':
                     return (
                         <LocationDetailsOverviewTab
-                            selectedLocationID={selectedLocationID}
+                            locationData={locationData}
+                            locationDetailsData={locationDetailsData}
                             expandBottomSheet={expandBottomSheet}
                         />
                     );
                 case 'events':
-                    return (
-                        <LocationDetailsEventsTab
-                            selectedLocationID={selectedLocationID}
-                        />
-                    );
+                    return <LocationDetailsEventsTab eventsData={eventsData} />;
                 case 'offers':
-                    return (
-                        <LocationDetailsOffersTab
-                            selectedLocationID={selectedLocationID}
-                        />
-                    );
+                    return <LocationDetailsOffersTab offersData={offersData} />;
                 default:
                     return null;
             }
         },
-        [selectedLocationID, expandBottomSheet],
+        [
+            locationData,
+            locationDetailsData,
+            eventsData,
+            offersData,
+            expandBottomSheet,
+        ],
     );
 
     const renderTabBar = (props: TabBarProps) => (
@@ -85,11 +95,7 @@ const LocationDetailsTabView = ({
             indicatorStyle={styles.indicator}
             pressColor="rgba(0, 0, 0, 0.1)" // ripple effect color (Android >= 5.0)
             pressOpacity={0.3} // press opacity (iOS and Android < 5.0)
-            onTabPress={({ route }) => {
-                if (route.key !== 'overview') {
-                    expandBottomSheet();
-                }
-            }}
+            onTabPress={expandBottomSheet}
         />
     );
 
