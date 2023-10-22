@@ -165,12 +165,14 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         fontSize: 17,
         lineHeight: 20,
+        color: Colors.black,
     },
 
     eventDescription: {
         fontWeight: '300',
         fontSize: 15,
         lineHeight: 18,
+        color: Colors.black,
     },
 
     showMore: {
@@ -181,6 +183,7 @@ const styles = StyleSheet.create({
     invisible: {
         position: 'absolute',
         opacity: 0,
+        zIndex: -1,
     },
 
     flexOne: {

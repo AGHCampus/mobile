@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         fontSize: 21,
         lineHeight: 24,
+        color: Colors.black,
         paddingTop: 2,
         paddingBottom: 4,
     },
@@ -226,6 +227,7 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         fontSize: 18,
         lineHeight: 22,
+        color: Colors.black,
         paddingBottom: Constants.SPACING_UNIT_8,
     },
 

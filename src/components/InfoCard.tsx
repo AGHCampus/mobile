@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         fontSize: 15,
         lineHeight: 20,
+        color: Colors.black,
     },
     divider: {
         backgroundColor: Colors.bgDivider,
