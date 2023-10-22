@@ -21,7 +21,9 @@ interface Props {
 
 const IconButton = ({ asset, color, onPress, style, iconStyle }: Props) => {
     return (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity
+            activeOpacity={Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY}
+            onPress={onPress}>
             <View style={[styles.iconContainer, style]}>
                 <Icon
                     asset={asset}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import {
     StyleSheet,
     View,
@@ -9,6 +9,7 @@ import {
 import type { Region } from 'react-native-maps';
 import RNMapView from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
+import { LatLng } from 'react-native-maps';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 import {
@@ -18,66 +19,25 @@ import {
 } from '../utils/geolocation';
 import Icon from '../components/Icon';
 import LocationDetails from '../components/LocationDetails/LocationDetailsBottomSheet';
-import MapMarker, { MarkerType } from '../components/Markers';
+import MapMarker, {
+    MarkerType,
+    getMarkerTypeByCategory,
+} from '../components/Markers';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 import { BASE_MAP_STYLE_LIGHT, Constants } from '../lib/Constants';
 import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
 import { TabsParamList } from './navigationTypes';
+import { TEMP_LOCATIONS_DATA } from '../lib/MockedData';
 
 type Props = BottomTabScreenProps<TabsParamList, 'Map'>;
 
-const markerData = [
-    {
-        id: '1',
-        coordinate: {
-            latitude: 50.0680619382141,
-            longitude: 19.912568786594342,
-        },
-        type: MarkerType.FACULTY,
-    },
-    {
-        id: '2',
-        coordinate: {
-            latitude: 50.0676808597424,
-            longitude: 19.907067919115676,
-        },
-        type: MarkerType.DORM,
-    },
-    {
-        id: '3',
-        coordinate: {
-            latitude: 50.06881234813738,
-            longitude: 19.906789494394012,
-        },
-        type: MarkerType.DORM,
-    },
-    {
-        id: '4',
-        coordinate: {
-            latitude: 50.06805101572392,
-            longitude: 19.90836342605491,
-        },
-        type: MarkerType.CLUB,
-    },
-    {
-        id: '5',
-        coordinate: {
-            latitude: 50.06774111788259,
-            longitude: 19.909685755094717,
-        },
-        type: MarkerType.FACULTY,
-    },
-    {
-        id: '6',
-        coordinate: {
-            latitude: 50.068376,
-            longitude: 19.90676,
-        },
-        type: MarkerType.SHOP,
-    },
-] as const;
+export interface MarkerData {
+    id: string;
+    coordinate: LatLng;
+    type: MarkerType;
+}
 
 export default function MapScreen({ route, navigation }: Props) {
     const mapViewRef = useRef<RNMapView>(null);
@@ -168,6 +128,18 @@ export default function MapScreen({ route, navigation }: Props) {
         return true;
     };
 
+    const markerData: MarkerData[] = useMemo(
+        () =>
+            Object.entries(TEMP_LOCATIONS_DATA).map(
+                ([id, { coordinate, category }]) => ({
+                    id,
+                    coordinate,
+                    type: getMarkerTypeByCategory(category),
+                }),
+            ),
+        [],
+    );
+
     return (
         <View style={styles.container}>
             <MapView
@@ -214,7 +186,9 @@ export default function MapScreen({ route, navigation }: Props) {
             />
 
             <View style={styles.opacityOverlay}>
-                <TouchableOpacity onPress={animateToUserRegion}>
+                <TouchableOpacity
+                    activeOpacity={Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY}
+                    onPress={animateToUserRegion}>
                     <View style={[styles.locationButton, Shadows.depth2]}>
                         <Icon
                             asset={
@@ -245,7 +219,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: Constants.MARGIN_UNIT_24 + Constants.SPACING_UNIT_16,
         top: 48,
-        borderRadius: Constants.BORDER_UNIT_8,
+        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
         paddingHorizontal: Constants.BORDER_UNIT_8,
         marginHorizontal: Constants.MARGIN_UNIT_24,
         justifyContent: 'center',
@@ -264,7 +238,7 @@ const styles = StyleSheet.create({
         height: Constants.TAP_UNIT_48,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 16,
+        borderRadius: Constants.BORDER_RADIUS_LARGE,
         borderColor: Colors.accentGreen,
         backgroundColor: Colors.bgWhite,
     },

@@ -1,14 +1,6 @@
-import React, { useState } from 'react';
-import {
-    Dimensions,
-    StyleSheet,
-    Text,
-    TouchableWithoutFeedback,
-    View,
-} from 'react-native';
+import React, { useState, useContext } from 'react';
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Constants } from '../../lib/Constants';
-import { Colors } from '../../lib/Colors';
 import Animated, {
     FadeInRight,
     FadeOutRight,
@@ -19,30 +11,22 @@ import Animated, {
     useSharedValue,
     withTiming,
 } from 'react-native-reanimated';
+import EventButtonRow from './EventButtonRow';
+import EventLocation from './EventLocation';
+import Icon from '../Icon';
+import { VerticalSpacer } from '../Spacers';
 import {
     getEventDatetimeRangeString,
     getEventDatetimeStringLong,
 } from '../../utils/time';
-import { VerticalSpacer } from '../Spacers';
+import { Constants } from '../../lib/Constants';
+import { Colors } from '../../lib/Colors';
 import { Shadows } from '../../lib/Shadows';
-import { LatLng } from 'react-native-maps';
-import EventButtonRow from './EventButtonRow';
-import EventLocation from './EventLocation';
-
-export interface EventData {
-    id: string;
-    name: string;
-    description: string;
-    imageUrl: string;
-    locationName: string;
-    startTime: Date;
-    endTime?: Date;
-    websiteUrl?: string;
-    locationCoordinate?: LatLng;
-    locationLogoUrl?: string;
-}
+import { LocationData, EventData } from '../../lib/MockedData';
+import { AppDimensionsContext } from '../../../App';
 
 interface Props {
+    location: LocationData;
     event: EventData;
     collapsed?: boolean;
 }
@@ -56,131 +40,129 @@ enum AnimationState {
 // @ts-ignore TS reports an error, but it works fine 🤷‍♂️
 const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
 
-export default function EventTile({ event, collapsed = true }: Props) {
+export default function EventTile({
+    location,
+    event,
+    collapsed = true,
+}: Props) {
     const [isCollapsed, setIsCollapsed] = useState(collapsed);
     const [animationStatus, setAnimationStatus] = useState(AnimationState.IDLE);
     const [expandHeight, setExpandHeight] = useState(0);
     const animationState = useSharedValue(collapsed ? 0 : 1);
-    const tileWidth =
-        Dimensions.get('window').width - 2 * Constants.SPACING_UNIT_24;
+    const dimensions = useContext(AppDimensionsContext);
+    const tileWidth = dimensions.width - 2 * Constants.SPACING_UNIT_16;
 
     const animateFocus = () => {
         setAnimationStatus(AnimationState.EXPANDING);
         setIsCollapsed(false);
-        animationState.value = withTiming(1, { duration: 500 }, () => {
+        animationState.value = withTiming(1, { duration: 400 }, () => {
             runOnJS(setAnimationStatus)(AnimationState.IDLE);
         });
     };
 
     const animateBlur = () => {
         setAnimationStatus(AnimationState.COLLAPSING);
-        animationState.value = withTiming(0, { duration: 500 }, () => {
+        animationState.value = withTiming(0, { duration: 400 }, () => {
             runOnJS(setIsCollapsed)(true);
             runOnJS(setAnimationStatus)(AnimationState.IDLE);
         });
     };
 
-    const eventTileStyle = useAnimatedStyle(() => {
+    const eventTileAnimatedStyle = useAnimatedStyle(() => {
         return {
             height: interpolate(
                 animationState.value,
                 [0, 1],
-                [120, 240 + expandHeight],
+                [100, (2 / 3) * tileWidth + expandHeight],
             ),
         };
     }, [animationState.value, expandHeight]);
 
-    const eventImageStyle = useAnimatedStyle(() => {
+    const eventImageAnimatedStyle = useAnimatedStyle(() => {
         return {
-            width: interpolate(
-                animationState.value,
-                [0, 1],
-                [0.4 * tileWidth, tileWidth],
-            ),
-            height: interpolate(animationState.value, [0, 1], [120, 240]),
+            width: interpolate(animationState.value, [0, 1], [150, tileWidth]),
             borderBottomLeftRadius: interpolate(
                 animationState.value,
                 [0, 1],
-                [16, 0],
+                [Constants.BORDER_RADIUS_MEDIUM, 0],
             ),
             borderTopRightRadius: interpolate(
                 animationState.value,
                 [0, 1],
-                [0, 16],
+                [0, Constants.BORDER_RADIUS_MEDIUM],
             ),
         };
     }, [animationState.value]);
 
-    const eventInfoExpandedStyle = useAnimatedStyle(() => {
+    const eventInfoExpandedAnimatedStyle = useAnimatedStyle(() => {
         return {
             opacity: interpolate(
                 animationState.value,
                 [0, 0.5, 0.75, 0.9, 1],
                 [0, 0, 0.2, 0.4, 1],
             ),
-            marginHorizontal: Constants.SPACING_UNIT_8,
         };
     }, [animationState.value]);
 
-    const {
-        name,
-        imageUrl,
-        description,
-        websiteUrl,
-        startTime,
-        endTime,
-        locationName,
-        locationCoordinate,
-        locationLogoUrl,
-    } = event;
+    const { title, imageUrl, description, websiteUrl, startTime, endTime } =
+        event;
 
     return (
         <View>
             <EventLocation
-                name={locationName}
-                logoUrl={locationLogoUrl}
-                coordinate={locationCoordinate}
+                name={location.name}
+                coordinate={location.coordinate}
+                logoUrl={location.logoUrl}
             />
             <Animated.View
-                style={[eventTileStyle, styles.eventContainer, Shadows.depth2]}>
+                style={[
+                    eventTileAnimatedStyle,
+                    styles.eventContainer,
+                    Shadows.depth2,
+                ]}>
                 <TouchableWithoutFeedback
                     onPress={() => {
                         if (animationStatus === AnimationState.IDLE) {
                             isCollapsed ? animateFocus() : animateBlur();
                         }
                     }}>
-                    <View style={styles.row}>
+                    <View style={[styles.row, { width: tileWidth }]}>
                         <AnimatedFastImage
-                            style={[eventImageStyle, styles.imageStaticBorder]}
+                            style={[eventImageAnimatedStyle, styles.image]}
                             source={{ uri: imageUrl }}
                         />
                         {!isCollapsed ||
                         animationStatus === AnimationState.EXPANDING ? null : (
                             <Animated.View
-                                entering={FadeInRight.duration(200)}
-                                exiting={FadeOutRight.duration(200)}
-                                style={styles.collapsedEventDetails}>
-                                <VerticalSpacer
-                                    height={Constants.SPACING_UNIT_16}
-                                />
-                                <Text style={styles.time}>
-                                    {endTime
-                                        ? getEventDatetimeRangeString(
-                                              startTime,
-                                              endTime,
-                                          )
-                                        : getEventDatetimeStringLong(startTime)}
-                                </Text>
-                                <VerticalSpacer
-                                    height={Constants.SPACING_UNIT_8}
-                                />
-                                <Text
-                                    style={[
-                                        styles.eventName,
-                                        styles.eventNameCollapsed,
-                                    ]}>
-                                    {name}
-                                </Text>
+                                entering={FadeInRight.duration(150)}
+                                exiting={FadeOutRight.duration(150)}
+                                style={[styles.collapsedEventDetails]}>
+                                <View style={styles.columnCenter}>
+                                    <Text style={styles.time}>
+                                        {endTime
+                                            ? getEventDatetimeRangeString(
+                                                  startTime,
+                                                  endTime,
+                                              )
+                                            : getEventDatetimeStringLong(
+                                                  startTime,
+                                              )}
+                                    </Text>
+                                    <Text
+                                        style={[
+                                            styles.eventTitle,
+                                            { width: tileWidth - 194 },
+                                        ]}>
+                                        {title}
+                                    </Text>
+                                </View>
+                                <View style={[styles.columnCenter]}>
+                                    <Icon
+                                        asset={'AngleDown'}
+                                        color={Colors.gray}
+                                        style={[styles.icon]}
+                                    />
+                                </View>
                             </Animated.View>
                         )}
                     </View>
@@ -194,9 +176,12 @@ export default function EventTile({ event, collapsed = true }: Props) {
                                 setExpandHeight(height);
                             }
                         }}
-                        style={eventInfoExpandedStyle}
-                        exiting={FadeOutUp.duration(200)}>
-                        <VerticalSpacer height={Constants.SPACING_UNIT_8} />
+                        style={[
+                            eventInfoExpandedAnimatedStyle,
+                            styles.eventInfoExpandedStyle,
+                        ]}
+                        exiting={FadeOutUp.duration(150)}>
+                        <VerticalSpacer height={Constants.SPACING_UNIT_10} />
                         <Text style={styles.time}>
                             {endTime
                                 ? getEventDatetimeRangeString(
@@ -205,9 +190,11 @@ export default function EventTile({ event, collapsed = true }: Props) {
                                   )
                                 : getEventDatetimeStringLong(startTime)}
                         </Text>
-                        <Text style={styles.eventName}>{name}</Text>
+                        <Text style={styles.eventTitle}>{title}</Text>
                         <VerticalSpacer height={Constants.SPACING_UNIT_8} />
-                        <Text>{description}</Text>
+                        <Text style={styles.eventDescription}>
+                            {description}
+                        </Text>
                         <VerticalSpacer height={Constants.SPACING_UNIT_16} />
                         {/* TODO: Proper sharing */}
                         <EventButtonRow
@@ -224,47 +211,58 @@ export default function EventTile({ event, collapsed = true }: Props) {
 
 const styles = StyleSheet.create({
     eventContainer: {
-        borderRadius: Constants.SPACING_UNIT_16,
+        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
         backgroundColor: Colors.bgWhite,
-        marginHorizontal: 24,
+        marginHorizontal: Constants.SPACING_UNIT_16,
         flex: 1,
     },
 
     time: {
-        fontWeight: '200',
+        fontWeight: '300',
         fontSize: 12,
-        lineHeight: 14,
+        lineHeight: 16,
+        color: Colors.textGray,
     },
 
-    eventName: {
-        fontWeight: 'normal',
-        fontSize: 16,
+    eventTitle: {
+        fontWeight: '400',
+        fontSize: 17,
         lineHeight: 20,
     },
 
-    eventNameCollapsed: {
-        maxWidth: '80%',
-    },
-
     eventDescription: {
-        fontSize: 14,
-        lineHeight: 16,
+        fontWeight: '300',
+        fontSize: 15,
+        lineHeight: 18,
     },
 
     row: {
         flexDirection: 'row',
     },
 
-    flexOne: {
-        flex: 1,
-    },
-
     collapsedEventDetails: {
-        marginLeft: Constants.SPACING_UNIT_8,
+        flexDirection: 'row',
+        gap: Constants.SPACING_UNIT_8,
+        paddingLeft: Constants.SPACING_UNIT_8,
     },
 
-    imageStaticBorder: {
-        borderTopLeftRadius: 16,
+    columnCenter: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
+
+    icon: {
+        width: 16,
+        height: 16,
+    },
+
+    eventInfoExpandedStyle: {
+        marginHorizontal: Constants.SPACING_UNIT_16,
+    },
+
+    image: {
+        aspectRatio: 3 / 2,
+        borderTopLeftRadius: Constants.BORDER_RADIUS_MEDIUM,
         borderBottomRightRadius: 0,
     },
 });

@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useState, useCallback, Dispatch, SetStateAction } from 'react';
+import { Platform, StyleSheet } from 'react-native';
 import {
     TabView,
     TabBar,
@@ -7,17 +7,28 @@ import {
     SceneRendererProps,
     NavigationState,
 } from 'react-native-tab-view';
-
 import LocationDetailsOverviewTab from './LocationDetailsOverviewTab';
 import LocationDetailsEventsTab from './LocationDetailsEventsTab';
 import LocationDetailsOffersTab from './LocationDetailsOffersTab';
 import { Colors } from '../../lib/Colors';
 import { Shadows } from '../../lib/Shadows';
 import i18n from '../../utils/i18n';
+import {
+    EventData,
+    LocationData,
+    LocationDetailsData,
+} from '../../lib/MockedData';
+
+const EXPAND_ANIMATION_DELAY = Platform.OS === 'ios' ? 250 : 50;
 
 interface Props {
-    selectedLocationID: string;
-    isBottomSheetFullscreen: boolean;
+    locationData: LocationData;
+    locationDetailsData: LocationDetailsData;
+    eventsData: ReadonlyArray<EventData>;
+    offersData: ReadonlyArray<EventData>;
+    expandBottomSheet: () => void;
+    selectedTabViewIndex: number;
+    setSelectedTabViewIndex: Dispatch<SetStateAction<number>>;
 }
 
 type TabBarProps = SceneRendererProps & {
@@ -25,10 +36,14 @@ type TabBarProps = SceneRendererProps & {
 };
 
 const LocationDetailsTabView = ({
-    selectedLocationID,
-    isBottomSheetFullscreen,
+    locationData,
+    locationDetailsData,
+    eventsData,
+    offersData,
+    expandBottomSheet,
+    selectedTabViewIndex,
+    setSelectedTabViewIndex,
 }: Props) => {
-    const [index, setIndex] = useState(0);
     const [routes] = useState<Route[]>([
         {
             key: 'overview',
@@ -44,35 +59,32 @@ const LocationDetailsTabView = ({
         },
     ]);
 
-    console.log('LocationDetailsTabView rerender');
-
     const renderScene = useCallback(
         ({ route }: { route: Route }) => {
             switch (route.key) {
                 case 'overview':
                     return (
                         <LocationDetailsOverviewTab
-                            selectedLocationID={selectedLocationID}
+                            locationData={locationData}
+                            locationDetailsData={locationDetailsData}
+                            expandBottomSheet={expandBottomSheet}
                         />
                     );
                 case 'events':
-                    return (
-                        <LocationDetailsEventsTab
-                            selectedLocationID={selectedLocationID}
-                            isBottomSheetFullscreen={isBottomSheetFullscreen}
-                        />
-                    );
+                    return <LocationDetailsEventsTab eventsData={eventsData} />;
                 case 'offers':
-                    return (
-                        <LocationDetailsOffersTab
-                            selectedLocationID={selectedLocationID}
-                        />
-                    );
+                    return <LocationDetailsOffersTab offersData={offersData} />;
                 default:
                     return null;
             }
         },
-        [selectedLocationID, isBottomSheetFullscreen],
+        [
+            locationData,
+            locationDetailsData,
+            eventsData,
+            offersData,
+            expandBottomSheet,
+        ],
     );
 
     const renderTabBar = (props: TabBarProps) => (
@@ -85,15 +97,18 @@ const LocationDetailsTabView = ({
             indicatorStyle={styles.indicator}
             pressColor="rgba(0, 0, 0, 0.1)" // ripple effect color (Android >= 5.0)
             pressOpacity={0.3} // press opacity (iOS and Android < 5.0)
+            onTabPress={() =>
+                setTimeout(expandBottomSheet, EXPAND_ANIMATION_DELAY)
+            }
         />
     );
 
     return (
         <TabView
-            navigationState={{ index, routes }}
+            navigationState={{ index: selectedTabViewIndex, routes }}
             renderScene={renderScene}
             renderTabBar={renderTabBar}
-            onIndexChange={setIndex}
+            onIndexChange={setSelectedTabViewIndex}
             swipeEnabled={false}
         />
     );

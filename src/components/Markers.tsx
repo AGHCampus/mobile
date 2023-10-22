@@ -5,16 +5,16 @@ import React, {
     useCallback,
     useEffect,
 } from 'react';
-import MapView, { LatLng, Marker } from 'react-native-maps';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { icons } from '../Icons';
 import { Image, StyleSheet, View } from 'react-native';
-import { Constants } from '../lib/Constants';
+import MapView, { LatLng, Marker } from 'react-native-maps';
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
     withSpring,
 } from 'react-native-reanimated';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { icons } from '../Icons';
+import { Constants } from '../lib/Constants';
 
 export enum MarkerType {
     FACULTY,
@@ -22,12 +22,30 @@ export enum MarkerType {
     SHOP,
     CLUB,
     RESTAURANT,
+    INFO,
 }
 
 export interface MarkerData {
     id: string;
     coordinate: LatLng;
     type: MarkerType;
+}
+
+export function getMarkerTypeByCategory(category: string) {
+    switch (category) {
+        case 'faculty':
+            return MarkerType.FACULTY;
+        case 'dorm':
+            return MarkerType.DORM;
+        case 'shop':
+            return MarkerType.SHOP;
+        case 'club':
+            return MarkerType.CLUB;
+        case 'restaurant':
+            return MarkerType.RESTAURANT;
+        default:
+            return MarkerType.INFO;
+    }
 }
 
 export function getMarkerImage(markerType: MarkerType) {
@@ -42,6 +60,7 @@ export function getMarkerImage(markerType: MarkerType) {
             return icons.Club.src;
         case MarkerType.RESTAURANT:
             return icons.Restaurant.src;
+        case MarkerType.INFO:
         default:
             return icons.Info.src;
     }

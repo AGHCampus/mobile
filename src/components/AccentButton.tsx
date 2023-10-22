@@ -57,6 +57,7 @@ const AccentButton = ({
 
     return (
         <TouchableOpacity
+            activeOpacity={Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY}
             onPress={onPress}
             style={[
                 styles.container,
@@ -92,12 +93,12 @@ export default {
 
 const styles = StyleSheet.create({
     container: {
-        height: 38,
+        height: 34,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         gap: Constants.SPACING_UNIT_10,
-        borderRadius: 19,
+        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
         borderColor: 'transparent',
         paddingHorizontal: Constants.SPACING_UNIT_16 + 2,
     },

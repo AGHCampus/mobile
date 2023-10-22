@@ -1,152 +1,145 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Constants } from '../../lib/Constants';
-import { Colors } from '../../lib/Colors';
+import MaskedView from '@react-native-masked-view/masked-view';
+import LinearGradient from 'react-native-linear-gradient';
 import Animated, {
-    FadeInUp,
-    FadeOutUp,
-    interpolate,
-    runOnJS,
     useAnimatedStyle,
     useSharedValue,
     withTiming,
+    interpolate,
 } from 'react-native-reanimated';
+import EventLocation from './EventLocation';
+import EventButtonRow from './EventButtonRow';
+import { VerticalSpacer } from '../Spacers';
+import { Constants } from '../../lib/Constants';
+import { Colors } from '../../lib/Colors';
+import { Shadows } from '../../lib/Shadows';
 import {
     getEventDatetimeRangeString,
     getEventDatetimeStringLong,
 } from '../../utils/time';
-import { FlexSpacer, VerticalSpacer } from '../Spacers';
-import { Shadows } from '../../lib/Shadows';
-import { EventData } from './ExpandableEventTile';
-import EventButtonRow from './EventButtonRow';
-import IconButton from '../IconButton';
-import LinearGradient from 'react-native-linear-gradient';
+import i18n from '../../utils/i18n';
+import { LocationData, EventData } from '../../lib/MockedData';
 
 interface Props {
+    location?: LocationData;
     event: EventData;
+    showEventButtonRow: boolean;
 }
 
-enum AnimationState {
-    IDLE,
-    EXPANDING,
-    COLLAPSING,
-}
+export default function EventTile({
+    location,
+    event,
+    showEventButtonRow,
+}: Props) {
+    const [expanded, setExpanded] = React.useState(false);
+    const expandedHeight = useRef(74);
+    const textAnimatedHeight = useSharedValue(74);
+    const showMoreAnimatedValue = useSharedValue(0);
 
-export default function EventTile({ event }: Props) {
-    const [isCollapsed, setIsCollapsed] = useState(true);
-    const [animationStatus, setAnimationStatus] = useState(AnimationState.IDLE);
-    const [expandHeight, setExpandHeight] = useState(0);
-    const animationState = useSharedValue(0);
+    const textAnimatedStyles = useAnimatedStyle(() => ({
+        height: withTiming(textAnimatedHeight.value, { duration: 250 }),
+    }));
 
-    const animateFocus = () => {
-        setAnimationStatus(AnimationState.EXPANDING);
-        setIsCollapsed(false);
+    const showMoreAnimatedStyles = useAnimatedStyle(() => ({
+        height: withTiming(
+            interpolate(showMoreAnimatedValue.value, [0, 1], [20, 0]),
+            {
+                duration: 250,
+            },
+        ),
+    }));
 
-        animationState.value = withTiming(1, { duration: 500 }, () => {
-            runOnJS(setAnimationStatus)(AnimationState.IDLE);
-        });
-    };
+    const textMaskAnimatedStyles = useAnimatedStyle(() => ({
+        backgroundColor: withTiming(
+            `rgba(255, 255, 255, ${showMoreAnimatedValue.value})`,
+            {
+                duration: 250,
+            },
+        ),
+    }));
 
-    const animateBlur = () => {
-        setAnimationStatus(AnimationState.COLLAPSING);
-
-        animationState.value = withTiming(0, { duration: 500 }, () => {
-            runOnJS(setIsCollapsed)(true);
-            runOnJS(setAnimationStatus)(AnimationState.IDLE);
-        });
-    };
-
-    const eventTileStyle = useAnimatedStyle(() => {
-        return {
-            height: interpolate(
-                animationState.value,
-                [0, 1],
-                [260, 260 + expandHeight],
-            ),
-        };
-    }, [animationState.value, expandHeight]);
-    const buttonRowStyle = useAnimatedStyle(() => {
-        return {
-            marginTop: interpolate(
-                animationState.value,
-                [0, 1],
-                [0, expandHeight],
-            ),
-        };
-    }, [animationState.value, expandHeight]);
-
-    const { name, imageUrl, description, websiteUrl, startTime, endTime } =
+    const { title, imageUrl, description, websiteUrl, startTime, endTime } =
         event;
 
     return (
         <View>
-            <Animated.View
-                style={[eventTileStyle, styles.eventContainer, Shadows.depth2]}>
-                <TouchableWithoutFeedback
-                    onPress={() => {
-                        if (animationStatus === AnimationState.IDLE) {
-                            isCollapsed ? animateFocus() : animateBlur();
-                        }
-                    }}>
-                    <FastImage
-                        style={styles.image}
-                        source={{ uri: imageUrl }}
-                    />
-                </TouchableWithoutFeedback>
-                <VerticalSpacer height={Constants.SPACING_UNIT_8} />
+            {location && (
+                <EventLocation
+                    name={location.name}
+                    coordinate={location.coordinate}
+                    logoUrl={location.logoUrl}
+                />
+            )}
+            <Animated.View style={[styles.eventContainer, Shadows.depth2]}>
+                <FastImage style={styles.image} source={{ uri: imageUrl }} />
                 <View style={styles.eventDetailsContainer}>
-                    <View style={styles.row}>
-                        <View>
-                            <Text style={styles.time}>
-                                {endTime
-                                    ? getEventDatetimeRangeString(
-                                          startTime,
-                                          endTime,
-                                      )
-                                    : getEventDatetimeStringLong(startTime)}
+                    <Text style={styles.time}>
+                        {endTime
+                            ? getEventDatetimeRangeString(startTime, endTime)
+                            : getEventDatetimeStringLong(startTime)}
+                    </Text>
+                    {title && <Text style={styles.eventTitle}>{title}</Text>}
+                    <VerticalSpacer
+                        height={title ? Constants.SPACING_UNIT_8 : 4}
+                    />
+                    <TouchableOpacity
+                        activeOpacity={expanded ? 1 : 0.6}
+                        onPress={() => {
+                            textAnimatedHeight.value = expandedHeight.current;
+                            showMoreAnimatedValue.value = 1;
+                            setExpanded(true);
+                        }}>
+                        <Animated.View style={textAnimatedStyles}>
+                            <MaskedView
+                                maskElement={
+                                    <Animated.View
+                                        style={[
+                                            styles.flexOne,
+                                            textMaskAnimatedStyles,
+                                        ]}>
+                                        <LinearGradient
+                                            style={styles.flexOne}
+                                            colors={['white', 'transparent']}
+                                        />
+                                    </Animated.View>
+                                }>
+                                <Text style={styles.eventDescription}>
+                                    {description}
+                                </Text>
+                            </MaskedView>
+                        </Animated.View>
+                        <Animated.View style={showMoreAnimatedStyles}>
+                            <Text style={styles.showMore}>
+                                {i18n.t('events.show_more')}
                             </Text>
-                            <Text style={styles.eventName}>{name}</Text>
-                        </View>
-                        <FlexSpacer />
-                        <IconButton
-                            asset={isCollapsed ? 'AngleDown' : 'AngleUp'}
-                            color={Colors.black}
-                            onPress={isCollapsed ? animateFocus : animateBlur}
-                        />
-                    </View>
-                    <VerticalSpacer height={Constants.SPACING_UNIT_8} />
-                    {!isCollapsed &&
-                        animationStatus !== AnimationState.COLLAPSING && (
-                            <Animated.View
-                                onLayout={e => {
-                                    const { height } = e.nativeEvent.layout;
-                                    if (height > expandHeight) {
-                                        setExpandHeight(height);
-                                    }
-                                }}
-                                style={styles.detailsTextContainer}
-                                entering={FadeInUp.duration(400).delay(200)}
-                                exiting={FadeOutUp.duration(250)}>
-                                <Text>{description}</Text>
-                            </Animated.View>
-                        )}
-                    <VerticalSpacer height={Constants.SPACING_UNIT_16} />
-                    <LinearGradient
-                        // TODO: Proper colors
-                        colors={
-                            !isCollapsed
-                                ? ['#00000000', '#00000000']
-                                : ['#ffffff00', '#ffffffa0', '#ffffffff']
-                        }>
-                        {/* TODO: Proper sharing */}
-                        <EventButtonRow
-                            style={buttonRowStyle}
-                            url={websiteUrl}
-                            shareContent={{ message: 'test' }}
-                        />
-                        <VerticalSpacer height={Constants.SPACING_UNIT_16} />
-                    </LinearGradient>
+                        </Animated.View>
+                    </TouchableOpacity>
+                    <Text
+                        style={[styles.eventDescription, styles.invisible]}
+                        onLayout={e => {
+                            const { height } = e.nativeEvent.layout;
+                            expandedHeight.current = height;
+                            if (height < 100) {
+                                textAnimatedHeight.value = height;
+                                showMoreAnimatedValue.value = 1;
+                                setExpanded(true);
+                            }
+                        }}>
+                        {description}
+                    </Text>
+                    {showEventButtonRow && (
+                        <>
+                            <VerticalSpacer
+                                height={Constants.SPACING_UNIT_16}
+                            />
+                            <EventButtonRow
+                                url={websiteUrl}
+                                shareContent={{ message: 'test' }}
+                            />
+                        </>
+                    )}
                 </View>
             </Animated.View>
         </View>
@@ -155,65 +148,59 @@ export default function EventTile({ event }: Props) {
 
 const styles = StyleSheet.create({
     eventContainer: {
-        borderRadius: Constants.SPACING_UNIT_16,
+        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
         backgroundColor: Colors.bgWhite,
         marginHorizontal: Constants.SPACING_UNIT_16,
         flex: 1,
     },
 
-    eventInfo: {
-        marginHorizontal: 8,
-    },
-
-    row: {
-        flexDirection: 'row',
-    },
-
     time: {
-        fontWeight: '200',
+        fontWeight: '300',
         fontSize: 12,
-        lineHeight: 14,
+        lineHeight: 16,
+        color: Colors.textGray,
     },
 
-    eventName: {
-        fontWeight: 'normal',
-        fontSize: 16,
+    eventTitle: {
+        fontWeight: '400',
+        fontSize: 17,
         lineHeight: 20,
+        color: Colors.black,
     },
 
     eventDescription: {
-        fontSize: 14,
-        lineHeight: 16,
+        fontWeight: '300',
+        fontSize: 15,
+        lineHeight: 18,
+        color: Colors.black,
     },
 
-    eventDetailsContainer: {
-        flex: 1,
-        marginHorizontal: Constants.SPACING_UNIT_8,
+    showMore: {
+        textAlign: 'center',
+        color: Colors.textLink,
     },
 
-    detailsTextContainer: { position: 'absolute', top: 50 },
-
-    topRowContainer: {
-        height: Constants.SPACING_UNIT_24,
-        flexDirection: 'row',
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
+    invisible: {
+        position: 'absolute',
+        opacity: 0,
+        zIndex: -1,
     },
 
     flexOne: {
         flex: 1,
     },
 
-    collapsedEventDetails: {
-        marginLeft: Constants.SPACING_UNIT_8,
+    eventDetailsContainer: {
+        flex: 1,
+        margin: Constants.SPACING_UNIT_16,
+        marginTop: Constants.SPACING_UNIT_10,
     },
 
     image: {
-        height: 120,
         width: '100%',
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
+        aspectRatio: 3 / 2,
+        borderTopLeftRadius: Constants.BORDER_RADIUS_MEDIUM,
+        borderTopRightRadius: Constants.BORDER_RADIUS_MEDIUM,
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
     },

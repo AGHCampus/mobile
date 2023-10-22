@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* aghCampusMapTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* aghCampusMapTests.m */; };
-		0C80B921A6F3F58F76C31292 /* libPods-aghCampusMap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-aghCampusMap.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		7699B88040F8A987B510C191 /* libPods-aghCampusMap-aghCampusMapTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-aghCampusMap-aghCampusMapTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		C9A2F83DC2AEF9D6D6A185C1 /* libPods-aghCampusMap-aghCampusMapTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9877667E86F39CD2572E5F40 /* libPods-aghCampusMap-aghCampusMapTests.a */; };
+		E0AF49D0FFF9A119D2B3BEDF /* libPods-aghCampusMap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0E4276EDBEB7C6B7F50E064 /* libPods-aghCampusMap.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,14 +36,16 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = aghCampusMap/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = aghCampusMap/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = aghCampusMap/main.m; sourceTree = "<group>"; };
-		19F6CBCC0A4E27FBF8BF4A61 /* libPods-aghCampusMap-aghCampusMapTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aghCampusMap-aghCampusMapTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		21C8B2F13A2A0B0F90DC8BAC /* Pods-aghCampusMapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aghCampusMapTests.debug.xcconfig"; path = "Target Support Files/Pods-aghCampusMapTests/Pods-aghCampusMapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-aghCampusMap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aghCampusMap.debug.xcconfig"; path = "Target Support Files/Pods-aghCampusMap/Pods-aghCampusMap.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-aghCampusMap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aghCampusMap.release.xcconfig"; path = "Target Support Files/Pods-aghCampusMap/Pods-aghCampusMap.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-aghCampusMap-aghCampusMapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aghCampusMap-aghCampusMapTests.debug.xcconfig"; path = "Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-aghCampusMap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aghCampusMap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = aghCampusMap/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-aghCampusMap-aghCampusMapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aghCampusMap-aghCampusMapTests.release.xcconfig"; path = "Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests.release.xcconfig"; sourceTree = "<group>"; };
+		9877667E86F39CD2572E5F40 /* libPods-aghCampusMap-aghCampusMapTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aghCampusMap-aghCampusMapTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0E4276EDBEB7C6B7F50E064 /* libPods-aghCampusMap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aghCampusMap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F42562F0BCC19F96D3D6B091 /* Pods-aghCampusMapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aghCampusMapTests.release.xcconfig"; path = "Target Support Files/Pods-aghCampusMapTests/Pods-aghCampusMapTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7699B88040F8A987B510C191 /* libPods-aghCampusMap-aghCampusMapTests.a in Frameworks */,
+				C9A2F83DC2AEF9D6D6A185C1 /* libPods-aghCampusMap-aghCampusMapTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-aghCampusMap.a in Frameworks */,
+				E0AF49D0FFF9A119D2B3BEDF /* libPods-aghCampusMap.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,8 +102,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-aghCampusMap.a */,
-				19F6CBCC0A4E27FBF8BF4A61 /* libPods-aghCampusMap-aghCampusMapTests.a */,
+				D0E4276EDBEB7C6B7F50E064 /* libPods-aghCampusMap.a */,
+				9877667E86F39CD2572E5F40 /* libPods-aghCampusMap-aghCampusMapTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -144,6 +146,8 @@
 				5709B34CF0A7D63546082F79 /* Pods-aghCampusMap.release.xcconfig */,
 				5B7EB9410499542E8C5724F5 /* Pods-aghCampusMap-aghCampusMapTests.debug.xcconfig */,
 				89C6BE57DB24E9ADA2F236DE /* Pods-aghCampusMap-aghCampusMapTests.release.xcconfig */,
+				21C8B2F13A2A0B0F90DC8BAC /* Pods-aghCampusMapTests.debug.xcconfig */,
+				F42562F0BCC19F96D3D6B091 /* Pods-aghCampusMapTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -159,8 +163,8 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */,
-				F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */,
+				6C6AB598A30EA6B2D75878DE /* [CP] Embed Pods Frameworks */,
+				5F2B0DB6BB8C380CC2A375AC /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -182,8 +186,8 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
+				2CC23E039E1E445D99037E6A /* [CP] Embed Pods Frameworks */,
+				28E48AE4DB82E4929D9F03CA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -266,7 +270,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
+		28E48AE4DB82E4929D9F03CA /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap/Pods-aghCampusMap-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap/Pods-aghCampusMap-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap/Pods-aghCampusMap-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2CC23E039E1E445D99037E6A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -281,6 +302,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap/Pods-aghCampusMap-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5F2B0DB6BB8C380CC2A375AC /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6C6AB598A30EA6B2D75878DE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
@@ -325,57 +380,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap/Pods-aghCampusMap-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap/Pods-aghCampusMap-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap/Pods-aghCampusMap-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-aghCampusMap-aghCampusMapTests/Pods-aghCampusMap-aghCampusMapTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -486,6 +490,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H6YJQ6PUNH;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = aghCampusMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -513,6 +518,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H6YJQ6PUNH;
 				INFOPLIST_FILE = aghCampusMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
