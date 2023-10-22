@@ -81,7 +81,9 @@ export default function EventTile({
                             : getEventDatetimeStringLong(startTime)}
                     </Text>
                     {title && <Text style={styles.eventTitle}>{title}</Text>}
-                    <VerticalSpacer height={Constants.SPACING_UNIT_8} />
+                    <VerticalSpacer
+                        height={title ? Constants.SPACING_UNIT_8 : 4}
+                    />
                     <TouchableOpacity
                         activeOpacity={expanded ? 1 : 0.6}
                         onPress={() => {

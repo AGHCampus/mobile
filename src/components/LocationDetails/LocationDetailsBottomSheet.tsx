@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useContext, RefObject } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
     useSharedValue,
@@ -23,6 +23,8 @@ import {
     TEMP_OFFER_DATA,
 } from '../../lib/MockedData';
 
+const COLLAPSE_ANIMATION_DELAY = Platform.OS === 'ios' ? 100 : 40;
+
 interface Props {
     bottomSheetModalRef: RefObject<BottomSheetModal>;
     selectedLocationID: string;
@@ -33,7 +35,7 @@ const springConfig: WithSpringConfig = {
     overshootClamping: true,
     restDisplacementThreshold: 0.1,
     restSpeedThreshold: 0.1,
-    stiffness: 500,
+    stiffness: 150,
 };
 
 const LocationDetailsBottomSheet = ({
@@ -58,7 +60,7 @@ const LocationDetailsBottomSheet = ({
     };
 
     const handleSheetCollapsePress = () => {
-        setSelectedTabViewIndex(0);
+        setTimeout(() => setSelectedTabViewIndex(0), COLLAPSE_ANIMATION_DELAY);
         bottomSheetModalRef.current!.snapToIndex(1);
     };
 

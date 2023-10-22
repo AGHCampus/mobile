@@ -1,5 +1,5 @@
 import React, { useState, useCallback, Dispatch, SetStateAction } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import {
     TabView,
     TabBar,
@@ -18,6 +18,8 @@ import {
     LocationData,
     LocationDetailsData,
 } from '../../lib/MockedData';
+
+const EXPAND_ANIMATION_DELAY = Platform.OS === 'ios' ? 250 : 50;
 
 interface Props {
     locationData: LocationData;
@@ -95,7 +97,9 @@ const LocationDetailsTabView = ({
             indicatorStyle={styles.indicator}
             pressColor="rgba(0, 0, 0, 0.1)" // ripple effect color (Android >= 5.0)
             pressOpacity={0.3} // press opacity (iOS and Android < 5.0)
-            onTabPress={expandBottomSheet}
+            onTabPress={() =>
+                setTimeout(expandBottomSheet, EXPAND_ANIMATION_DELAY)
+            }
         />
     );
 
