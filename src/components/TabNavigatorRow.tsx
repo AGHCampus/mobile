@@ -118,10 +118,15 @@ const styles = StyleSheet.create({
     row: {
         backgroundColor: Colors.bgWhite,
         elevation: 4,
-        // TODO: Add shadow/elevation for iOS that will not be visible on the bottom edge on inset bottom area
-        // I think this may be a problem for some android devices as well (?)
         height: 60,
         flexDirection: 'row',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.0,
     },
 
     buttonContainer: {
