@@ -1,4 +1,5 @@
 export default {
+    agh: 'Akademia Górniczo-Hutnicza',
     tabs: {
         map: 'Mapa',
         events: 'Wydarzenia',
@@ -27,7 +28,7 @@ export default {
     },
     categories: {
         faculty: 'Budynek wydziału',
-        dorm: 'Akademik',
+        dormitory: 'Akademik',
         shop: 'Sklep',
         club: 'Klub studencki',
         restaurant: 'Restauracja',

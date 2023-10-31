@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import {
     StyleSheet,
     View,
@@ -9,7 +9,6 @@ import {
 import type { Region } from 'react-native-maps';
 import RNMapView from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
-import { LatLng } from 'react-native-maps';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 import {
@@ -19,27 +18,20 @@ import {
 } from '../utils/geolocation';
 import Icon from '../components/Icon';
 import LocationDetails from '../components/LocationDetails/LocationDetailsBottomSheet';
-import MapMarker, {
-    MarkerType,
-    getMarkerTypeByCategory,
-} from '../components/Markers';
+import MapMarker from '../components/Markers';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 import { BASE_MAP_STYLE_LIGHT, Constants } from '../lib/Constants';
 import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
 import { TabsParamList } from './navigationTypes';
-import { TEMP_LOCATIONS_DATA } from '../lib/MockedData';
+import { LocationsDataContext } from '../../App';
 
 type Props = BottomTabScreenProps<TabsParamList, 'Map'>;
 
-export interface MarkerData {
-    id: string;
-    coordinate: LatLng;
-    type: MarkerType;
-}
-
 export default function MapScreen({ route, navigation }: Props) {
+    const locationsData = useContext(LocationsDataContext);
+
     const mapViewRef = useRef<RNMapView>(null);
     const inputRef = useRef<TextInput>(null);
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -128,18 +120,6 @@ export default function MapScreen({ route, navigation }: Props) {
         return true;
     };
 
-    const markerData: MarkerData[] = useMemo(
-        () =>
-            Object.entries(TEMP_LOCATIONS_DATA).map(
-                ([id, { coordinate, category }]) => ({
-                    id,
-                    coordinate,
-                    type: getMarkerTypeByCategory(category),
-                }),
-            ),
-        [],
-    );
-
     return (
         <View style={styles.container}>
             <MapView
@@ -159,17 +139,19 @@ export default function MapScreen({ route, navigation }: Props) {
                 onPress={handleMapPress}
                 minPoints={3}
                 style={styles.map}>
-                {markerData.filter(shouldDisplayMarker).map(marker => (
-                    <MapMarker
-                        data={marker}
-                        coordinate={marker.coordinate}
-                        mapViewRef={mapViewRef}
-                        bottomSheetModalRef={bottomSheetModalRef}
-                        key={`marker_${marker.id}`}
-                        isSelected={selectedMarkerID === marker.id}
-                        selectMarker={setSelectedMarkerID}
-                    />
-                ))}
+                {Object.values(locationsData)
+                    .filter(shouldDisplayMarker)
+                    .map(location => (
+                        <MapMarker
+                            data={location}
+                            coordinate={location.coordinate}
+                            mapViewRef={mapViewRef}
+                            bottomSheetModalRef={bottomSheetModalRef}
+                            key={`marker_${location.id}`}
+                            isSelected={selectedMarkerID === location.id}
+                            selectMarker={setSelectedMarkerID}
+                        />
+                    ))}
             </MapView>
 
             <View style={[styles.searchBar, Shadows.depth2]}>

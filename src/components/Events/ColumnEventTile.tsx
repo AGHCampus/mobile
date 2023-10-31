@@ -20,7 +20,8 @@ import {
     getEventDatetimeStringLong,
 } from '../../utils/time';
 import i18n from '../../utils/i18n';
-import { LocationData, EventData } from '../../lib/MockedData';
+import { LocationData } from '../../api/locations';
+import { EventData } from '../../api/events';
 
 interface Props {
     location?: LocationData;
@@ -60,7 +61,7 @@ export default function EventTile({
         ),
     }));
 
-    const { title, imageUrl, description, websiteUrl, startTime, endTime } =
+    const { title, image_url, description, website_url, start_date, end_date } =
         event;
 
     return (
@@ -69,16 +70,19 @@ export default function EventTile({
                 <EventLocation
                     name={location.name}
                     coordinate={location.coordinate}
-                    logoUrl={location.logoUrl}
+                    logoUrl={location.logo_url}
                 />
             )}
             <Animated.View style={[styles.eventContainer, Shadows.depth2]}>
-                <FastImage style={styles.image} source={{ uri: imageUrl }} />
+                <FastImage style={styles.image} source={{ uri: image_url }} />
                 <View style={styles.eventDetailsContainer}>
                     <Text style={styles.time}>
-                        {endTime
-                            ? getEventDatetimeRangeString(startTime, endTime)
-                            : getEventDatetimeStringLong(startTime)}
+                        {end_date
+                            ? getEventDatetimeRangeString(
+                                  new Date(start_date),
+                                  new Date(end_date),
+                              )
+                            : getEventDatetimeStringLong(new Date(start_date))}
                     </Text>
                     {title && <Text style={styles.eventTitle}>{title}</Text>}
                     <VerticalSpacer
@@ -135,7 +139,7 @@ export default function EventTile({
                                 height={Constants.SPACING_UNIT_16}
                             />
                             <EventButtonRow
-                                url={websiteUrl}
+                                url={website_url}
                                 shareContent={{ message: 'test' }}
                             />
                         </>

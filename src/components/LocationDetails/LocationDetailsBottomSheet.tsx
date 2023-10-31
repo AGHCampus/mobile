@@ -13,15 +13,6 @@ import BottomSheetFullScreenHeader from './LocationDetailsFullScreenHeader';
 import LocationDetailsTabView from './LocationDetailsTabView';
 import { Colors } from '../../lib/Colors';
 import { AppDimensionsContext } from '../../../App';
-import {
-    LocationData,
-    LocationDetailsData,
-    EventData,
-    TEMP_LOCATIONS_DATA,
-    TEMP_EXAMPLE_LOCATION_DETAILS_DATA,
-    TEMP_EVENTS_DATA,
-    TEMP_OFFER_DATA,
-} from '../../lib/MockedData';
 
 const COLLAPSE_ANIMATION_DELAY = Platform.OS === 'ios' ? 100 : 40;
 
@@ -78,12 +69,6 @@ const LocationDetailsBottomSheet = ({
         };
     });
 
-    const locationData: LocationData = TEMP_LOCATIONS_DATA[selectedLocationID];
-    const locationDetailsData: LocationDetailsData =
-        TEMP_EXAMPLE_LOCATION_DETAILS_DATA;
-    const eventsData: ReadonlyArray<EventData> = TEMP_EVENTS_DATA;
-    const offersData: ReadonlyArray<EventData> = TEMP_OFFER_DATA;
-
     return (
         <>
             <BottomSheetModal
@@ -96,20 +81,12 @@ const LocationDetailsBottomSheet = ({
                 handleStyle={styles.handle}
                 handleIndicatorStyle={styles.handleIndicator}
                 animationConfigs={springConfig}>
-                {locationData &&
-                    locationDetailsData &&
-                    eventsData &&
-                    offersData && (
-                        <LocationDetailsTabView
-                            locationData={locationData}
-                            locationDetailsData={locationDetailsData}
-                            eventsData={eventsData}
-                            offersData={offersData}
-                            expandBottomSheet={expandBottomSheet}
-                            selectedTabViewIndex={selectedTabViewIndex}
-                            setSelectedTabViewIndex={setSelectedTabViewIndex}
-                        />
-                    )}
+                <LocationDetailsTabView
+                    selectedLocationID={selectedLocationID}
+                    expandBottomSheet={expandBottomSheet}
+                    selectedTabViewIndex={selectedTabViewIndex}
+                    setSelectedTabViewIndex={setSelectedTabViewIndex}
+                />
             </BottomSheetModal>
             <Portal>
                 <Animated.View

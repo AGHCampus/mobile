@@ -1,16 +1,12 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 import SafeView from './SafeView';
-
 import { VerticalSpacer } from '../components/Spacers';
 import ExpandableEventTile from '../components/Events/ExpandableEventTile';
 import { Constants } from '../lib/Constants';
-import {
-    EventData,
-    LocationsMap,
-    TEMP_EVENTS_DATA,
-    TEMP_LOCATIONS_DATA,
-} from '../lib/MockedData';
+import DataFetchStatusWrapper from '../components/DataFetchStatusWrapper';
+import { LocationsDataContext } from '../../App';
+import useEventsData from '../hooks/useEventsData';
 
 function ListHeader() {
     return <VerticalSpacer height={Constants.SPACING_UNIT_16} />;
@@ -25,9 +21,8 @@ function ListFooter() {
 }
 
 export default function EventsScreen() {
-    // TODO: Fetch events data from server
-    const eventsData: ReadonlyArray<EventData> = TEMP_EVENTS_DATA;
-    const locationsData: LocationsMap = TEMP_LOCATIONS_DATA;
+    const { eventsData, eventsDataStatus } = useEventsData();
+    const locationsData = useContext(LocationsDataContext);
 
     const [refreshing, setRefreshing] = React.useState(false);
     const onRefresh = useCallback(() => {
@@ -37,25 +32,27 @@ export default function EventsScreen() {
 
     return (
         <SafeView style={styles.container}>
-            <FlatList
-                data={eventsData}
-                renderItem={event => (
-                    <ExpandableEventTile
-                        location={locationsData[event.item.locationId]}
-                        event={event.item}
-                    />
-                )}
-                ListHeaderComponent={ListHeader}
-                ItemSeparatorComponent={ListSpacer}
-                ListFooterComponent={ListFooter}
-                showsVerticalScrollIndicator={false}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-            />
+            <DataFetchStatusWrapper status={eventsDataStatus}>
+                <FlatList
+                    data={eventsData}
+                    renderItem={event => (
+                        <ExpandableEventTile
+                            location={locationsData[event.item.location_id]}
+                            event={event.item}
+                        />
+                    )}
+                    ListHeaderComponent={ListHeader}
+                    ItemSeparatorComponent={ListSpacer}
+                    ListFooterComponent={ListFooter}
+                    showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                />
+            </DataFetchStatusWrapper>
         </SafeView>
     );
 }

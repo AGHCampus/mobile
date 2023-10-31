@@ -26,6 +26,7 @@ import i18n from './src/utils/i18n';
 import Icon from './src/components/Icon';
 import { Colors } from './src/lib/Colors';
 import { Constants } from './src/lib/Constants';
+import useLocationsData, { LocationsMap } from './src/hooks/useLocationsData';
 
 // TODO: Investigate the warnings or move this somewhere else
 LogBox.ignoreLogs(['Overriding previous layout', 'Encountered']);
@@ -82,6 +83,8 @@ const InfoHeader = () => {
 export const AppDimensionsContext =
     createContext<Dimensions>(initialDimensions);
 
+export const LocationsDataContext = createContext<LocationsMap>({});
+
 export default function App() {
     const [dimensions, setDimensions] = useState<Dimensions>(initialDimensions);
     i18n.locale = locale;
@@ -99,53 +102,57 @@ export default function App() {
         );
     };
 
+    const { locationsData } = useLocationsData();
+
     return (
-        <SafeAreaProvider
-            onLayout={event => {
-                const { width, height } = event.nativeEvent.layout;
-                setDimensions({ height, width });
-            }}>
-            <PortalProvider>
-                <GestureHandlerRootView style={styles.container}>
-                    <BottomSheetModalProvider>
-                        <AppDimensionsContext.Provider value={dimensions}>
-                            <NavigationContainer>
-                                <Tab.Navigator
-                                    tabBar={renderTabBar}
-                                    screenOptions={navigationOptions}
-                                    initialRouteName="Map">
-                                    <Tab.Screen
-                                        name="Map"
-                                        component={MapScreen}
-                                    />
-                                    <Tab.Screen
-                                        name="Events"
-                                        component={EventsScreen}
-                                        options={{
-                                            headerTitle: EventsHeader,
-                                        }}
-                                    />
-                                    <Tab.Screen
-                                        name="Offers"
-                                        component={OffersScreen}
-                                        options={{
-                                            headerTitle: OffersHeader,
-                                        }}
-                                    />
-                                    <Tab.Screen
-                                        name="Info"
-                                        component={InfoScreen}
-                                        options={{
-                                            headerTitle: InfoHeader,
-                                        }}
-                                    />
-                                </Tab.Navigator>
-                            </NavigationContainer>
-                        </AppDimensionsContext.Provider>
-                    </BottomSheetModalProvider>
-                </GestureHandlerRootView>
-            </PortalProvider>
-        </SafeAreaProvider>
+        <LocationsDataContext.Provider value={locationsData}>
+            <SafeAreaProvider
+                onLayout={event => {
+                    const { width, height } = event.nativeEvent.layout;
+                    setDimensions({ height, width });
+                }}>
+                <PortalProvider>
+                    <GestureHandlerRootView style={styles.container}>
+                        <BottomSheetModalProvider>
+                            <AppDimensionsContext.Provider value={dimensions}>
+                                <NavigationContainer>
+                                    <Tab.Navigator
+                                        tabBar={renderTabBar}
+                                        screenOptions={navigationOptions}
+                                        initialRouteName="Map">
+                                        <Tab.Screen
+                                            name="Map"
+                                            component={MapScreen}
+                                        />
+                                        <Tab.Screen
+                                            name="Events"
+                                            component={EventsScreen}
+                                            options={{
+                                                headerTitle: EventsHeader,
+                                            }}
+                                        />
+                                        <Tab.Screen
+                                            name="Offers"
+                                            component={OffersScreen}
+                                            options={{
+                                                headerTitle: OffersHeader,
+                                            }}
+                                        />
+                                        <Tab.Screen
+                                            name="Info"
+                                            component={InfoScreen}
+                                            options={{
+                                                headerTitle: InfoHeader,
+                                            }}
+                                        />
+                                    </Tab.Navigator>
+                                </NavigationContainer>
+                            </AppDimensionsContext.Provider>
+                        </BottomSheetModalProvider>
+                    </GestureHandlerRootView>
+                </PortalProvider>
+            </SafeAreaProvider>
+        </LocationsDataContext.Provider>
     );
 }
 
