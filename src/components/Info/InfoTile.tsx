@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Colors } from '../../lib/Colors';
-import { InfoData } from '../../screens/InfoScreen';
 import { getInfoDatetimeString } from '../../utils/time';
 import { Shadows } from '../../lib/Shadows';
 import { VerticalSpacer } from '../Spacers';
+import { InfoData } from '../../api/information';
 
 export default function InfoTile({ title, content, timestamp }: InfoData) {
     return (

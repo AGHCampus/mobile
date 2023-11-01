@@ -71,10 +71,10 @@ const LocationDetailsOverviewTab = ({
                             {locationData && locationDetailsData && (
                                 <>
                                     <View style={styles.row}>
-                                        {locationData.logo_url ? (
+                                        {locationData.logoUrl ? (
                                             <FastImage
                                                 source={{
-                                                    uri: locationData.logo_url,
+                                                    uri: locationData.logoUrl,
                                                 }}
                                                 style={styles.locationLogo}
                                             />
@@ -182,7 +182,7 @@ const LocationDetailsOverviewTab = ({
                                                         i18n.t(
                                                             'location.website',
                                                         ),
-                                                        locationDetailsData.website_url,
+                                                        locationDetailsData.websiteUrl,
                                                     ],
                                                     [
                                                         i18n.t(

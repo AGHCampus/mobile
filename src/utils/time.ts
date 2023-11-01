@@ -5,7 +5,6 @@ function getLocale() {
 }
 
 export function getEventDatetimeStringLong(date: Date) {
-    // TODO: add locale
     const locale = getLocale();
     return `${date.toLocaleDateString(locale)} / ${date
         .toLocaleString(locale, {
@@ -20,7 +19,6 @@ export function getEventDatetimeStringLong(date: Date) {
 }
 
 export function getEventDatetimeRangeString(startDate: Date, endDate: Date) {
-    // TODO: add locale
     const locale = getLocale();
 
     return `${startDate.toLocaleDateString(
@@ -28,7 +26,8 @@ export function getEventDatetimeRangeString(startDate: Date, endDate: Date) {
     )} - ${endDate.toLocaleDateString(locale)} `;
 }
 
-export function getInfoDatetimeString(date: Date) {
+export function getInfoDatetimeString(timestamp: string) {
+    const date = new Date(timestamp);
     const locale = getLocale();
-    return date.toLocaleString(locale);
+    return date.toLocaleDateString(locale).replace(/\//g, '.');
 }

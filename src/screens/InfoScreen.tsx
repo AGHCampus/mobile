@@ -5,33 +5,8 @@ import { VerticalSpacer } from '../components/Spacers';
 import { Constants } from '../lib/Constants';
 import { Colors } from '../lib/Colors';
 import InfoTile from '../components/Info/InfoTile';
-
-export interface InfoData {
-    title: string;
-    content: string;
-    timestamp: Date;
-}
-
-const TEMP_INFO_DATA: ReadonlyArray<InfoData> = [
-    {
-        title: 'Godziny rektorskie',
-        content:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies aliquam, nunc nisl ultricies nunc, vitae ultricies nisl nisl vitae nisl. Donec auctor, nisl eget ultricies aliquam, nunc nisl ultricies nunc, vitae ultricies nisl nisl vitae nisl.',
-        timestamp: new Date('2023-06-20T10:00:00+02:00'),
-    },
-    {
-        title: 'Sesja egzaminacyjna',
-        content:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies aliquam, nunc nisl ultricies nunc, vitae ultricies nisl nisl vitae nisl. Donec auctor, nisl eget ultricies aliquam, nunc nisl ultricies nunc, vitae ultricies nisl nisl vitae nisl.',
-        timestamp: new Date('2023-06-20T10:00:00+02:00'),
-    },
-    {
-        title: 'Stypendium rektora',
-        content:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies aliquam, nunc nisl ultricies nunc, vitae ultricies nisl nisl vitae nisl. Donec auctor, nisl eget ultricies aliquam, nunc nisl ultricies nunc, vitae ultricies nisl nisl vitae nisl.',
-        timestamp: new Date('2023-06-20T10:00:00+02:00'),
-    },
-];
+import useInfoData from '../hooks/useInfoData';
+import DataFetchStatusWrapper from '../components/DataFetchStatusWrapper';
 
 function ListSpacer() {
     return <VerticalSpacer height={Constants.SPACING_UNIT_20} />;
@@ -39,9 +14,10 @@ function ListSpacer() {
 
 export default function InfoScreen() {
     // TODO: Fetch info data from server
-    const infoData: ReadonlyArray<InfoData> = TEMP_INFO_DATA;
 
     const [refreshing, setRefreshing] = useState(false);
+    const { infoData, infoDataStatus } = useInfoData();
+
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         setTimeout(() => setRefreshing(false), 1000);
@@ -49,25 +25,27 @@ export default function InfoScreen() {
 
     return (
         <SafeView style={styles.container}>
-            <FlatList
-                data={infoData}
-                renderItem={info => (
-                    <InfoTile
-                        title={info.item.title}
-                        content={info.item.content}
-                        timestamp={info.item.timestamp}
-                    />
-                )}
-                ItemSeparatorComponent={ListSpacer}
-                ListHeaderComponent={ListSpacer}
-                showsVerticalScrollIndicator={false}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-            />
+            <DataFetchStatusWrapper status={infoDataStatus}>
+                <FlatList
+                    data={infoData}
+                    renderItem={info => (
+                        <InfoTile
+                            title={info.item.title}
+                            content={info.item.content}
+                            timestamp={info.item.timestamp}
+                        />
+                    )}
+                    ItemSeparatorComponent={ListSpacer}
+                    ListHeaderComponent={ListSpacer}
+                    showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                />
+            </DataFetchStatusWrapper>
         </SafeView>
     );
 }
