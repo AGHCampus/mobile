@@ -1,16 +1,12 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 import SafeView from './SafeView';
-
 import { VerticalSpacer } from '../components/Spacers';
 import ColumnEventTile from '../components/Events/ColumnEventTile';
 import { Constants } from '../lib/Constants';
-import {
-    EventData,
-    LocationsMap,
-    TEMP_OFFER_DATA,
-    TEMP_LOCATIONS_DATA,
-} from '../lib/MockedData';
+import DataFetchStatusWrapper from '../components/DataFetchStatusWrapper';
+import { LocationsDataContext } from '../../App';
+import useOffersData from '../hooks/useOffersData';
 
 function ListHeader() {
     return <VerticalSpacer height={Constants.SPACING_UNIT_16} />;
@@ -25,9 +21,8 @@ function ListFooter() {
 }
 
 export default function OffersScreen() {
-    // TODO: Fetch offer data from server
-    const offerData: ReadonlyArray<EventData> = TEMP_OFFER_DATA;
-    const locationsData: LocationsMap = TEMP_LOCATIONS_DATA;
+    const { offersData, offersDataStatus } = useOffersData();
+    const locationsData = useContext(LocationsDataContext);
 
     const [refreshing, setRefreshing] = React.useState(false);
     const onRefresh = useCallback(() => {
@@ -37,26 +32,28 @@ export default function OffersScreen() {
 
     return (
         <SafeView style={styles.container}>
-            <FlatList
-                data={offerData}
-                renderItem={event => (
-                    <ColumnEventTile
-                        location={locationsData[event.item.locationId]}
-                        event={event.item}
-                        showEventButtonRow={false}
-                    />
-                )}
-                ListHeaderComponent={ListHeader}
-                ItemSeparatorComponent={ListSpacer}
-                ListFooterComponent={ListFooter}
-                showsVerticalScrollIndicator={false}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-            />
+            <DataFetchStatusWrapper status={offersDataStatus}>
+                <FlatList
+                    data={offersData}
+                    renderItem={event => (
+                        <ColumnEventTile
+                            location={locationsData[event.item.location_id]}
+                            event={event.item}
+                            showEventButtonRow={false}
+                        />
+                    )}
+                    ListHeaderComponent={ListHeader}
+                    ItemSeparatorComponent={ListSpacer}
+                    ListFooterComponent={ListFooter}
+                    showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                />
+            </DataFetchStatusWrapper>
         </SafeView>
     );
 }

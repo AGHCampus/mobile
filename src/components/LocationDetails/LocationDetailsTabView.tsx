@@ -13,19 +13,12 @@ import LocationDetailsOffersTab from './LocationDetailsOffersTab';
 import { Colors } from '../../lib/Colors';
 import { Shadows } from '../../lib/Shadows';
 import i18n from '../../utils/i18n';
-import {
-    EventData,
-    LocationData,
-    LocationDetailsData,
-} from '../../lib/MockedData';
+import useLocationData from '../../hooks/useLocationData';
 
 const EXPAND_ANIMATION_DELAY = Platform.OS === 'ios' ? 250 : 50;
 
 interface Props {
-    locationData: LocationData;
-    locationDetailsData: LocationDetailsData;
-    eventsData: ReadonlyArray<EventData>;
-    offersData: ReadonlyArray<EventData>;
+    selectedLocationID: string;
     expandBottomSheet: () => void;
     selectedTabViewIndex: number;
     setSelectedTabViewIndex: Dispatch<SetStateAction<number>>;
@@ -36,14 +29,23 @@ type TabBarProps = SceneRendererProps & {
 };
 
 const LocationDetailsTabView = ({
-    locationData,
-    locationDetailsData,
-    eventsData,
-    offersData,
+    selectedLocationID,
     expandBottomSheet,
     selectedTabViewIndex,
     setSelectedTabViewIndex,
 }: Props) => {
+    const {
+        locationData,
+        locationDetailsData,
+        locationDetailsDataStatus,
+        eventsData,
+        eventsDataStatus,
+        offersData,
+        offersDataStatus,
+    } = useLocationData({
+        selectedLocationID,
+    });
+
     const [routes] = useState<Route[]>([
         {
             key: 'overview',
@@ -67,13 +69,26 @@ const LocationDetailsTabView = ({
                         <LocationDetailsOverviewTab
                             locationData={locationData}
                             locationDetailsData={locationDetailsData}
+                            locationDetailsDataStatus={
+                                locationDetailsDataStatus
+                            }
                             expandBottomSheet={expandBottomSheet}
                         />
                     );
                 case 'events':
-                    return <LocationDetailsEventsTab eventsData={eventsData} />;
+                    return (
+                        <LocationDetailsEventsTab
+                            eventsData={eventsData}
+                            eventsDataStatus={eventsDataStatus}
+                        />
+                    );
                 case 'offers':
-                    return <LocationDetailsOffersTab offersData={offersData} />;
+                    return (
+                        <LocationDetailsOffersTab
+                            offersData={offersData}
+                            offersDataStatus={offersDataStatus}
+                        />
+                    );
                 default:
                     return null;
             }
@@ -81,8 +96,11 @@ const LocationDetailsTabView = ({
         [
             locationData,
             locationDetailsData,
+            locationDetailsDataStatus,
             eventsData,
+            eventsDataStatus,
             offersData,
+            offersDataStatus,
             expandBottomSheet,
         ],
     );

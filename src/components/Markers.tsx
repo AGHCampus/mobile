@@ -15,59 +15,27 @@ import Animated, {
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { icons } from '../Icons';
 import { Constants } from '../lib/Constants';
+import { LocationData } from '../api/locations';
 
-export enum MarkerType {
-    FACULTY,
-    DORM,
-    SHOP,
-    CLUB,
-    RESTAURANT,
-    INFO,
-}
-
-export interface MarkerData {
-    id: string;
-    coordinate: LatLng;
-    type: MarkerType;
-}
-
-export function getMarkerTypeByCategory(category: string) {
+export function getMarkerImageByCategory(category: string) {
     switch (category) {
         case 'faculty':
-            return MarkerType.FACULTY;
-        case 'dorm':
-            return MarkerType.DORM;
-        case 'shop':
-            return MarkerType.SHOP;
-        case 'club':
-            return MarkerType.CLUB;
-        case 'restaurant':
-            return MarkerType.RESTAURANT;
-        default:
-            return MarkerType.INFO;
-    }
-}
-
-export function getMarkerImage(markerType: MarkerType) {
-    switch (markerType) {
-        case MarkerType.FACULTY:
             return icons.Faculty.src;
-        case MarkerType.DORM:
+        case 'dormitory':
             return icons.Dorm.src;
-        case MarkerType.SHOP:
+        case 'shop':
             return icons.Shop.src;
-        case MarkerType.CLUB:
+        case 'club':
             return icons.Club.src;
-        case MarkerType.RESTAURANT:
+        case 'restaurant':
             return icons.Restaurant.src;
-        case MarkerType.INFO:
         default:
             return icons.Info.src;
     }
 }
 
 interface Props {
-    data: MarkerData;
+    data: LocationData;
     coordinate: LatLng;
     mapViewRef: RefObject<MapView>;
     bottomSheetModalRef: RefObject<BottomSheetModal>;
@@ -86,7 +54,7 @@ function MapMarker({
     isSelected,
     selectMarker,
 }: Props) {
-    const { coordinate, id, type } = data;
+    const { coordinate, id, category } = data;
     const markerSize = useSharedValue(24);
 
     const focusMarker = useCallback(() => {
@@ -133,7 +101,7 @@ function MapMarker({
             style={styles.markerTapTarget}>
             <View style={styles.flexOne}>
                 <AnimatedImage
-                    source={getMarkerImage(type)}
+                    source={getMarkerImageByCategory(category)}
                     resizeMode="contain"
                     resizeMethod="resize"
                     style={markerImageStyle}

@@ -11,4 +11,5 @@ export const Colors = {
     textLink: '#356EFF',
     shadowGrey: '#171717',
     bottomSheetHandle: '#455360',
+    activityIndicator: '#999999',
 } as const;

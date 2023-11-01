@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { LatLng } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
@@ -8,6 +8,7 @@ import { TabNavigation } from '../../screens/navigationTypes';
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
 import i18n from '../../utils/i18n';
+import AghSmall from '../../../assets/Agh_small.png';
 
 interface Props {
     name: string;
@@ -15,20 +16,24 @@ interface Props {
     coordinate?: LatLng;
 }
 
-export default function EventButtonRow({ logoUrl, name, coordinate }: Props) {
+export default function EventLocation({ logoUrl, name, coordinate }: Props) {
     const navigation = useNavigation<TabNavigation>();
 
     return (
         <View style={styles.container}>
-            {logoUrl && (
+            {logoUrl ? (
                 <FastImage
                     source={{ uri: logoUrl }}
                     style={styles.locationLogo}
                 />
+            ) : (
+                <Image source={AghSmall} style={styles.locationLogo} />
             )}
             <View style={styles.row}>
-                <Text style={styles.text}>{name}</Text>
-                {coordinate && (
+                <Text style={styles.text}>
+                    {name === 'global' ? i18n.t('agh') : name}
+                </Text>
+                {coordinate && name !== 'global' && (
                     <>
                         <Text style={styles.text}>-</Text>
                         <TextButton

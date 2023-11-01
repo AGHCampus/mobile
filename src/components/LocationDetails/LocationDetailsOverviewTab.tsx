@@ -5,8 +5,8 @@ import {
     Text,
     Share,
     ScrollView,
-    Image,
     FlatList,
+    Image,
 } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import { useSharedValue, runOnJS } from 'react-native-reanimated';
@@ -14,28 +14,34 @@ import FastImage from 'react-native-fast-image';
 import AccentButton from '../AccentButton';
 import InfoCard from '../InfoCard';
 import { HorizontalSpacer, VerticalSpacer } from '../Spacers';
-import { getMarkerImage, getMarkerTypeByCategory } from '../Markers';
 import i18n from '../../utils/i18n';
 import { openURL } from '../../utils/linking';
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
-import { LocationData, LocationDetailsData } from '../../lib/MockedData';
+import { DataFetchingStatus } from '../../lib/CommonTypes';
+import { LocationData, LocationDetailsData } from '../../api/locations';
+import DataFetchStatusWrapper from '../DataFetchStatusWrapper';
+import { getMarkerImageByCategory } from '../Markers';
 
 function PhotosSpacer() {
     return <HorizontalSpacer width={6} />;
 }
 interface Props {
-    locationData: LocationData;
-    locationDetailsData: LocationDetailsData;
+    locationData?: LocationData;
+    locationDetailsData?: LocationDetailsData;
+    locationDetailsDataStatus: DataFetchingStatus;
     expandBottomSheet: () => void;
 }
 
 const LocationDetailsOverviewTab = ({
     locationData,
     locationDetailsData,
+    locationDetailsDataStatus,
     expandBottomSheet,
 }: Props) => {
     const handleSwipeUp = useSharedValue(true);
+
+    const nativeGesture = Gesture.Native();
 
     const scrollPanGesture = Gesture.Pan()
         .onUpdate(e => {
@@ -46,9 +52,8 @@ const LocationDetailsOverviewTab = ({
         })
         .onEnd(() => {
             handleSwipeUp.value = true;
-        });
-
-    const nativeGesture = Gesture.Native();
+        })
+        .simultaneousWithExternalGesture(nativeGesture);
 
     const composedGestures = Gesture.Simultaneous(
         scrollPanGesture,
@@ -60,108 +65,141 @@ const LocationDetailsOverviewTab = ({
             <GestureDetector gesture={composedGestures}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.scrollViewContent}>
-                        <View style={styles.row}>
-                            {locationData.logoUrl ? (
-                                <FastImage
-                                    source={{ uri: locationData.logoUrl }}
-                                    style={styles.locationLogo}
-                                />
-                            ) : (
-                                <Image
-                                    style={styles.locationLogo}
-                                    source={getMarkerImage(
-                                        getMarkerTypeByCategory(
-                                            locationData.category,
-                                        ),
-                                    )}
-                                />
-                            )}
-                            <View>
-                                <Text style={styles.locationCategory}>
-                                    {i18n.t(
-                                        `categories.${locationData.category}`,
-                                    )}
-                                </Text>
-                                <Text style={styles.locationName}>
-                                    {locationData.name}
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={styles.buttonsContainer}>
-                            <AccentButton.Primary
-                                icon={'Website'}
-                                color={Colors.accentGreen}
-                                label={i18n.t('location.website')}
-                                onPress={() => openURL('http://google.com')}
-                            />
-                            <AccentButton.Secondary
-                                icon={'Phone'}
-                                color={Colors.accentGreen}
-                                label={i18n.t('location.call')}
-                                onPress={() => {}}
-                            />
-                            <AccentButton.Secondary
-                                icon={'Share'}
-                                color={Colors.accentGreen}
-                                label={i18n.t('location.share')}
-                                onPress={() => Share.share({ message: 'test' })}
-                            />
-                        </View>
-                        <View style={styles.sectionContainer}>
-                            <Text style={styles.sectionTitle}>
-                                {i18n.t('location.photos')}
-                            </Text>
-                            <FlatList
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                scrollEnabled
-                                data={locationDetailsData.imageUrls}
-                                renderItem={imageUrl => (
-                                    <FastImage
-                                        key={imageUrl.index}
-                                        source={{ uri: imageUrl.item }}
-                                        style={styles.image}
+                        <DataFetchStatusWrapper
+                            status={locationDetailsDataStatus}
+                            errorMessage="Failed to fetch data for this location">
+                            {locationData && locationDetailsData && (
+                                <>
+                                    <View style={styles.row}>
+                                        {locationData.logo_url ? (
+                                            <FastImage
+                                                source={{
+                                                    uri: locationData.logo_url,
+                                                }}
+                                                style={styles.locationLogo}
+                                            />
+                                        ) : (
+                                            <Image
+                                                style={
+                                                    styles.locationCategoryLogo
+                                                }
+                                                source={getMarkerImageByCategory(
+                                                    locationData.category,
+                                                )}
+                                            />
+                                        )}
+                                        <View>
+                                            <Text
+                                                style={styles.locationCategory}>
+                                                {i18n.t(
+                                                    `categories.${locationData.category}`,
+                                                )}
+                                            </Text>
+                                            <Text style={styles.locationName}>
+                                                {locationData.name}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.buttonsContainer}>
+                                        <AccentButton.Primary
+                                            icon={'Website'}
+                                            color={Colors.accentGreen}
+                                            label={i18n.t('location.website')}
+                                            onPress={() =>
+                                                openURL('http://google.com')
+                                            }
+                                        />
+                                        <AccentButton.Secondary
+                                            icon={'Phone'}
+                                            color={Colors.accentGreen}
+                                            label={i18n.t('location.call')}
+                                            onPress={() => {}}
+                                        />
+                                        <AccentButton.Secondary
+                                            icon={'Share'}
+                                            color={Colors.accentGreen}
+                                            label={i18n.t('location.share')}
+                                            onPress={() =>
+                                                Share.share({ message: 'test' })
+                                            }
+                                        />
+                                    </View>
+                                    <View style={styles.sectionContainer}>
+                                        <Text style={styles.sectionTitle}>
+                                            {i18n.t('location.photos')}
+                                        </Text>
+                                        <FlatList
+                                            horizontal={true}
+                                            showsHorizontalScrollIndicator={
+                                                false
+                                            }
+                                            scrollEnabled
+                                            data={locationDetailsData.photos}
+                                            renderItem={imageUrl => (
+                                                <FastImage
+                                                    key={imageUrl.index}
+                                                    source={{
+                                                        uri: imageUrl.item,
+                                                    }}
+                                                    style={styles.image}
+                                                />
+                                            )}
+                                            ItemSeparatorComponent={
+                                                PhotosSpacer
+                                            }
+                                        />
+                                    </View>
+                                    <View style={styles.sectionContainer}>
+                                        <Text style={styles.sectionTitle}>
+                                            {i18n.t('location.info')}
+                                        </Text>
+                                        <View style={styles.infoContainer}>
+                                            <InfoCard
+                                                data={[
+                                                    [
+                                                        i18n.t(
+                                                            'location.description',
+                                                        ),
+                                                        locationDetailsData.description,
+                                                    ],
+                                                ]}
+                                            />
+                                            <InfoCard
+                                                data={[
+                                                    [
+                                                        i18n.t(
+                                                            'location.opening_hours',
+                                                        ),
+                                                        locationDetailsData.opening_hours,
+                                                    ],
+                                                    [
+                                                        i18n.t(
+                                                            'location.phone_number',
+                                                        ),
+                                                        locationDetailsData.phone_number,
+                                                    ],
+                                                    [
+                                                        i18n.t(
+                                                            'location.website',
+                                                        ),
+                                                        locationDetailsData.website_url,
+                                                    ],
+                                                    [
+                                                        i18n.t(
+                                                            'location.address',
+                                                        ),
+                                                        locationDetailsData.address,
+                                                    ],
+                                                ]}
+                                            />
+                                        </View>
+                                    </View>
+                                    <VerticalSpacer
+                                        height={Constants.SPACING_UNIT_24}
                                     />
-                                )}
-                                ItemSeparatorComponent={PhotosSpacer}
-                            />
-                        </View>
-                        <View style={styles.sectionContainer}>
-                            <Text style={styles.sectionTitle}>
-                                {i18n.t('location.info')}
-                            </Text>
-                            <View style={styles.infoContainer}>
-                                <InfoCard
-                                    data={[
-                                        [
-                                            i18n.t('location.description'),
-                                            locationDetailsData.description,
-                                        ],
-                                    ]}
-                                />
-                                <InfoCard
-                                    data={[
-                                        [
-                                            i18n.t('location.opening_hours'),
-                                            locationDetailsData.openingHours,
-                                        ],
-                                        [
-                                            i18n.t('location.phone_number'),
-                                            locationDetailsData.phoneNumber,
-                                        ],
-                                        [
-                                            i18n.t('location.website'),
-                                            locationDetailsData.websiteUrl,
-                                        ],
-                                        [
-                                            i18n.t('location.address'),
-                                            locationDetailsData.address,
-                                        ],
-                                    ]}
-                                />
-                            </View>
-                        </View>
-                        <VerticalSpacer height={Constants.SPACING_UNIT_24} />
+                                </>
+                            )}
+                        </DataFetchStatusWrapper>
                     </View>
                 </ScrollView>
             </GestureDetector>
@@ -187,6 +225,11 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         borderRadius: 15,
+    },
+
+    locationCategoryLogo: {
+        width: 30,
+        height: 30,
     },
 
     locationCategory: {
