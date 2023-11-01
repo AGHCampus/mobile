@@ -11,7 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PortalProvider } from '@gorhom/portal';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { NavigationContainer } from '@react-navigation/native';
+import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import {
     BottomTabBarProps,
     createBottomTabNavigator,
@@ -80,6 +80,45 @@ const InfoHeader = () => {
     );
 };
 
+const linking: LinkingOptions<TabsParamList> = {
+    prefixes: ['aghmap://'],
+    config: {
+        screens: {
+            Map: {
+                path: 'map/:id?/:coordinates?',
+                parse: {
+                    id: id => `${id}`,
+                    coordinates: coordinates => {
+                        const [lat, lng] = coordinates.split(',');
+                        const latitude = parseFloat(lat);
+                        const longitude = parseFloat(lng);
+                        return {
+                            latitude,
+                            longitude,
+                        };
+                    },
+                },
+                stringify: {
+                    id: id => id,
+                    coordinates: coordinates => {
+                        const { latitude, longitude } = coordinates;
+                        return `${latitude},${longitude}`;
+                    },
+                },
+            },
+            Events: {
+                path: 'events',
+            },
+            Offers: {
+                path: 'offers',
+            },
+            Info: {
+                path: 'info',
+            },
+        },
+    },
+};
+
 export const AppDimensionsContext =
     createContext<Dimensions>(initialDimensions);
 
@@ -115,7 +154,7 @@ export default function App() {
                     <GestureHandlerRootView style={styles.container}>
                         <BottomSheetModalProvider>
                             <AppDimensionsContext.Provider value={dimensions}>
-                                <NavigationContainer>
+                                <NavigationContainer linking={linking}>
                                     <Tab.Navigator
                                         tabBar={renderTabBar}
                                         screenOptions={navigationOptions}

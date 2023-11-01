@@ -7,7 +7,7 @@ import {
     TextInput,
 } from 'react-native';
 import type { Region } from 'react-native-maps';
-import RNMapView from 'react-native-maps';
+import RNMapView, { LatLng } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
@@ -26,6 +26,7 @@ import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
 import { TabsParamList } from './navigationTypes';
 import { LocationsDataContext } from '../../App';
+import SharedLocationMarker from '../components/SharedLocationMarker';
 
 type Props = BottomTabScreenProps<TabsParamList, 'Map'>;
 
@@ -41,12 +42,18 @@ export default function MapScreen({ route, navigation }: Props) {
         ...Constants.DEFAULT_REGION_DELTA,
     });
 
+    const [sharedLocationCoordinates, setSharedLocationCoordinates] =
+        useState<LatLng | null>(null);
     const [selectedMarkerID, setSelectedMarkerID] = useState<string>('');
     const [followUserLocation, setFollowUserLocation] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
 
-    const { eventLocation } = route.params ?? { eventLocation: null };
+    const { eventLocation, id, coordinates } = route.params ?? {
+        eventLocation: null,
+        id: null,
+        coordinates: null,
+    };
 
     useEffect(() => {
         navigation.setOptions({ headerShown: false });
@@ -59,7 +66,26 @@ export default function MapScreen({ route, navigation }: Props) {
                 500,
             );
         }
-    }, [navigation, eventLocation]);
+        if (id && mapViewRef.current) {
+            mapViewRef.current.animateToRegion(
+                {
+                    ...locationsData[id].coordinate,
+                    ...Constants.DEFAULT_ZOOMED_IN_REGION_DELTA,
+                },
+                500,
+            );
+        }
+        if (coordinates && mapViewRef.current) {
+            setSharedLocationCoordinates(coordinates);
+            mapViewRef.current.animateToRegion(
+                {
+                    ...coordinates,
+                    ...Constants.DEFAULT_ZOOMED_IN_REGION_DELTA,
+                },
+                500,
+            );
+        }
+    }, [navigation, eventLocation, id, locationsData, coordinates]);
 
     const onRegionChangeComplete = (newRegion: Region) => {
         setCurrentRegion(newRegion);
@@ -152,6 +178,12 @@ export default function MapScreen({ route, navigation }: Props) {
                             selectMarker={setSelectedMarkerID}
                         />
                     ))}
+                {sharedLocationCoordinates && (
+                    <SharedLocationMarker
+                        coordinate={sharedLocationCoordinates}
+                        mapViewRef={mapViewRef}
+                    />
+                )}
             </MapView>
 
             <View style={[styles.searchBar, Shadows.depth2]}>
