@@ -34,6 +34,7 @@ const LocationDetailsBottomSheet = ({
     selectedLocationID,
 }: Props) => {
     const [selectedTabViewIndex, setSelectedTabViewIndex] = useState(0);
+    const [bottomSheetCurrentIndex, setBottomSheetCurrentIndex] = useState(1);
 
     const dimensions = useContext(AppDimensionsContext);
     const insets = useSafeAreaInsets();
@@ -42,12 +43,12 @@ const LocationDetailsBottomSheet = ({
 
     const animatedPosition = useSharedValue(dimensions.height);
     const snapPoints = useMemo(
-        () => [170, 350, bottomSheetMaxHeight],
+        () => [185, 350, bottomSheetMaxHeight],
         [bottomSheetMaxHeight],
     );
 
-    const expandBottomSheet = () => {
-        bottomSheetModalRef.current!.snapToIndex(2);
+    const bottomSheetSnapToIndex = (index: number) => {
+        bottomSheetModalRef.current!.snapToIndex(index);
     };
 
     const handleSheetCollapsePress = () => {
@@ -74,6 +75,7 @@ const LocationDetailsBottomSheet = ({
             <BottomSheetModal
                 ref={bottomSheetModalRef}
                 index={1}
+                onChange={setBottomSheetCurrentIndex}
                 snapPoints={snapPoints}
                 animatedPosition={animatedPosition}
                 enablePanDownToClose={false}
@@ -83,7 +85,8 @@ const LocationDetailsBottomSheet = ({
                 animationConfigs={springConfig}>
                 <LocationDetailsTabView
                     selectedLocationID={selectedLocationID}
-                    expandBottomSheet={expandBottomSheet}
+                    bottomSheetSnapToIndex={bottomSheetSnapToIndex}
+                    bottomSheetCurrentIndex={bottomSheetCurrentIndex}
                     selectedTabViewIndex={selectedTabViewIndex}
                     setSelectedTabViewIndex={setSelectedTabViewIndex}
                 />

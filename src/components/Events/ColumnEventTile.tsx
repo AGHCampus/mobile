@@ -64,6 +64,9 @@ export default function EventTile({
     const { title, image_url, description, website_url, start_date, end_date } =
         event;
 
+    const startDate = new Date(start_date);
+    const endDate = end_date ? new Date(end_date) : null;
+
     return (
         <View>
             {location && (
@@ -77,12 +80,9 @@ export default function EventTile({
                 <FastImage style={styles.image} source={{ uri: image_url }} />
                 <View style={styles.eventDetailsContainer}>
                     <Text style={styles.time}>
-                        {end_date
-                            ? getEventDatetimeRangeString(
-                                  new Date(start_date),
-                                  new Date(end_date),
-                              )
-                            : getEventDatetimeStringLong(new Date(start_date))}
+                        {endDate
+                            ? getEventDatetimeRangeString(startDate, endDate)
+                            : getEventDatetimeStringLong(startDate)}
                     </Text>
                     {title && <Text style={styles.eventTitle}>{title}</Text>}
                     <VerticalSpacer
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     eventContainer: {
         borderRadius: Constants.BORDER_RADIUS_MEDIUM,
         backgroundColor: Colors.bgWhite,
-        marginHorizontal: Constants.SPACING_UNIT_16,
+        marginHorizontal: Constants.SPACING_UNIT_10,
         flex: 1,
     },
 

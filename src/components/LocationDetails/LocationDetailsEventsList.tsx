@@ -12,7 +12,7 @@ interface Props {
 }
 
 function ListHeader() {
-    return <VerticalSpacer height={Constants.SPACING_UNIT_16} />;
+    return <VerticalSpacer height={Constants.SPACING_UNIT_10} />;
 }
 
 function ListSpacer() {
