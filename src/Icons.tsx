@@ -15,7 +15,7 @@ import Faculty from '../assets/Faculty.png';
 import Dorm from '../assets/Dorm.png';
 import Shop from '../assets/Shop.png';
 import Club from '../assets/Club.png';
-import Restaurant from '../assets/Info.png';
+import Restaurant from '../assets/Shop.png';
 
 export const icons = {
     Calendar: {

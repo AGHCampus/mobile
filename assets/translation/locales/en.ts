@@ -1,4 +1,5 @@
 export default {
+    agh: 'AGH University of Science and Technology',
     tabs: {
         map: 'Map',
         events: 'Events',
@@ -27,7 +28,7 @@ export default {
     },
     categories: {
         faculty: 'Faculty Building',
-        dorm: 'Dormitory',
+        dormitory: 'Dormitory',
         shop: 'Shop',
         club: 'Student Club',
         restaurant: 'Restaurant',

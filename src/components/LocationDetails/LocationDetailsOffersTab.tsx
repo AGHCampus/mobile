@@ -1,18 +1,22 @@
 import React from 'react';
 import LocationDetailsEventsList from './LocationDetailsEventsList';
-import { EventData } from '../../lib/MockedData';
+import { DataFetchingStatus } from '../../lib/CommonTypes';
+import { EventData } from '../../api/events';
+import DataFetchStatusWrapper from '../DataFetchStatusWrapper';
 
 interface Props {
     offersData: ReadonlyArray<EventData>;
+    offersDataStatus: DataFetchingStatus;
 }
 
-// TODO: Fetch data from backend
-const LocationDetailsOffersTab = ({ offersData }: Props) => {
+const LocationDetailsOffersTab = ({ offersData, offersDataStatus }: Props) => {
     return (
-        <LocationDetailsEventsList
-            eventsData={offersData}
-            showEventButtonRow={false}
-        />
+        <DataFetchStatusWrapper status={offersDataStatus}>
+            <LocationDetailsEventsList
+                eventsData={offersData}
+                showEventButtonRow={false}
+            />
+        </DataFetchStatusWrapper>
     );
 };
 

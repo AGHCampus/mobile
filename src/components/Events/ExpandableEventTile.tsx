@@ -22,7 +22,8 @@ import {
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
 import { Shadows } from '../../lib/Shadows';
-import { LocationData, EventData } from '../../lib/MockedData';
+import { EventData } from '../../api/events';
+import { LocationData } from '../../api/locations';
 import { AppDimensionsContext } from '../../../App';
 
 interface Props {
@@ -104,15 +105,18 @@ export default function EventTile({
         };
     }, [animationState.value]);
 
-    const { title, imageUrl, description, websiteUrl, startTime, endTime } =
+    const { title, image_url, description, website_url, start_date, end_date } =
         event;
+
+    const startDate = new Date(start_date);
+    const endDate = end_date ? new Date(end_date) : null;
 
     return (
         <View>
             <EventLocation
                 name={location.name}
                 coordinate={location.coordinate}
-                logoUrl={location.logoUrl}
+                logoUrl={location.logo_url}
             />
             <Animated.View
                 style={[
@@ -129,7 +133,7 @@ export default function EventTile({
                     <View style={[styles.row, { width: tileWidth }]}>
                         <AnimatedFastImage
                             style={[eventImageAnimatedStyle, styles.image]}
-                            source={{ uri: imageUrl }}
+                            source={{ uri: image_url }}
                         />
                         {!isCollapsed ||
                         animationStatus === AnimationState.EXPANDING ? null : (
@@ -139,13 +143,13 @@ export default function EventTile({
                                 style={[styles.collapsedEventDetails]}>
                                 <View style={styles.columnCenter}>
                                     <Text style={styles.time}>
-                                        {endTime
+                                        {endDate
                                             ? getEventDatetimeRangeString(
-                                                  startTime,
-                                                  endTime,
+                                                  startDate,
+                                                  endDate,
                                               )
                                             : getEventDatetimeStringLong(
-                                                  startTime,
+                                                  startDate,
                                               )}
                                     </Text>
                                     <Text
@@ -183,12 +187,12 @@ export default function EventTile({
                         exiting={FadeOutUp.duration(150)}>
                         <VerticalSpacer height={Constants.SPACING_UNIT_10} />
                         <Text style={styles.time}>
-                            {endTime
+                            {endDate
                                 ? getEventDatetimeRangeString(
-                                      startTime,
-                                      endTime,
+                                      startDate,
+                                      endDate,
                                   )
-                                : getEventDatetimeStringLong(startTime)}
+                                : getEventDatetimeStringLong(startDate)}
                         </Text>
                         <Text style={styles.eventTitle}>{title}</Text>
                         <VerticalSpacer height={Constants.SPACING_UNIT_8} />
@@ -198,7 +202,7 @@ export default function EventTile({
                         <VerticalSpacer height={Constants.SPACING_UNIT_16} />
                         {/* TODO: Proper sharing */}
                         <EventButtonRow
-                            url={websiteUrl}
+                            url={website_url}
                             shareContent={{ message: 'test' }}
                         />
                         <VerticalSpacer height={Constants.SPACING_UNIT_16} />

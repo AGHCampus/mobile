@@ -4,7 +4,7 @@ import ColumnEventTile from '../Events/ColumnEventTile';
 import { VerticalSpacer } from '../Spacers';
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
-import { EventData } from '../../lib/MockedData';
+import { EventData } from '../../api/events';
 
 interface Props {
     eventsData: ReadonlyArray<EventData>;
