@@ -61,11 +61,11 @@ export default function EventTile({
         ),
     }));
 
-    const { title, image_url, description, website_url, start_date, end_date } =
+    const { title, imageUrl, description, websiteUrl, startDate, endDate } =
         event;
 
-    const startDate = new Date(start_date);
-    const endDate = end_date ? new Date(end_date) : null;
+    const startTime = new Date(startDate);
+    const endTime = endDate ? new Date(endDate) : null;
 
     return (
         <View>
@@ -73,16 +73,16 @@ export default function EventTile({
                 <EventLocation
                     name={location.name}
                     coordinate={location.coordinate}
-                    logoUrl={location.logo_url}
+                    logoUrl={location.logoUrl}
                 />
             )}
             <Animated.View style={[styles.eventContainer, Shadows.depth2]}>
-                <FastImage style={styles.image} source={{ uri: image_url }} />
+                <FastImage style={styles.image} source={{ uri: imageUrl }} />
                 <View style={styles.eventDetailsContainer}>
                     <Text style={styles.time}>
-                        {endDate
-                            ? getEventDatetimeRangeString(startDate, endDate)
-                            : getEventDatetimeStringLong(startDate)}
+                        {endTime
+                            ? getEventDatetimeRangeString(startTime, endTime)
+                            : getEventDatetimeStringLong(startTime)}
                     </Text>
                     {title && <Text style={styles.eventTitle}>{title}</Text>}
                     <VerticalSpacer
@@ -139,7 +139,7 @@ export default function EventTile({
                                 height={Constants.SPACING_UNIT_16}
                             />
                             <EventButtonRow
-                                url={website_url}
+                                url={websiteUrl}
                                 shareContent={{ message: 'test' }}
                             />
                         </>

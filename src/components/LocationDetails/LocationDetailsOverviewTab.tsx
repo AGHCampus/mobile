@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
     Platform,
     StyleSheet,
@@ -82,8 +82,7 @@ const LocationDetailsOverviewTab = ({
                 onScroll={handleScroll}
                 onScrollBeginDrag={handleScrollBeginDrag}
                 onScrollEndDrag={handleScrollEndDrag}
-                scrollEventThrottle={16}
-                overScrollMode="always">
+                scrollEventThrottle={16}>
                 <View style={styles.scrollViewContent}>
                     <DataFetchStatusWrapper
                         status={locationDetailsDataStatus}
@@ -91,10 +90,10 @@ const LocationDetailsOverviewTab = ({
                         {locationData && locationDetailsData && (
                             <>
                                 <View style={styles.row}>
-                                    {locationData.logo_url ? (
+                                    {locationData.logoUrl ? (
                                         <FastImage
                                             source={{
-                                                uri: locationData.logo_url,
+                                                uri: locationData.logoUrl,
                                             }}
                                             style={styles.locationLogo}
                                         />
@@ -183,17 +182,17 @@ const LocationDetailsOverviewTab = ({
                                                     i18n.t(
                                                         'location.opening_hours',
                                                     ),
-                                                    locationDetailsData.opening_hours,
+                                                    locationDetailsData.openingHours,
                                                 ],
                                                 [
                                                     i18n.t(
                                                         'location.phone_number',
                                                     ),
-                                                    locationDetailsData.phone_number,
+                                                    locationDetailsData.phoneNumber,
                                                 ],
                                                 [
                                                     i18n.t('location.website'),
-                                                    locationDetailsData.website_url,
+                                                    locationDetailsData.websiteUrl,
                                                 ],
                                                 [
                                                     i18n.t('location.address'),

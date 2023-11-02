@@ -37,7 +37,7 @@ export default function EventsScreen() {
                     data={eventsData}
                     renderItem={event => (
                         <ExpandableEventTile
-                            location={locationsData[event.item.location_id]}
+                            location={locationsData[event.item.locationId]}
                             event={event.item}
                         />
                     )}
