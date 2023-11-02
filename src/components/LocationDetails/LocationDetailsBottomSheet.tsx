@@ -14,7 +14,7 @@ import LocationDetailsTabView from './LocationDetailsTabView';
 import { Colors } from '../../lib/Colors';
 import { AppDimensionsContext } from '../../../App';
 
-const COLLAPSE_ANIMATION_DELAY = Platform.OS === 'ios' ? 100 : 40;
+const COLLAPSE_ANIMATION_DELAY = Platform.OS === 'ios' ? 100 : 0;
 
 interface Props {
     bottomSheetModalRef: RefObject<BottomSheetModal>;

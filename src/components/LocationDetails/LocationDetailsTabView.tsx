@@ -15,7 +15,7 @@ import { Shadows } from '../../lib/Shadows';
 import i18n from '../../utils/i18n';
 import useLocationData from '../../hooks/useLocationData';
 
-const EXPAND_ANIMATION_DELAY = Platform.OS === 'ios' ? 250 : 50;
+const EXPAND_ANIMATION_DELAY = Platform.OS === 'ios' ? 250 : 0;
 
 interface Props {
     selectedLocationID: string;
