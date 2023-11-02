@@ -55,27 +55,33 @@ const locale =
 
 const EventsHeader = () => {
     return (
-        <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>{i18n.t('tabs.events')}</Text>
-            <Icon asset={'Calendar'} color={Colors.accentGreen} />
+        <View style={styles.headerOuterContainer}>
+            <View style={styles.headerInnerContainer}>
+                <Text style={styles.headerText}>{i18n.t('tabs.events')}</Text>
+                <Icon asset={'Calendar'} color={Colors.accentGreen} />
+            </View>
         </View>
     );
 };
 
 const OffersHeader = () => {
     return (
-        <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>{i18n.t('tabs.offers')}</Text>
-            <Icon asset={'Offer'} color={Colors.accentGreen} />
+        <View style={styles.headerOuterContainer}>
+            <View style={styles.headerInnerContainer}>
+                <Text style={styles.headerText}>{i18n.t('tabs.offers')}</Text>
+                <Icon asset={'Offer'} color={Colors.accentGreen} />
+            </View>
         </View>
     );
 };
 
 const InfoHeader = () => {
     return (
-        <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>{i18n.t('tabs.info')}</Text>
-            <Icon asset={'Info'} color={Colors.accentGreen} />
+        <View style={styles.headerOuterContainer}>
+            <View style={styles.headerInnerContainer}>
+                <Text style={styles.headerText}>{i18n.t('tabs.info')}</Text>
+                <Icon asset={'Info'} color={Colors.accentGreen} />
+            </View>
         </View>
     );
 };
@@ -160,14 +166,24 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    headerContainer: {
+    headerOuterContainer: {
         display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'flex-end',
         alignItems: 'center',
+        width: '100%',
+    },
+    headerInnerContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
         gap: Constants.SPACING_UNIT_10,
     },
     headerText: {
         fontWeight: '500',
         fontSize: 22,
+        color: Colors.black,
     },
 });

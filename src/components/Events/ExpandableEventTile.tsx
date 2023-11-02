@@ -105,18 +105,18 @@ export default function EventTile({
         };
     }, [animationState.value]);
 
-    const { title, image_url, description, website_url, start_date, end_date } =
+    const { title, imageUrl, description, websiteUrl, startDate, endDate } =
         event;
 
-    const startDate = new Date(start_date);
-    const endDate = end_date ? new Date(end_date) : null;
+    const startTime = new Date(startDate);
+    const endTime = endDate ? new Date(endDate) : null;
 
     return (
         <View>
             <EventLocation
                 name={location.name}
                 coordinate={location.coordinate}
-                logoUrl={location.logo_url}
+                logoUrl={location.logoUrl}
             />
             <Animated.View
                 style={[
@@ -133,7 +133,7 @@ export default function EventTile({
                     <View style={[styles.row, { width: tileWidth }]}>
                         <AnimatedFastImage
                             style={[eventImageAnimatedStyle, styles.image]}
-                            source={{ uri: image_url }}
+                            source={{ uri: imageUrl }}
                         />
                         {!isCollapsed ||
                         animationStatus === AnimationState.EXPANDING ? null : (
@@ -143,13 +143,13 @@ export default function EventTile({
                                 style={[styles.collapsedEventDetails]}>
                                 <View style={styles.columnCenter}>
                                     <Text style={styles.time}>
-                                        {endDate
+                                        {endTime
                                             ? getEventDatetimeRangeString(
-                                                  startDate,
-                                                  endDate,
+                                                  startTime,
+                                                  endTime,
                                               )
                                             : getEventDatetimeStringLong(
-                                                  startDate,
+                                                  startTime,
                                               )}
                                     </Text>
                                     <Text
@@ -187,12 +187,12 @@ export default function EventTile({
                         exiting={FadeOutUp.duration(150)}>
                         <VerticalSpacer height={Constants.SPACING_UNIT_10} />
                         <Text style={styles.time}>
-                            {endDate
+                            {endTime
                                 ? getEventDatetimeRangeString(
-                                      startDate,
-                                      endDate,
+                                      startTime,
+                                      endTime,
                                   )
-                                : getEventDatetimeStringLong(startDate)}
+                                : getEventDatetimeStringLong(startTime)}
                         </Text>
                         <Text style={styles.eventTitle}>{title}</Text>
                         <VerticalSpacer height={Constants.SPACING_UNIT_8} />
@@ -202,7 +202,7 @@ export default function EventTile({
                         <VerticalSpacer height={Constants.SPACING_UNIT_16} />
                         {/* TODO: Proper sharing */}
                         <EventButtonRow
-                            url={website_url}
+                            url={websiteUrl}
                             shareContent={{ message: 'test' }}
                         />
                         <VerticalSpacer height={Constants.SPACING_UNIT_16} />
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     eventContainer: {
         borderRadius: Constants.BORDER_RADIUS_MEDIUM,
         backgroundColor: Colors.bgWhite,
-        marginHorizontal: Constants.SPACING_UNIT_16,
+        marginHorizontal: Constants.SPACING_UNIT_10,
         flex: 1,
     },
 

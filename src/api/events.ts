@@ -3,19 +3,19 @@ import { API_URL } from './config';
 
 export interface EventData {
     id: string;
-    location_id: string;
+    locationId: string;
     title?: string;
     description: string;
-    image_url: string;
-    start_date: string;
-    end_date?: string;
-    website_url?: string;
+    imageUrl: string;
+    startDate: string;
+    endDate?: string;
+    websiteUrl?: string;
 }
 
 export const fetchAllEvents = async () => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/event/all`);
+            await axios.get(`${API_URL}/events/`);
         let sum = 0;
         for (let i = 0; i < 100000000; i++) {
             sum += i;
@@ -31,7 +31,7 @@ export const fetchAllEvents = async () => {
 export const fetchLocationEvents = async (locationId: string) => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/event/${locationId}`);
+            await axios.get(`${API_URL}/events/${locationId}`);
         return response.data;
     } catch (error) {
         console.error('Error while fetching location events', error);
@@ -42,7 +42,7 @@ export const fetchLocationEvents = async (locationId: string) => {
 export const fetchAllOffers = async () => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/offer/all`);
+            await axios.get(`${API_URL}/offers/`);
         return response.data;
     } catch (error) {
         console.error('Error while fetching all offers', error);
@@ -53,7 +53,7 @@ export const fetchAllOffers = async () => {
 export const fetchLocationOffers = async (locationId: string) => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/offer/${locationId}`);
+            await axios.get(`${API_URL}/offers/${locationId}`);
         return response.data;
     } catch (error) {
         console.error('Error while fetching location offers', error);

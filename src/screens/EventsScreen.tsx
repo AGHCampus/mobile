@@ -13,7 +13,7 @@ function ListHeader() {
 }
 
 function ListSpacer() {
-    return <VerticalSpacer height={Constants.SPACING_UNIT_20} />;
+    return <VerticalSpacer height={Constants.SPACING_UNIT_28} />;
 }
 
 function ListFooter() {
@@ -37,7 +37,7 @@ export default function EventsScreen() {
                     data={eventsData}
                     renderItem={event => (
                         <ExpandableEventTile
-                            location={locationsData[event.item.location_id]}
+                            location={locationsData[event.item.locationId]}
                             event={event.item}
                         />
                     )}

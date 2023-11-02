@@ -61,8 +61,11 @@ export default function EventTile({
         ),
     }));
 
-    const { title, image_url, description, website_url, start_date, end_date } =
+    const { title, imageUrl, description, websiteUrl, startDate, endDate } =
         event;
+
+    const startTime = new Date(startDate);
+    const endTime = endDate ? new Date(endDate) : null;
 
     return (
         <View>
@@ -70,19 +73,16 @@ export default function EventTile({
                 <EventLocation
                     name={location.name}
                     coordinate={location.coordinate}
-                    logoUrl={location.logo_url}
+                    logoUrl={location.logoUrl}
                 />
             )}
             <Animated.View style={[styles.eventContainer, Shadows.depth2]}>
-                <FastImage style={styles.image} source={{ uri: image_url }} />
+                <FastImage style={styles.image} source={{ uri: imageUrl }} />
                 <View style={styles.eventDetailsContainer}>
                     <Text style={styles.time}>
-                        {end_date
-                            ? getEventDatetimeRangeString(
-                                  new Date(start_date),
-                                  new Date(end_date),
-                              )
-                            : getEventDatetimeStringLong(new Date(start_date))}
+                        {endTime
+                            ? getEventDatetimeRangeString(startTime, endTime)
+                            : getEventDatetimeStringLong(startTime)}
                     </Text>
                     {title && <Text style={styles.eventTitle}>{title}</Text>}
                     <VerticalSpacer
@@ -139,7 +139,7 @@ export default function EventTile({
                                 height={Constants.SPACING_UNIT_16}
                             />
                             <EventButtonRow
-                                url={website_url}
+                                url={websiteUrl}
                                 shareContent={{ message: 'test' }}
                             />
                         </>
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     eventContainer: {
         borderRadius: Constants.BORDER_RADIUS_MEDIUM,
         backgroundColor: Colors.bgWhite,
-        marginHorizontal: Constants.SPACING_UNIT_16,
+        marginHorizontal: Constants.SPACING_UNIT_10,
         flex: 1,
     },
 

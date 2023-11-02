@@ -7,13 +7,13 @@ export interface LocationData {
     name: string;
     category: string;
     coordinate: LatLng;
-    logo_url?: string;
+    logoUrl?: string;
 }
 
 export const fetchAllLocations = async () => {
     try {
         const response: AxiosResponse<LocationData[]> = await axios.get(
-            `${API_URL}/location/all`,
+            `${API_URL}/locations/`,
         );
         return response.data;
     } catch (error) {
@@ -25,16 +25,16 @@ export const fetchAllLocations = async () => {
 export interface LocationDetailsData {
     address: string;
     description: string;
-    phone_number: string;
-    website_url: string;
-    opening_hours: string;
+    phoneNumber: string;
+    websiteUrl: string;
+    openingHours: string;
     photos: string[];
 }
 
 export const fetchLocationDetails = async (locationId: string) => {
     try {
         const response: AxiosResponse<LocationDetailsData> = await axios.get(
-            `${API_URL}/location/${locationId}/details`,
+            `${API_URL}/locations/${locationId}/details`,
         );
         return response.data;
     } catch (error) {
