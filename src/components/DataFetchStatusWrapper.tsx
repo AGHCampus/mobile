@@ -7,11 +7,13 @@ import { Colors } from '../lib/Colors';
 interface Props {
     status: DataFetchingStatus;
     errorMessage?: string;
+    padding?: number;
 }
 
 export default function DataFetchStatusWrapper({
     status,
     errorMessage,
+    padding = 0,
     children,
 }: PropsWithChildren<Props>) {
     return (
@@ -23,7 +25,7 @@ export default function DataFetchStatusWrapper({
                 />
             )}
             {status === DataFetchingStatus.ERROR && (
-                <View>
+                <View style={{ padding: padding }}>
                     <Text style={styles.errorTitle}>Error</Text>
                     <Text style={styles.errorText}>
                         {errorMessage || 'Failed to fetch data'}

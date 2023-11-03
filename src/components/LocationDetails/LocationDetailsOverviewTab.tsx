@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
 
     locationCategory: {
         fontWeight: '300',
-        fontSize: 12,
+        fontSize: 13,
         lineHeight: 16,
         color: Colors.textGray,
     },
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
         lineHeight: 24,
         color: Colors.black,
         paddingTop: 2,
-        paddingBottom: 4,
+        paddingBottom: 2,
     },
 
     row: {

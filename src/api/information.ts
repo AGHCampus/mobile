@@ -7,14 +7,14 @@ export interface InfoData {
     timestamp: string;
 }
 
-export const fetchAllInformations = async () => {
+export const fetchAllInformation = async () => {
     try {
         const response: AxiosResponse<InfoData[]> = await axios.get(
-            `${API_URL}/information/all`,
+            `${API_URL}/information/`,
         );
         return response.data;
     } catch (error) {
-        console.error('Error while fetching informations', error);
+        console.error('Error while fetching information', error);
         return null;
     }
 };

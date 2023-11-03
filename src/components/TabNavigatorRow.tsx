@@ -85,7 +85,7 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
                                 onPress={onPress}
                                 onLongPress={onLongPress}
                                 style={styles.buttonContainer}>
-                                <View>
+                                <View style={styles.iconContainer}>
                                     <Icon
                                         asset={this.getAssetForLabel(label)}
                                         color={tabColor}
@@ -135,6 +135,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: 2,
     },
+
+    iconContainer: {
+        // Fixes the problem with clipped icons on Android
+        paddingRight: 1,
+    },
+
     tabNotification: {
         width: 8,
         height: 8,

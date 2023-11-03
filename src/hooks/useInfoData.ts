@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DataFetchingStatus } from '../lib/CommonTypes';
-import { InfoData, fetchAllInformations } from '../api/information';
+import { InfoData, fetchAllInformation } from '../api/information';
 
 const useInfoData = () => {
     const [infoData, setInfoData] = useState<ReadonlyArray<InfoData>>([]);
@@ -9,7 +9,7 @@ const useInfoData = () => {
     );
 
     useEffect(() => {
-        fetchAllInformations()
+        fetchAllInformation()
             .then(data => {
                 if (data) {
                     setInfoData(data);

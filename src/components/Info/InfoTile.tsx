@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Colors } from '../../lib/Colors';
-import { getInfoDatetimeString } from '../../utils/time';
 import { Shadows } from '../../lib/Shadows';
-import { VerticalSpacer } from '../Spacers';
+import { Colors } from '../../lib/Colors';
+import { Constants } from '../../lib/Constants';
+import { getInfoDatetimeString } from '../../utils/time';
 import { InfoData } from '../../api/information';
 
 export default function InfoTile({ title, content, timestamp }: InfoData) {
@@ -16,8 +16,6 @@ export default function InfoTile({ title, content, timestamp }: InfoData) {
                     {getInfoDatetimeString(timestamp)}
                 </Text>
             </View>
-            <VerticalSpacer height={8} />
-
             <Text style={styles.contentText}>{content}</Text>
         </View>
     );
@@ -26,8 +24,9 @@ export default function InfoTile({ title, content, timestamp }: InfoData) {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.bgGray,
-        borderRadius: 8,
-        padding: 20,
+        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
+        padding: Constants.SPACING_UNIT_16,
+        marginHorizontal: Constants.SPACING_UNIT_10,
     },
     flexSpacer: {
         flex: 1,
@@ -36,14 +35,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         flexWrap: 'wrap',
+        marginBottom: 4,
     },
     titleText: {
-        fontSize: 11,
-        lineHeight: 13,
-        color: Colors.textLightGray,
+        fontWeight: '300',
+        fontSize: 13,
+        lineHeight: 16,
+        color: Colors.textGray,
     },
     contentText: {
-        fontSize: 14,
-        lineHeight: 17,
+        fontWeight: '400',
+        fontSize: 15,
+        lineHeight: 20,
+        color: Colors.black,
     },
 });

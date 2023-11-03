@@ -9,15 +9,13 @@ import useInfoData from '../hooks/useInfoData';
 import DataFetchStatusWrapper from '../components/DataFetchStatusWrapper';
 
 function ListSpacer() {
-    return <VerticalSpacer height={Constants.SPACING_UNIT_20} />;
+    return <VerticalSpacer height={Constants.SPACING_UNIT_16} />;
 }
 
 export default function InfoScreen() {
-    // TODO: Fetch info data from server
-
-    const [refreshing, setRefreshing] = useState(false);
     const { infoData, infoDataStatus } = useInfoData();
 
+    const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         setTimeout(() => setRefreshing(false), 1000);
@@ -25,7 +23,9 @@ export default function InfoScreen() {
 
     return (
         <SafeView style={styles.container}>
-            <DataFetchStatusWrapper status={infoDataStatus}>
+            <DataFetchStatusWrapper
+                status={infoDataStatus}
+                padding={Constants.SPACING_UNIT_10}>
                 <FlatList
                     data={infoData}
                     renderItem={info => (
@@ -35,8 +35,9 @@ export default function InfoScreen() {
                             timestamp={info.item.timestamp}
                         />
                     )}
-                    ItemSeparatorComponent={ListSpacer}
                     ListHeaderComponent={ListSpacer}
+                    ItemSeparatorComponent={ListSpacer}
+                    ListFooterComponent={ListSpacer}
                     showsVerticalScrollIndicator={false}
                     refreshControl={
                         <RefreshControl
@@ -53,7 +54,6 @@ export default function InfoScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.bgWhite,
-        paddingHorizontal: Constants.SPACING_UNIT_16,
+        backgroundColor: Colors.bgLightGray,
     },
 });
