@@ -3,6 +3,7 @@ export const Constants = {
     TAP_UNIT_48: 48,
     SPACING_UNIT_24: 24,
     MARGIN_UNIT_24: 24,
+    SPACING_UNIT_28: 28,
     SPACING_UNIT_20: 20,
     SPACING_UNIT_16: 16,
     SPACING_UNIT_10: 10,

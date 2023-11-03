@@ -85,7 +85,7 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
                                 onPress={onPress}
                                 onLongPress={onLongPress}
                                 style={styles.buttonContainer}>
-                                <View>
+                                <View style={styles.iconContainer}>
                                     <Icon
                                         asset={this.getAssetForLabel(label)}
                                         color={tabColor}
@@ -118,10 +118,15 @@ const styles = StyleSheet.create({
     row: {
         backgroundColor: Colors.bgWhite,
         elevation: 4,
-        // TODO: Add shadow/elevation for iOS that will not be visible on the bottom edge on inset bottom area
-        // I think this may be a problem for some android devices as well (?)
         height: 60,
         flexDirection: 'row',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.0,
     },
 
     buttonContainer: {
@@ -130,6 +135,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: 2,
     },
+
+    iconContainer: {
+        // Fixes the problem with clipped icons on Android
+        paddingRight: 1,
+    },
+
     tabNotification: {
         width: 8,
         height: 8,

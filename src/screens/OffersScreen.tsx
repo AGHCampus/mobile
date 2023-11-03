@@ -1,9 +1,10 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 import SafeView from './SafeView';
 import { VerticalSpacer } from '../components/Spacers';
 import ColumnEventTile from '../components/Events/ColumnEventTile';
 import { Constants } from '../lib/Constants';
+import { Colors } from '../lib/Colors';
 import DataFetchStatusWrapper from '../components/DataFetchStatusWrapper';
 import { LocationsDataContext } from '../../App';
 import useOffersData from '../hooks/useOffersData';
@@ -13,7 +14,7 @@ function ListHeader() {
 }
 
 function ListSpacer() {
-    return <VerticalSpacer height={Constants.SPACING_UNIT_20} />;
+    return <VerticalSpacer height={Constants.SPACING_UNIT_28} />;
 }
 
 function ListFooter() {
@@ -24,7 +25,7 @@ export default function OffersScreen() {
     const { offersData, offersDataStatus } = useOffersData();
     const locationsData = useContext(LocationsDataContext);
 
-    const [refreshing, setRefreshing] = React.useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         setTimeout(() => setRefreshing(false), 1000);
@@ -32,12 +33,14 @@ export default function OffersScreen() {
 
     return (
         <SafeView style={styles.container}>
-            <DataFetchStatusWrapper status={offersDataStatus}>
+            <DataFetchStatusWrapper
+                status={offersDataStatus}
+                padding={Constants.SPACING_UNIT_10}>
                 <FlatList
                     data={offersData}
                     renderItem={event => (
                         <ColumnEventTile
-                            location={locationsData[event.item.location_id]}
+                            location={locationsData[event.item.locationId]}
                             event={event.item}
                             showEventButtonRow={false}
                         />
@@ -61,5 +64,6 @@ export default function OffersScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: Colors.bgLightGray,
     },
 });

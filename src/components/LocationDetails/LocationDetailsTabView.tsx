@@ -15,11 +15,12 @@ import { Shadows } from '../../lib/Shadows';
 import i18n from '../../utils/i18n';
 import useLocationData from '../../hooks/useLocationData';
 
-const EXPAND_ANIMATION_DELAY = Platform.OS === 'ios' ? 250 : 50;
+const EXPAND_ANIMATION_DELAY = Platform.OS === 'ios' ? 250 : 0;
 
 interface Props {
     selectedLocationID: string;
-    expandBottomSheet: () => void;
+    bottomSheetSnapToIndex: (index: number) => void;
+    bottomSheetCurrentIndex: number;
     selectedTabViewIndex: number;
     setSelectedTabViewIndex: Dispatch<SetStateAction<number>>;
 }
@@ -30,7 +31,8 @@ type TabBarProps = SceneRendererProps & {
 
 const LocationDetailsTabView = ({
     selectedLocationID,
-    expandBottomSheet,
+    bottomSheetSnapToIndex,
+    bottomSheetCurrentIndex,
     selectedTabViewIndex,
     setSelectedTabViewIndex,
 }: Props) => {
@@ -72,7 +74,8 @@ const LocationDetailsTabView = ({
                             locationDetailsDataStatus={
                                 locationDetailsDataStatus
                             }
-                            expandBottomSheet={expandBottomSheet}
+                            bottomSheetSnapToIndex={bottomSheetSnapToIndex}
+                            bottomSheetCurrentIndex={bottomSheetCurrentIndex}
                         />
                     );
                 case 'events':
@@ -101,7 +104,8 @@ const LocationDetailsTabView = ({
             eventsDataStatus,
             offersData,
             offersDataStatus,
-            expandBottomSheet,
+            bottomSheetSnapToIndex,
+            bottomSheetCurrentIndex,
         ],
     );
 
@@ -116,7 +120,10 @@ const LocationDetailsTabView = ({
             pressColor="rgba(0, 0, 0, 0.1)" // ripple effect color (Android >= 5.0)
             pressOpacity={0.3} // press opacity (iOS and Android < 5.0)
             onTabPress={() =>
-                setTimeout(expandBottomSheet, EXPAND_ANIMATION_DELAY)
+                setTimeout(
+                    () => bottomSheetSnapToIndex(2),
+                    EXPAND_ANIMATION_DELAY,
+                )
             }
         />
     );

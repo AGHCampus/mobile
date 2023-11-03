@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
 
     text: {
         fontSize: 13,
+        color: Colors.black,
     },
 
     locationLogo: {
