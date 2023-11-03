@@ -108,8 +108,8 @@ export default function EventTile({
     const { title, imageUrl, description, websiteUrl, startDate, endDate } =
         event;
 
-    const start = new Date(startDate);
-    const end = endDate ? new Date(endDate) : null;
+    const startTime = new Date(startDate);
+    const endTime = endDate ? new Date(endDate) : null;
 
     return (
         <View>
@@ -143,12 +143,14 @@ export default function EventTile({
                                 style={[styles.collapsedEventDetails]}>
                                 <View style={styles.columnCenter}>
                                     <Text style={styles.time}>
-                                        {end
+                                        {endTime
                                             ? getEventDatetimeRangeString(
-                                                  start,
-                                                  end,
+                                                  startTime,
+                                                  endTime,
                                               )
-                                            : getEventDatetimeStringLong(start)}
+                                            : getEventDatetimeStringLong(
+                                                  startTime,
+                                              )}
                                     </Text>
                                     <Text
                                         style={[
@@ -185,9 +187,12 @@ export default function EventTile({
                         exiting={FadeOutUp.duration(150)}>
                         <VerticalSpacer height={Constants.SPACING_UNIT_10} />
                         <Text style={styles.time}>
-                            {end
-                                ? getEventDatetimeRangeString(start, end)
-                                : getEventDatetimeStringLong(start)}
+                            {endTime
+                                ? getEventDatetimeRangeString(
+                                      startTime,
+                                      endTime,
+                                  )
+                                : getEventDatetimeStringLong(startTime)}
                         </Text>
                         <Text style={styles.eventTitle}>{title}</Text>
                         <VerticalSpacer height={Constants.SPACING_UNIT_8} />
@@ -212,7 +217,7 @@ const styles = StyleSheet.create({
     eventContainer: {
         borderRadius: Constants.BORDER_RADIUS_MEDIUM,
         backgroundColor: Colors.bgWhite,
-        marginHorizontal: Constants.SPACING_UNIT_16,
+        marginHorizontal: Constants.SPACING_UNIT_10,
         flex: 1,
     },
 
@@ -227,12 +232,14 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         fontSize: 17,
         lineHeight: 20,
+        color: Colors.black,
     },
 
     eventDescription: {
         fontWeight: '300',
         fontSize: 15,
         lineHeight: 18,
+        color: Colors.black,
     },
 
     row: {
