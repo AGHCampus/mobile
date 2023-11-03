@@ -33,4 +33,16 @@ export default {
         club: 'Student Club',
         restaurant: 'Restaurant',
     },
+    markers: {
+        shared_location: 'Shared location',
+    },
+    coordinates: {
+        coordinates: 'Coordinates',
+        latitude: 'Latitude',
+        longitude: 'Longitude',
+    },
+    share: {
+        location_id: 'Check out this location on AGH Map!',
+        current_location: 'Check out my current location in AGH Map app!',
+    },
 };

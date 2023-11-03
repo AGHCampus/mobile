@@ -13,12 +13,15 @@ import BottomSheetFullScreenHeader from './LocationDetailsFullScreenHeader';
 import LocationDetailsTabView from './LocationDetailsTabView';
 import { Colors } from '../../lib/Colors';
 import { AppDimensionsContext } from '../../../App';
+import SharedLocationInfo from './SharedLocationInfo';
+import { LatLng } from 'react-native-maps';
 
 const COLLAPSE_ANIMATION_DELAY = Platform.OS === 'ios' ? 100 : 0;
 
 interface Props {
     bottomSheetModalRef: RefObject<BottomSheetModal>;
     selectedLocationID: string;
+    locationCoordinates: LatLng | null;
 }
 
 const springConfig: WithSpringConfig = {
@@ -32,6 +35,7 @@ const springConfig: WithSpringConfig = {
 const LocationDetailsBottomSheet = ({
     bottomSheetModalRef,
     selectedLocationID,
+    locationCoordinates,
 }: Props) => {
     const [selectedTabViewIndex, setSelectedTabViewIndex] = useState(0);
     const [bottomSheetCurrentIndex, setBottomSheetCurrentIndex] = useState(1);
@@ -69,7 +73,6 @@ const LocationDetailsBottomSheet = ({
             transform: [{ translateY: y }],
         };
     });
-
     return (
         <>
             <BottomSheetModal
@@ -83,13 +86,18 @@ const LocationDetailsBottomSheet = ({
                 handleStyle={styles.handle}
                 handleIndicatorStyle={styles.handleIndicator}
                 animationConfigs={springConfig}>
-                <LocationDetailsTabView
-                    selectedLocationID={selectedLocationID}
-                    bottomSheetSnapToIndex={bottomSheetSnapToIndex}
-                    bottomSheetCurrentIndex={bottomSheetCurrentIndex}
-                    selectedTabViewIndex={selectedTabViewIndex}
-                    setSelectedTabViewIndex={setSelectedTabViewIndex}
-                />
+                {selectedLocationID === 'SHARED' && locationCoordinates && (
+                    <SharedLocationInfo coordinates={locationCoordinates} />
+                )}
+                {selectedLocationID !== 'SHARED' && (
+                    <LocationDetailsTabView
+                        selectedLocationID={selectedLocationID}
+                        bottomSheetSnapToIndex={bottomSheetSnapToIndex}
+                        bottomSheetCurrentIndex={bottomSheetCurrentIndex}
+                        selectedTabViewIndex={selectedTabViewIndex}
+                        setSelectedTabViewIndex={setSelectedTabViewIndex}
+                    />
+                )}
             </BottomSheetModal>
             <Portal>
                 <Animated.View

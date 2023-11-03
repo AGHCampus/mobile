@@ -24,6 +24,7 @@ import { DataFetchingStatus } from '../../lib/CommonTypes';
 import { LocationData, LocationDetailsData } from '../../api/locations';
 import DataFetchStatusWrapper from '../DataFetchStatusWrapper';
 import { getMarkerImageByCategory } from '../Markers';
+import { getLocationShareText } from '../../utils/sharing';
 
 function PhotosSpacer() {
     return <HorizontalSpacer width={6} />;
@@ -140,7 +141,12 @@ const LocationDetailsOverviewTab = ({
                                         color={Colors.accentGreen}
                                         label={i18n.t('location.share')}
                                         onPress={() =>
-                                            Share.share({ message: 'test' })
+                                            Share.share({
+                                                message:
+                                                    getLocationShareText(
+                                                        locationData,
+                                                    ),
+                                            })
                                         }
                                     />
                                 </View>

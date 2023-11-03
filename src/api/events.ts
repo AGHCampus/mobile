@@ -16,11 +16,6 @@ export const fetchAllEvents = async () => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
             await axios.get(`${API_URL}/events/`);
-        let sum = 0;
-        for (let i = 0; i < 100000000; i++) {
-            sum += i;
-        }
-        console.log(sum);
         return response.data;
     } catch (error) {
         console.error('Error while fetching all events', error);

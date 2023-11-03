@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react';
+import React, { Dispatch, RefObject, SetStateAction } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import MapView, { LatLng, Marker } from 'react-native-maps';
 import Animated, {
@@ -7,16 +7,24 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Constants } from '../lib/Constants';
 import { icons } from '../Icons';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 interface Props {
     coordinate: LatLng;
     mapViewRef: RefObject<MapView>;
+    selectMarker: Dispatch<SetStateAction<void>>;
+    bottomSheetModalRef: RefObject<BottomSheetModal>;
 }
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
-function SharedLocationMarker({ coordinate, mapViewRef }: Props) {
-    const markerSize = useSharedValue(24);
+function SharedLocationMarker({
+    coordinate,
+    mapViewRef,
+    selectMarker,
+    bottomSheetModalRef,
+}: Props) {
+    const markerSize = useSharedValue(32);
 
     const markerImageStyle = useAnimatedStyle(() => {
         return {
@@ -31,9 +39,10 @@ function SharedLocationMarker({ coordinate, mapViewRef }: Props) {
             coordinate={coordinate}
             id={'sharedLocationMarker'}
             stopPropagation
-            key={`sharedLocationMarker`}
+            key={'sharedLocationMarker'}
             onPress={() => {
-                if (mapViewRef.current != null) {
+                selectMarker();
+                if (mapViewRef.current) {
                     mapViewRef.current.animateToRegion(
                         {
                             ...coordinate,
@@ -42,11 +51,14 @@ function SharedLocationMarker({ coordinate, mapViewRef }: Props) {
                         500,
                     );
                 }
+                if (bottomSheetModalRef.current) {
+                    bottomSheetModalRef.current.present();
+                }
             }}
             style={styles.markerTapTarget}>
             <View style={styles.flexOne}>
                 <AnimatedImage
-                    source={icons.Info.src}
+                    source={icons.Marker.src}
                     resizeMode="contain"
                     resizeMethod="resize"
                     style={markerImageStyle}

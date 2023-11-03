@@ -30,7 +30,7 @@ export function getMarkerImageByCategory(category: string) {
         case 'restaurant':
             return icons.Restaurant.src;
         default:
-            return icons.Info.src;
+            return icons.Marker.src;
     }
 }
 

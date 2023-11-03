@@ -16,6 +16,7 @@ import Dorm from '../assets/Dorm.png';
 import Shop from '../assets/Shop.png';
 import Club from '../assets/Club.png';
 import Restaurant from '../assets/Shop.png';
+import Marker from '../assets/Marker.png';
 
 export const icons = {
     Calendar: {
@@ -71,5 +72,8 @@ export const icons = {
     },
     Restaurant: {
         src: Restaurant,
+    },
+    Marker: {
+        src: Marker,
     },
 };

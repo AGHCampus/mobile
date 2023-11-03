@@ -33,4 +33,17 @@ export default {
         club: 'Klub studencki',
         restaurant: 'Restauracja',
     },
+    markers: {
+        shared_location: 'Udostępniona lokalizacja',
+    },
+    coordinates: {
+        coordinates: 'Współrzędne',
+        latitude: 'Szerokość geograficzna',
+        longitude: 'Długość geograficzna',
+    },
+    share: {
+        location_id: 'Dowiedz się więcej o tym obiekcie w aplikacji AGH Map!',
+        current_location:
+            'Zobacz moją aktualną lokalizację w aplikacji AGH Map!',
+    },
 };
