@@ -10,7 +10,7 @@ interface Props {
 
 export default function InfoCard({ data }: Props) {
     return (
-        <View style={[styles.card, Shadows.depth2]}>
+        <View style={[styles.card, Shadows.depth1]}>
             {data.map(([title, text], index) => (
                 <View key={index}>
                     {index !== 0 && <View style={styles.divider} />}
@@ -32,10 +32,10 @@ const styles = StyleSheet.create({
     },
     title: {
         fontWeight: '300',
-        fontSize: 12,
+        fontSize: 13,
         lineHeight: 16,
         color: Colors.textGray,
-        marginBottom: 2,
+        marginBottom: 4,
     },
     text: {
         fontWeight: '400',
