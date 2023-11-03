@@ -46,10 +46,14 @@ const LocationDetailsOverviewTab = ({
     const isOnTop = useSharedValue(false);
 
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const scrollHeight =
+            event.nativeEvent.contentSize.height -
+            event.nativeEvent.layoutMeasurement.height;
         const y = event.nativeEvent.contentOffset.y;
         if (bottomSheetCurrentIndex === 2 && isOnTop.value && y < 0) {
             bottomSheetSnapToIndex(1);
-        } else if (bottomSheetCurrentIndex === 1 && y > 0) {
+        }
+        if (bottomSheetCurrentIndex === 1 && y > scrollHeight - 1) {
             bottomSheetSnapToIndex(2);
         }
         isOnTop.value = false;
