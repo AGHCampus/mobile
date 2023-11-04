@@ -1,16 +1,9 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import {
-    StyleSheet,
-    View,
-    TouchableOpacity,
-    Dimensions,
-    TextInput,
-} from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
 import type { Region } from 'react-native-maps';
 import RNMapView from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-
 import {
     areRegionsMatching,
     getCurrentLocation,
@@ -20,16 +13,18 @@ import Icon from '../components/Icon';
 import LocationDetails from '../components/LocationDetails/LocationDetailsBottomSheet';
 import MapMarker from '../components/Markers';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-
 import { BASE_MAP_STYLE_LIGHT, Constants } from '../lib/Constants';
 import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
-import { TabsParamList } from './navigationTypes';
 import { LocationsDataContext } from '../../App';
+import SearchBar from '../components/SearchBar';
+import { StackNavigation, TabsParamList } from '../lib/Navigation';
+import { useNavigation } from '@react-navigation/native';
 
 type Props = BottomTabScreenProps<TabsParamList, 'Map'>;
 
-export default function MapScreen({ route, navigation }: Props) {
+export default function MapScreen({ route }: Props) {
+    const navigation = useNavigation<StackNavigation>();
     const locationsData = useContext(LocationsDataContext);
 
     const mapViewRef = useRef<RNMapView>(null);
@@ -42,6 +37,7 @@ export default function MapScreen({ route, navigation }: Props) {
     });
 
     const [selectedMarkerID, setSelectedMarkerID] = useState<string>('');
+    const [settingsButtonEnabled, setSettingsButtonEnabled] = useState(true);
     const [followUserLocation, setFollowUserLocation] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
@@ -115,6 +111,22 @@ export default function MapScreen({ route, navigation }: Props) {
         setSelectedMarkerID('');
     };
 
+    const handleSettingsPress = () => {
+        // Prevent multiple taps and delay navigation to allow bottom sheet dismiss
+        if (!settingsButtonEnabled) {
+            return;
+        }
+        inputRef.current?.blur();
+        setSelectedMarkerID('');
+        bottomSheetModalRef.current?.forceClose();
+        setSettingsButtonEnabled(false);
+
+        setTimeout(() => {
+            navigation.navigate('Settings');
+            setSettingsButtonEnabled(true);
+        }, 100);
+    };
+
     const shouldDisplayMarker = () => {
         // TODO: Proper marker filtering
         return true;
@@ -153,30 +165,11 @@ export default function MapScreen({ route, navigation }: Props) {
                         />
                     ))}
             </MapView>
-            <View style={styles.topBar}>
-                <TouchableOpacity
-                    onPress={() => {}}
-                    style={[styles.menuIcon, Shadows.depth2]}>
-                    <Icon
-                        asset="MenuDots"
-                        color={Colors.black}
-                        // style={styles.menuIcon}
-                    />
-                </TouchableOpacity>
-                <View style={[styles.searchBar, Shadows.depth2]}>
-                    <TextInput
-                        ref={inputRef}
-                        placeholder="Search..."
-                        style={styles.searchBarInput}
-                    />
-                </View>
-            </View>
-
+            <SearchBar inputRef={inputRef} onPress={handleSettingsPress} />
             <LocationDetails
                 bottomSheetModalRef={bottomSheetModalRef}
                 selectedLocationID={selectedMarkerID}
             />
-
             <View style={styles.opacityOverlay}>
                 <TouchableOpacity
                     activeOpacity={Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY}
@@ -205,38 +198,6 @@ export default function MapScreen({ route, navigation }: Props) {
 const styles = StyleSheet.create({
     container: { flex: 1 },
     map: { flex: 1 },
-    topBar: {
-        position: 'absolute',
-        top: 48,
-        flexDirection: 'row',
-    },
-    menuIcon: {
-        width: Constants.MARGIN_UNIT_24 + Constants.SPACING_UNIT_16,
-        marginLeft: Constants.MARGIN_UNIT_24,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: Constants.MARGIN_UNIT_24 + Constants.SPACING_UNIT_16,
-        borderRadius: Constants.BORDER_UNIT_8,
-        backgroundColor: 'white',
-    },
-    searchBar: {
-        width:
-            Dimensions.get('window').width -
-            2 * Constants.TAP_UNIT_48 -
-            Constants.SPACING_UNIT_8,
-        backgroundColor: 'white',
-        height: Constants.MARGIN_UNIT_24 + Constants.SPACING_UNIT_16,
-        top: 48,
-        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
-        paddingHorizontal: Constants.BORDER_UNIT_8,
-        marginRight: Constants.MARGIN_UNIT_24,
-        marginLeft: Constants.SPACING_UNIT_16,
-        justifyContent: 'center',
-    },
-    searchBarInput: {
-        lineHeight: 20,
-        fontSize: 16,
-    },
     opacityOverlay: {
         position: 'absolute',
         bottom: 8,

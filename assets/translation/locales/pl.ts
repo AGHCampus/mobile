@@ -5,6 +5,9 @@ export default {
         events: 'Wydarzenia',
         offers: 'Oferty',
         info: 'Informacje',
+        settings: 'Ustawienia',
+        login: 'Logowanie',
+        register: 'Rejestracja',
     },
     events: {
         show_on_map: 'pokaż na mapie',
@@ -32,5 +35,20 @@ export default {
         shop: 'Sklep',
         club: 'Klub studencki',
         restaurant: 'Restauracja',
+    },
+    settings: {
+        share_location: 'Udostępnij swoją lokalizację',
+        links: 'Więcej informacji',
+        login: 'Zaloguj się',
+        logout: 'Wyloguj się',
+        create_event: 'Utwórz wydarzenie',
+        password: 'Hasło',
+        credential_error: 'Nieprawidłowy email lub hasło',
+        register: 'Zarejestruj się',
+        confirm_password: 'Potwierdź hasło',
+        password_match_error: 'Hasła nie są takie same',
+        register_error: 'Błąd rejestracji',
+        register_success:
+            'Rejestracja zakończona sukcesem. Na wskazany adres email otrzymasz wiadomość z linkiem do aktywacji konta.',
     },
 };

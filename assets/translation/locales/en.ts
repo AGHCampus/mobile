@@ -5,6 +5,9 @@ export default {
         events: 'Events',
         offers: 'Offers',
         info: 'Info',
+        settings: 'Settings',
+        login: 'Login',
+        register: 'Sign up',
     },
     events: {
         show_on_map: 'show on map',
@@ -32,5 +35,20 @@ export default {
         shop: 'Shop',
         club: 'Student Club',
         restaurant: 'Restaurant',
+    },
+    settings: {
+        share_location: 'Share location',
+        links: 'Learn more',
+        login: 'Login',
+        logout: 'Logout',
+        create_event: 'Create event',
+        password: 'Password',
+        credential_error: 'Invalid email or password',
+        register: 'Sign up',
+        confirm_password: 'Confirm password',
+        password_match_error: 'Passwords do not match',
+        register_error: 'Registration error',
+        register_success:
+            'Registration successful. You will receive an email with a link to activate your account.',
     },
 };

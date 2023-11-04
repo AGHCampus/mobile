@@ -16,6 +16,11 @@ import Dorm from '../assets/Dorm.png';
 import Shop from '../assets/Shop.png';
 import Club from '../assets/Club.png';
 import Restaurant from '../assets/Shop.png';
+import Sliders from '../assets/Sliders.png';
+import SignOut from '../assets/SignOut.png';
+import Portrait from '../assets/Portrait.png';
+import Left from '../assets/Left.png';
+import SignUp from '../assets/SignUp.png';
 
 export const icons = {
     Calendar: {
@@ -71,5 +76,20 @@ export const icons = {
     },
     Restaurant: {
         src: Restaurant,
+    },
+    Sliders: {
+        src: Sliders,
+    },
+    SignOut: {
+        src: SignOut,
+    },
+    Portrait: {
+        src: Portrait,
+    },
+    Left: {
+        src: Left,
+    },
+    SignUp: {
+        src: SignUp,
     },
 };
