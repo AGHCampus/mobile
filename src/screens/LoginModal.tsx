@@ -65,6 +65,7 @@ function LoginForm() {
             <TextInput
                 secureTextEntry={!showPassword}
                 style={styles.input}
+                autoCapitalize="none"
                 onChangeText={setPassword}
             />
             <VerticalSpacer height={40} />

@@ -63,6 +63,7 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
             <TextInput
                 secureTextEntry={!showPassword}
                 style={styles.input}
+                autoCapitalize="none"
                 onChangeText={setPassword}
             />
             <VerticalSpacer height={20} />
@@ -72,6 +73,7 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
             <TextInput
                 secureTextEntry={!showConfirmPassword}
                 style={styles.input}
+                autoCapitalize="none"
                 onChangeText={setConfirmPassword}
             />
             <VerticalSpacer height={40} />
