@@ -143,7 +143,7 @@ export default function RegisterModal() {
             <TouchableOpacity
                 style={styles.opacity}
                 activeOpacity={0}
-                onPress={navigation.goBack}
+                onPress={navigation.popToTop}
             />
         </View>
     );
