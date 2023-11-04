@@ -12,7 +12,8 @@ import useLocationsData, { LocationsMap } from './src/hooks/useLocationsData';
 import { setTopLevelNavigator } from './src/lib/Navigation';
 import MainStackNavigator from './src/components/navigation/MainStackNavigator';
 import { Provider as ReduxStoreProvider } from 'react-redux';
-import store from './src/lib/Store';
+import store, { persistor } from './src/lib/Store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 // TODO: Investigate the warnings or move this somewhere else
 LogBox.ignoreLogs(['Overriding previous layout', 'Encountered']);
@@ -47,31 +48,33 @@ export default function App() {
 
     return (
         <ReduxStoreProvider store={store}>
-            <LocationsDataContext.Provider value={locationsData}>
-                <SafeAreaProvider
-                    onLayout={event => {
-                        const { width, height } = event.nativeEvent.layout;
-                        setDimensions({ height, width });
-                    }}>
-                    <PortalProvider>
-                        <GestureHandlerRootView style={styles.container}>
-                            <BottomSheetModalProvider>
-                                <AppDimensionsContext.Provider
-                                    value={dimensions}>
-                                    <NavigationContainer
-                                        ref={navigatorRef =>
-                                            setTopLevelNavigator(
-                                                navigatorRef ?? undefined,
-                                            )
-                                        }>
-                                        <MainStackNavigator />
-                                    </NavigationContainer>
-                                </AppDimensionsContext.Provider>
-                            </BottomSheetModalProvider>
-                        </GestureHandlerRootView>
-                    </PortalProvider>
-                </SafeAreaProvider>
-            </LocationsDataContext.Provider>
+            <PersistGate loading={null} persistor={persistor}>
+                <LocationsDataContext.Provider value={locationsData}>
+                    <SafeAreaProvider
+                        onLayout={event => {
+                            const { width, height } = event.nativeEvent.layout;
+                            setDimensions({ height, width });
+                        }}>
+                        <PortalProvider>
+                            <GestureHandlerRootView style={styles.container}>
+                                <BottomSheetModalProvider>
+                                    <AppDimensionsContext.Provider
+                                        value={dimensions}>
+                                        <NavigationContainer
+                                            ref={navigatorRef =>
+                                                setTopLevelNavigator(
+                                                    navigatorRef ?? undefined,
+                                                )
+                                            }>
+                                            <MainStackNavigator />
+                                        </NavigationContainer>
+                                    </AppDimensionsContext.Provider>
+                                </BottomSheetModalProvider>
+                            </GestureHandlerRootView>
+                        </PortalProvider>
+                    </SafeAreaProvider>
+                </LocationsDataContext.Provider>
+            </PersistGate>
         </ReduxStoreProvider>
     );
 }

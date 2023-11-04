@@ -1,8 +1,17 @@
 import { createSlice, configureStore, PayloadAction } from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { TypedUseSelectorHook } from 'react-redux';
 import { useDispatch, useSelector } from 'react-redux';
-
-// TODO: Persistence and proper storing of user data
+import {
+    persistStore,
+    persistReducer,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+} from 'redux-persist';
 
 interface AppState {
     userApiKey: string | null;
@@ -11,6 +20,12 @@ interface AppState {
 const initialState: AppState = {
     userApiKey: null,
     username: null,
+};
+
+const persistConfig = {
+    key: 'root',
+    version: 1,
+    storage: AsyncStorage,
 };
 
 const userSlice = createSlice({
@@ -30,11 +45,27 @@ const userSlice = createSlice({
     },
 });
 
+const persistedReducer = persistReducer(persistConfig, userSlice.reducer);
+
 export const { setUsername, setUserApiKey, logout } = userSlice.actions;
 
 const store = configureStore({
-    reducer: userSlice.reducer,
+    reducer: persistedReducer,
+    middleware: getDefaultMiddleware =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [
+                    FLUSH,
+                    REHYDRATE,
+                    PAUSE,
+                    PERSIST,
+                    PURGE,
+                    REGISTER,
+                ],
+            },
+        }),
 });
+export const persistor = persistStore(store);
 
 export default store;
 export type RootState = ReturnType<typeof store.getState>;
