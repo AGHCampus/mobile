@@ -229,6 +229,7 @@ export default function MapScreen({ route }: Props) {
                 bottomSheetModalRef={bottomSheetModalRef}
                 selectedLocationID={selectedMarkerID}
                 locationCoordinates={sharedLocationCoordinates}
+                clearSelectedMarker={() => setSelectedMarkerID('')}
             />
             <View style={styles.opacityOverlay}>
                 <TouchableOpacity
