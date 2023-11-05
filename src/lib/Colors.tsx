@@ -11,4 +11,5 @@ export const Colors = {
     shadowGrey: '#171717',
     bottomSheetHandle: '#455360',
     activityIndicator: '#999999',
+    red: '#FF0000',
 } as const;
