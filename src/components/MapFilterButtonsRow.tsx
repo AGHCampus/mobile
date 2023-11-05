@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useCallback } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import MapFilterButton from './MapFilterButton';
+import { HorizontalSpacer } from './Spacers';
 
 interface Props {
     selectedCategories: string[];
@@ -38,6 +39,7 @@ export default function MapFilterButtonsRow({
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             style={styles.container}>
+            <HorizontalSpacer width={16} />
             {markerCategories.map(category => (
                 <MapFilterButton
                     key={category}
