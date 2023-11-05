@@ -4,11 +4,11 @@ import FastImage from 'react-native-fast-image';
 import { LatLng } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import TextButton from '../TextButton';
-import { TabNavigation } from '../../screens/navigationTypes';
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
 import i18n from '../../utils/i18n';
 import AghSmall from '../../../assets/Agh_small.png';
+import { TabNavigation } from '../../lib/Navigation';
 
 interface Props {
     name: string;
