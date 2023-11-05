@@ -12,4 +12,8 @@ export const Colors = {
     bottomSheetHandle: '#455360',
     activityIndicator: '#999999',
     red: '#FF0000',
+    accentBlue: '#30417D',
+    accentYellow: '#FFA800',
+    accentOrange: '#EC850C',
+    accentRed: '#C9261C',
 } as const;
