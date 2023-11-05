@@ -15,7 +15,7 @@ import Faculty from '../assets/Faculty.png';
 import Dorm from '../assets/Dorm.png';
 import Shop from '../assets/Shop.png';
 import Club from '../assets/Club.png';
-import Restaurant from '../assets/Shop.png';
+import Restaurant from '../assets/Restaurant.png';
 import Sliders from '../assets/Sliders.png';
 import SignOut from '../assets/SignOut.png';
 import Portrait from '../assets/Portrait.png';

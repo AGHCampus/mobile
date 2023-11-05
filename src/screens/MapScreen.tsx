@@ -20,6 +20,9 @@ import { LocationsDataContext } from '../../App';
 import SearchBar from '../components/SearchBar';
 import { StackNavigation, TabsParamList } from '../lib/Navigation';
 import { useNavigation } from '@react-navigation/native';
+import MapFilterButtonsRow from '../components/MapFilterButtonsRow';
+import { VerticalSpacer } from '../components/Spacers';
+import { LocationData } from '../api/locations';
 
 type Props = BottomTabScreenProps<TabsParamList, 'Map'>;
 
@@ -41,6 +44,7 @@ export default function MapScreen({ route }: Props) {
     const [followUserLocation, setFollowUserLocation] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
     const { eventLocation } = route.params ?? { eventLocation: null };
 
@@ -127,9 +131,12 @@ export default function MapScreen({ route }: Props) {
         }, 100);
     };
 
-    const shouldDisplayMarker = () => {
-        // TODO: Proper marker filtering
-        return true;
+    const shouldDisplayMarker = (marker: LocationData) => {
+        return (
+            selectedCategories.length === 0 ||
+            (selectedCategories.length > 0 &&
+                selectedCategories.includes(marker.category))
+        );
     };
 
     return (
@@ -165,7 +172,15 @@ export default function MapScreen({ route }: Props) {
                         />
                     ))}
             </MapView>
-            <SearchBar inputRef={inputRef} onPress={handleSettingsPress} />
+            <View style={styles.topContentOverlay}>
+                <SearchBar inputRef={inputRef} onPress={handleSettingsPress} />
+                <VerticalSpacer height={Constants.SPACING_UNIT_8} />
+                <MapFilterButtonsRow
+                    selectedCategories={selectedCategories}
+                    setSelectedCategories={setSelectedCategories}
+                />
+            </View>
+
             <LocationDetails
                 bottomSheetModalRef={bottomSheetModalRef}
                 selectedLocationID={selectedMarkerID}
@@ -213,4 +228,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.bgWhite,
     },
     locationIcon: { width: 28, height: 28 },
+    topContentOverlay: {
+        position: 'absolute',
+        top: 48,
+    },
 });

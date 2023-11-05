@@ -38,8 +38,6 @@ export default function SearchBar({ inputRef, onPress }: Props) {
 
 const styles = StyleSheet.create({
     topBar: {
-        position: 'absolute',
-        top: 48,
         flexDirection: 'row',
     },
     menuIcon: {
