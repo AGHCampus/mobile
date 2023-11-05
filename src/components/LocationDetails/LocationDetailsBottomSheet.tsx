@@ -1,4 +1,10 @@
-import React, { useState, useMemo, useContext, RefObject } from 'react';
+import React, {
+    useState,
+    useMemo,
+    useContext,
+    RefObject,
+    useEffect,
+} from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
@@ -37,6 +43,11 @@ const LocationDetailsBottomSheet = ({
     selectedLocationID,
     locationCoordinates,
 }: Props) => {
+    useEffect(() => {
+        if (!selectedLocationID) {
+            bottomSheetModalRef.current?.forceClose();
+        }
+    }, [bottomSheetModalRef, selectedLocationID]);
     const [selectedTabViewIndex, setSelectedTabViewIndex] = useState(0);
     const [bottomSheetCurrentIndex, setBottomSheetCurrentIndex] = useState(1);
 
