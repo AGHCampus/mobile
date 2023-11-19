@@ -46,7 +46,9 @@ export default function SettingsModal() {
                                 iconAsset={'Calendar'}
                                 text={i18n.t('settings.create_event')}
                                 divider={true}
-                                onPress={() => {}}
+                                onPress={() =>
+                                    navigation.navigate('CreateEvent')
+                                }
                             />
                             <SettingRow
                                 iconAsset={'SignOut'}

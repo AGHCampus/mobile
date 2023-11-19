@@ -8,12 +8,16 @@ export default {
         settings: 'Ustawienia',
         login: 'Logowanie',
         register: 'Rejestracja',
+        create_event: 'Utwórz wydarzenie',
     },
     events: {
         show_on_map: 'pokaż na mapie',
         show_more: 'Czytaj dalej',
         more_info: 'Więcej informacji',
         share: 'Udostępnij',
+        info: 'Informacje',
+        description: 'Opis',
+        startTime: 'Czas rozpoczęcia',
     },
     location: {
         overview: 'Opis',
@@ -63,5 +67,13 @@ export default {
         register_error: 'Błąd rejestracji',
         register_success:
             'Rejestracja zakończona sukcesem. Na wskazany adres email otrzymasz wiadomość z linkiem do aktywacji konta.',
+    },
+    create_event: {
+        title: 'Nazwa wydarzenia',
+        description: 'Opis wydarzenia',
+        create: 'Utwórz',
+        location: 'Lokalizacja',
+        start_date: 'Czas rozpoczęcia',
+        date_error: 'Czas rozpoczęcia nie może być wcześniejszy niż aktualny',
     },
 };

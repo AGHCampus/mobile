@@ -22,6 +22,8 @@ import Portrait from '../assets/Portrait.png';
 import Left from '../assets/Left.png';
 import SignUp from '../assets/SignUp.png';
 import Marker from '../assets/Marker.png';
+import Eye from '../assets/Eye.png';
+import CrossedEye from '../assets/CrossedEye.png';
 
 export const icons = {
     Calendar: {
@@ -95,5 +97,11 @@ export const icons = {
     },
     SignUp: {
         src: SignUp,
+    },
+    Eye: {
+        src: Eye,
+    },
+    CrossedEye: {
+        src: CrossedEye,
     },
 };

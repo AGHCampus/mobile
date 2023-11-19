@@ -5,6 +5,7 @@ import SettingsModal from '../../screens/SettingsModal';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginModal from '../../screens/LoginModal';
 import RegisterModal from '../../screens/RegisterModal';
+import CreatePrivateEventModal from '../../screens/CreatePrivateEventModal';
 
 const navigationOptions = {
     headerShown: false,
@@ -38,6 +39,15 @@ export default function MainStackNavigator() {
             <Stack.Screen
                 name="Register"
                 component={RegisterModal}
+                options={{
+                    presentation: 'transparentModal',
+                    headerShown: false,
+                    cardOverlayEnabled: false,
+                }}
+            />
+            <Stack.Screen
+                name="CreateEvent"
+                component={CreatePrivateEventModal}
                 options={{
                     presentation: 'transparentModal',
                     headerShown: false,

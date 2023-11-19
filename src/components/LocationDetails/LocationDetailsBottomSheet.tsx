@@ -24,6 +24,8 @@ import SharedLocationInfo from './SharedLocationInfo';
 import { LatLng } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigation } from '../../lib/Navigation';
+import PrivateEventInfo from './PrivateEventInfo';
+import { PrivateEventData } from '../../api/events';
 
 const COLLAPSE_ANIMATION_DELAY = Platform.OS === 'ios' ? 100 : 0;
 
@@ -31,6 +33,7 @@ interface Props {
     bottomSheetModalRef: RefObject<BottomSheetModal>;
     selectedLocationID: string;
     locationCoordinates: LatLng | null;
+    privateEventDetails: PrivateEventData | null;
     clearSelectedMarker: () => void;
 }
 
@@ -46,6 +49,7 @@ const LocationDetailsBottomSheet = ({
     bottomSheetModalRef,
     selectedLocationID,
     locationCoordinates,
+    privateEventDetails,
     clearSelectedMarker,
 }: Props) => {
     useEffect(() => {
@@ -98,6 +102,7 @@ const LocationDetailsBottomSheet = ({
             transform: [{ translateY: y }],
         };
     });
+
     return (
         <>
             <BottomSheetModal
@@ -111,6 +116,10 @@ const LocationDetailsBottomSheet = ({
                 handleStyle={styles.handle}
                 handleIndicatorStyle={styles.handleIndicator}
                 animationConfigs={springConfig}>
+                {selectedLocationID === 'PRIVATE_EVENT' &&
+                    privateEventDetails && (
+                        <PrivateEventInfo eventDetails={privateEventDetails} />
+                    )}
                 {selectedLocationID === 'SHARED' && locationCoordinates && (
                     <SharedLocationInfo coordinates={locationCoordinates} />
                 )}

@@ -38,7 +38,11 @@ const useLocationData = ({ selectedLocationID }: Props) => {
     };
 
     useEffect(() => {
-        if (!selectedLocationID) {
+        if (
+            !selectedLocationID ||
+            selectedLocationID === 'SHARED' ||
+            selectedLocationID === 'PRIVATE_EVENT'
+        ) {
             return;
         }
         if (isInitalFetch.current) {

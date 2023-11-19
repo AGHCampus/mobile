@@ -62,12 +62,20 @@ function LoginForm() {
             />
             <VerticalSpacer height={20} />
             <Text style={styles.inputLabel}>{i18n.t('settings.password')}</Text>
-            <TextInput
-                secureTextEntry={!showPassword}
-                style={styles.input}
-                autoCapitalize="none"
-                onChangeText={setPassword}
-            />
+            <View style={styles.row}>
+                <TextInput
+                    secureTextEntry={!showPassword}
+                    style={styles.input}
+                    autoCapitalize="none"
+                    onChangeText={setPassword}
+                />
+                <IconButton
+                    asset={showPassword ? 'CrossedEye' : 'Eye'}
+                    color={Colors.black}
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.passwordToggle}
+                />
+            </View>
             <VerticalSpacer height={40} />
             {error ? (
                 <Text style={styles.errorText}>{error}</Text>
@@ -149,6 +157,7 @@ const styles = StyleSheet.create({
         lineHeight: 16,
         paddingHorizontal: 8,
         fontSize: 14,
+        width: '100%',
     },
     loginButton: {
         alignSelf: 'center',
@@ -194,4 +203,6 @@ const styles = StyleSheet.create({
     },
     backIcon: { width: 24, height: 24 },
     backButton: { alignSelf: 'flex-end' },
+    passwordToggle: { position: 'absolute', height: 40, right: -2 },
+    row: { flexDirection: 'row' },
 });

@@ -60,22 +60,40 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
             />
             <VerticalSpacer height={20} />
             <Text style={styles.inputLabel}>{i18n.t('settings.password')}</Text>
-            <TextInput
-                secureTextEntry={!showPassword}
-                style={styles.input}
-                autoCapitalize="none"
-                onChangeText={setPassword}
-            />
+            <View style={styles.row}>
+                <TextInput
+                    secureTextEntry={!showPassword}
+                    style={styles.input}
+                    autoCapitalize="none"
+                    onChangeText={setPassword}
+                />
+                <IconButton
+                    asset={showPassword ? 'CrossedEye' : 'Eye'}
+                    color={Colors.black}
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.passwordToggle}
+                />
+            </View>
+
             <VerticalSpacer height={20} />
             <Text style={styles.inputLabel}>
                 {i18n.t('settings.confirm_password')}
             </Text>
-            <TextInput
-                secureTextEntry={!showConfirmPassword}
-                style={styles.input}
-                autoCapitalize="none"
-                onChangeText={setConfirmPassword}
-            />
+            <View style={styles.row}>
+                <TextInput
+                    secureTextEntry={!showConfirmPassword}
+                    style={styles.input}
+                    autoCapitalize="none"
+                    onChangeText={setConfirmPassword}
+                />
+                <IconButton
+                    asset={showConfirmPassword ? 'CrossedEye' : 'Eye'}
+                    color={Colors.black}
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={styles.passwordToggle}
+                />
+            </View>
+
             <VerticalSpacer height={40} />
 
             {error ? (
@@ -182,6 +200,7 @@ const styles = StyleSheet.create({
         lineHeight: 16,
         paddingHorizontal: 8,
         fontSize: 14,
+        width: '100%',
     },
     RegisterButton: {
         alignSelf: 'center',
@@ -227,4 +246,6 @@ const styles = StyleSheet.create({
     },
     backIcon: { width: 24, height: 24 },
     backButton: { alignSelf: 'flex-end' },
+    passwordToggle: { position: 'absolute', height: 40, right: -2 },
+    row: { flexDirection: 'row' },
 });

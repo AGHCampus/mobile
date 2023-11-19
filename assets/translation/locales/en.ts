@@ -8,12 +8,16 @@ export default {
         settings: 'Settings',
         login: 'Login',
         register: 'Sign up',
+        create_event: 'Create an event',
     },
     events: {
         show_on_map: 'show on map',
         show_more: 'Show more',
         more_info: 'More info',
         share: 'Share',
+        info: 'Information',
+        description: 'Description',
+        startTime: 'Start time',
     },
     location: {
         overview: 'Overview',
@@ -62,5 +66,13 @@ export default {
         register_error: 'Registration error',
         register_success:
             'Registration successful. You will receive an email with a link to activate your account.',
+    },
+    create_event: {
+        title: 'Event title',
+        description: 'Event description',
+        create: 'Create',
+        location: 'Location',
+        start_date: 'Start date and time',
+        date_error: 'Event start time must be in the future',
     },
 };

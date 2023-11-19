@@ -19,7 +19,7 @@ const Icon = ({ asset, color, style }: Props) => {
     }
 
     return (
-        <View>
+        <View pointerEvents="none">
             <Image
                 style={[styles.icon, { tintColor: color }, style]}
                 source={iconData.src}

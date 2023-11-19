@@ -32,6 +32,7 @@ import { VerticalSpacer } from '../components/Spacers';
 import { LocationData } from '../api/locations';
 import SharedLocationMarker from '../components/SharedLocationMarker';
 import { shareCurrentLocation } from '../utils/sharing';
+import { PrivateEventData, getPrivateEvent } from '../api/events';
 
 type Props = BottomTabScreenProps<TabsParamList, 'Map'>;
 
@@ -50,13 +51,15 @@ export default function MapScreen({ route }: Props) {
 
     const [sharedLocationCoordinates, setSharedLocationCoordinates] =
         useState<LatLng | null>(null);
+    const [privateEventDetails, setPrivateEventDetails] =
+        useState<PrivateEventData | null>(null);
     const [selectedMarkerID, setSelectedMarkerID] = useState<string>('');
     const [settingsButtonEnabled, setSettingsButtonEnabled] = useState(true);
     const [followUserLocation, setFollowUserLocation] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const { coordinates } = route.params || {};
+    const { coordinates, eventID } = route.params || {};
 
     useEffect(() => {
         navigation.setOptions({ headerShown: false });
@@ -67,6 +70,23 @@ export default function MapScreen({ route }: Props) {
         if (coordinates) {
             setSharedLocationCoordinates(coordinates);
         }
+        if (eventID) {
+            // TODO Proper loading
+            const loadPrivateEventData = async () => {
+                const eventData = await getPrivateEvent(eventID);
+                if (eventData) {
+                    setPrivateEventDetails(eventData);
+                    mapViewRef.current?.animateToRegion(
+                        {
+                            ...eventData.coordinates,
+                            ...Constants.DEFAULT_REGION_DELTA,
+                        },
+                        500,
+                    );
+                }
+            };
+            loadPrivateEventData();
+        }
         if (focusedCoordinates) {
             mapViewRef.current?.animateToRegion(
                 {
@@ -76,7 +96,7 @@ export default function MapScreen({ route }: Props) {
                 500,
             );
         }
-    }, [coordinates, locationsData, navigation, route.params]);
+    }, [coordinates, locationsData, navigation, eventID, route.params]);
 
     const onRegionChangeComplete = (newRegion: Region) => {
         setCurrentRegion(newRegion);
@@ -215,6 +235,16 @@ export default function MapScreen({ route }: Props) {
                         selectMarker={() => setSelectedMarkerID('SHARED')}
                     />
                 )}
+                {privateEventDetails && (
+                    <SharedLocationMarker
+                        coordinate={privateEventDetails.coordinates}
+                        mapViewRef={mapViewRef}
+                        bottomSheetModalRef={bottomSheetModalRef}
+                        selectMarker={() =>
+                            setSelectedMarkerID('PRIVATE_EVENT')
+                        }
+                    />
+                )}
             </MapView>
             <View style={styles.topContentOverlay}>
                 <SearchBar inputRef={inputRef} onPress={handleSettingsPress} />
@@ -229,6 +259,7 @@ export default function MapScreen({ route }: Props) {
                 bottomSheetModalRef={bottomSheetModalRef}
                 selectedLocationID={selectedMarkerID}
                 locationCoordinates={sharedLocationCoordinates}
+                privateEventDetails={privateEventDetails}
                 clearSelectedMarker={() => setSelectedMarkerID('')}
             />
             <View style={styles.opacityOverlay}>
