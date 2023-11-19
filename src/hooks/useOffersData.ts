@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { EventData, fetchAllOffers } from '../api/events';
 import { DataFetchingStatus } from '../lib/CommonTypes';
 
@@ -8,7 +8,20 @@ const useOffersData = () => {
         DataFetchingStatus.LOADING,
     );
 
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
+    const isInitalFetch = useRef(true);
+
+    const refresh = useCallback(() => {
+        setRefreshTrigger(value => !value);
+    }, []);
+
     useEffect(() => {
+        if (!isInitalFetch.current) {
+            setOffersDataStatus(DataFetchingStatus.REFRESHING);
+        } else {
+            isInitalFetch.current = false;
+        }
+
         fetchAllOffers()
             .then(data => {
                 if (data) {
@@ -21,11 +34,12 @@ const useOffersData = () => {
             .catch(() => {
                 setOffersDataStatus(DataFetchingStatus.ERROR);
             });
-    }, []);
+    }, [refreshTrigger]);
 
     return {
         offersData,
         offersDataStatus,
+        refresh,
     };
 };
 

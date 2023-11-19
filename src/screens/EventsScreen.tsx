@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 import SafeView from './SafeView';
 import { VerticalSpacer } from '../components/Spacers';
@@ -8,6 +8,7 @@ import { Colors } from '../lib/Colors';
 import DataFetchStatusWrapper from '../components/DataFetchStatusWrapper';
 import { LocationsDataContext } from '../../App';
 import useEventsData from '../hooks/useEventsData';
+import useRefreshControl from '../hooks/useRefreshControl';
 
 function ListHeader() {
     return <VerticalSpacer height={Constants.SPACING_UNIT_16} />;
@@ -22,20 +23,19 @@ function ListFooter() {
 }
 
 export default function EventsScreen() {
-    const { eventsData, eventsDataStatus } = useEventsData();
+    const { eventsData, eventsDataStatus, refresh } = useEventsData();
     const locationsData = useContext(LocationsDataContext);
-
-    const [refreshing, setRefreshing] = useState(false);
-    const onRefresh = useCallback(() => {
-        setRefreshing(true);
-        setTimeout(() => setRefreshing(false), 1000);
-    }, []);
+    const { onRefresh, refreshing } = useRefreshControl(
+        eventsDataStatus,
+        refresh,
+    );
 
     return (
         <SafeView style={styles.container}>
             <DataFetchStatusWrapper
                 status={eventsDataStatus}
-                padding={Constants.SPACING_UNIT_10}>
+                padding={Constants.SPACING_UNIT_10}
+                refresh={refresh}>
                 <FlatList
                     data={eventsData}
                     renderItem={event => (

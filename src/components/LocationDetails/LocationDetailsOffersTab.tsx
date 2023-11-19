@@ -7,14 +7,21 @@ import DataFetchStatusWrapper from '../DataFetchStatusWrapper';
 interface Props {
     offersData: ReadonlyArray<EventData>;
     offersDataStatus: DataFetchingStatus;
+    refresh: () => void;
 }
 
-const LocationDetailsOffersTab = ({ offersData, offersDataStatus }: Props) => {
+const LocationDetailsOffersTab = ({
+    offersData,
+    offersDataStatus,
+    refresh,
+}: Props) => {
     return (
         <DataFetchStatusWrapper status={offersDataStatus}>
             <LocationDetailsEventsList
                 eventsData={offersData}
                 showEventButtonRow={false}
+                refresh={refresh}
+                dataStatus={offersDataStatus}
             />
         </DataFetchStatusWrapper>
     );

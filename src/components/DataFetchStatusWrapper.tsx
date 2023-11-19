@@ -1,5 +1,11 @@
-import React, { PropsWithChildren } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { PropsWithChildren, useState } from 'react';
+import {
+    Text,
+    StyleSheet,
+    ActivityIndicator,
+    ScrollView,
+    RefreshControl,
+} from 'react-native';
 import { DataFetchingStatus } from '../lib/CommonTypes';
 import { Constants } from '../lib/Constants';
 import { Colors } from '../lib/Colors';
@@ -8,14 +14,22 @@ interface Props {
     status: DataFetchingStatus;
     errorMessage?: string;
     padding?: number;
+    refresh?: () => void;
 }
 
 export default function DataFetchStatusWrapper({
     status,
     errorMessage,
     padding = 0,
+    refresh,
     children,
 }: PropsWithChildren<Props>) {
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = () => {
+        setRefreshing(true);
+        refresh && refresh();
+        setTimeout(() => setRefreshing(false), 20000);
+    };
     return (
         <>
             {status === DataFetchingStatus.LOADING && (
@@ -24,15 +38,25 @@ export default function DataFetchStatusWrapper({
                     style={styles.activityIndicator}
                 />
             )}
-            {status === DataFetchingStatus.ERROR && (
-                <View style={{ padding: padding }}>
+            {(status === DataFetchingStatus.ERROR ||
+                (refreshing && status === DataFetchingStatus.REFRESHING)) && (
+                <ScrollView
+                    style={{ padding: padding }}
+                    refreshControl={
+                        <RefreshControl
+                            onRefresh={onRefresh}
+                            refreshing={refreshing}
+                        />
+                    }>
                     <Text style={styles.errorTitle}>Error</Text>
                     <Text style={styles.errorText}>
                         {errorMessage || 'Failed to fetch data'}
                     </Text>
-                </View>
+                </ScrollView>
             )}
-            {status === DataFetchingStatus.SUCCESS && children}
+            {(status === DataFetchingStatus.SUCCESS ||
+                status === DataFetchingStatus.REFRESHING) &&
+                children}
         </>
     );
 }

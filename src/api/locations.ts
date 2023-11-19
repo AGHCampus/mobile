@@ -13,7 +13,7 @@ export interface LocationData {
 export const fetchAllLocations = async () => {
     try {
         const response: AxiosResponse<LocationData[]> = await axios.get(
-            `${API_URL}/locations/`,
+            `${API_URL}/locations`,
         );
         return response.data;
     } catch (error) {

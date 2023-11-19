@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { LocationDetailsData, fetchLocationDetails } from '../api/locations';
 import {
     fetchLocationEvents,
@@ -30,9 +30,23 @@ const useLocationData = ({ selectedLocationID }: Props) => {
         DataFetchingStatus.LOADING,
     );
 
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
+    const isInitalFetch = useRef(true);
+
+    const refresh = () => {
+        setRefreshTrigger(value => !value);
+    };
+
     useEffect(() => {
         if (!selectedLocationID) {
             return;
+        }
+        if (isInitalFetch.current) {
+            isInitalFetch.current = false;
+        } else {
+            setLocationDetailsDataStatus(DataFetchingStatus.REFRESHING);
+            setEventsDataStatus(DataFetchingStatus.REFRESHING);
+            setOffersDataStatus(DataFetchingStatus.REFRESHING);
         }
 
         fetchLocationDetails(selectedLocationID)
@@ -73,7 +87,7 @@ const useLocationData = ({ selectedLocationID }: Props) => {
             .catch(() => {
                 setLocationDetailsDataStatus(DataFetchingStatus.ERROR);
             });
-    }, [selectedLocationID]);
+    }, [selectedLocationID, refreshTrigger]);
 
     return {
         locationData: locationsData[selectedLocationID],
@@ -83,6 +97,7 @@ const useLocationData = ({ selectedLocationID }: Props) => {
         eventsDataStatus,
         offersData,
         offersDataStatus,
+        refresh,
     };
 };
 
