@@ -56,7 +56,6 @@ export default class TabNavigationRow extends Component<BottomTabBarProps> {
                                 navigation.navigate({
                                     name: route.name,
                                     params: route.params,
-                                    merge: true,
                                 });
                             }
                         };

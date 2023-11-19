@@ -1,4 +1,11 @@
-import React, { useState, useMemo, useContext, RefObject } from 'react';
+import React, {
+    useState,
+    useMemo,
+    useContext,
+    RefObject,
+    useEffect,
+    useCallback,
+} from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
@@ -13,12 +20,18 @@ import BottomSheetFullScreenHeader from './LocationDetailsFullScreenHeader';
 import LocationDetailsTabView from './LocationDetailsTabView';
 import { Colors } from '../../lib/Colors';
 import { AppDimensionsContext } from '../../../App';
+import SharedLocationInfo from './SharedLocationInfo';
+import { LatLng } from 'react-native-maps';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigation } from '../../lib/Navigation';
 
 const COLLAPSE_ANIMATION_DELAY = Platform.OS === 'ios' ? 100 : 0;
 
 interface Props {
     bottomSheetModalRef: RefObject<BottomSheetModal>;
     selectedLocationID: string;
+    locationCoordinates: LatLng | null;
+    clearSelectedMarker: () => void;
 }
 
 const springConfig: WithSpringConfig = {
@@ -32,7 +45,15 @@ const springConfig: WithSpringConfig = {
 const LocationDetailsBottomSheet = ({
     bottomSheetModalRef,
     selectedLocationID,
+    locationCoordinates,
+    clearSelectedMarker,
 }: Props) => {
+    useEffect(() => {
+        if (!selectedLocationID) {
+            bottomSheetModalRef.current?.forceClose();
+        }
+    }, [bottomSheetModalRef, selectedLocationID]);
+    const navigation = useNavigation<StackNavigation>();
     const [selectedTabViewIndex, setSelectedTabViewIndex] = useState(0);
     const [bottomSheetCurrentIndex, setBottomSheetCurrentIndex] = useState(1);
 
@@ -56,6 +77,14 @@ const LocationDetailsBottomSheet = ({
         bottomSheetModalRef.current!.snapToIndex(1);
     };
 
+    const navigateToSettings = useCallback(() => {
+        bottomSheetModalRef.current!.dismiss();
+        setTimeout(() => {
+            navigation.navigate('Settings');
+            clearSelectedMarker();
+        }, 150);
+    }, [bottomSheetModalRef, clearSelectedMarker, navigation]);
+
     const headerAnimatedStyles = useAnimatedStyle(() => {
         const opacity = interpolate(
             animatedPosition.value,
@@ -69,7 +98,6 @@ const LocationDetailsBottomSheet = ({
             transform: [{ translateY: y }],
         };
     });
-
     return (
         <>
             <BottomSheetModal
@@ -83,13 +111,18 @@ const LocationDetailsBottomSheet = ({
                 handleStyle={styles.handle}
                 handleIndicatorStyle={styles.handleIndicator}
                 animationConfigs={springConfig}>
-                <LocationDetailsTabView
-                    selectedLocationID={selectedLocationID}
-                    bottomSheetSnapToIndex={bottomSheetSnapToIndex}
-                    bottomSheetCurrentIndex={bottomSheetCurrentIndex}
-                    selectedTabViewIndex={selectedTabViewIndex}
-                    setSelectedTabViewIndex={setSelectedTabViewIndex}
-                />
+                {selectedLocationID === 'SHARED' && locationCoordinates && (
+                    <SharedLocationInfo coordinates={locationCoordinates} />
+                )}
+                {selectedLocationID !== 'SHARED' && (
+                    <LocationDetailsTabView
+                        selectedLocationID={selectedLocationID}
+                        bottomSheetSnapToIndex={bottomSheetSnapToIndex}
+                        bottomSheetCurrentIndex={bottomSheetCurrentIndex}
+                        selectedTabViewIndex={selectedTabViewIndex}
+                        setSelectedTabViewIndex={setSelectedTabViewIndex}
+                    />
+                )}
             </BottomSheetModal>
             <Portal>
                 <Animated.View
@@ -100,7 +133,7 @@ const LocationDetailsBottomSheet = ({
                     <BottomSheetFullScreenHeader
                         onCollapseButtonPress={handleSheetCollapsePress}
                         onSearchButtonPress={() => console.log('search')}
-                        onMenuButtonPress={() => console.log('menu')}
+                        onMenuButtonPress={navigateToSettings}
                     />
                 </Animated.View>
             </Portal>

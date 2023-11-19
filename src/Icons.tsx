@@ -21,6 +21,7 @@ import SignOut from '../assets/SignOut.png';
 import Portrait from '../assets/Portrait.png';
 import Left from '../assets/Left.png';
 import SignUp from '../assets/SignUp.png';
+import Marker from '../assets/Marker.png';
 
 export const icons = {
     Calendar: {
@@ -76,6 +77,9 @@ export const icons = {
     },
     Restaurant: {
         src: Restaurant,
+    },
+    Marker: {
+        src: Marker,
     },
     Sliders: {
         src: Sliders,

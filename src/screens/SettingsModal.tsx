@@ -13,6 +13,7 @@ import AghLogo from '../../assets/Agh.png';
 import { StackNavigation } from '../lib/Navigation';
 import { logout, useAppDispatch, useAppSelector } from '../lib/Store';
 import IconButton from '../components/IconButton';
+import { shareCurrentLocation } from '../utils/sharing';
 
 // TODO: Add proper card animation
 export default function SettingsModal() {
@@ -39,7 +40,7 @@ export default function SettingsModal() {
                                 iconAsset={'Location'}
                                 text={i18n.t('settings.share_location')}
                                 divider={true}
-                                onPress={() => {}}
+                                onPress={shareCurrentLocation}
                             />
                             <SettingRow
                                 iconAsset={'Calendar'}

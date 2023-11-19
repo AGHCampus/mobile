@@ -1,12 +1,19 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
+import {
+    StyleSheet,
+    View,
+    TouchableOpacity,
+    TextInput,
+    Linking,
+} from 'react-native';
 import type { Region } from 'react-native-maps';
-import RNMapView from 'react-native-maps';
+import RNMapView, { LatLng } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import {
     areRegionsMatching,
     getCurrentLocation,
+    getFocusedCoordinates,
     handleGeolocationError,
 } from '../utils/geolocation';
 import Icon from '../components/Icon';
@@ -23,6 +30,8 @@ import { useNavigation } from '@react-navigation/native';
 import MapFilterButtonsRow from '../components/MapFilterButtonsRow';
 import { VerticalSpacer } from '../components/Spacers';
 import { LocationData } from '../api/locations';
+import SharedLocationMarker from '../components/SharedLocationMarker';
+import { shareCurrentLocation } from '../utils/sharing';
 
 type Props = BottomTabScreenProps<TabsParamList, 'Map'>;
 
@@ -39,27 +48,35 @@ export default function MapScreen({ route }: Props) {
         ...Constants.DEFAULT_REGION_DELTA,
     });
 
+    const [sharedLocationCoordinates, setSharedLocationCoordinates] =
+        useState<LatLng | null>(null);
     const [selectedMarkerID, setSelectedMarkerID] = useState<string>('');
     const [settingsButtonEnabled, setSettingsButtonEnabled] = useState(true);
     const [followUserLocation, setFollowUserLocation] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
-    const { eventLocation } = route.params ?? { eventLocation: null };
+    const { coordinates } = route.params || {};
 
     useEffect(() => {
         navigation.setOptions({ headerShown: false });
-        if (eventLocation) {
+        const focusedCoordinates = getFocusedCoordinates(
+            route.params,
+            locationsData,
+        );
+        if (coordinates) {
+            setSharedLocationCoordinates(coordinates);
+        }
+        if (focusedCoordinates) {
             mapViewRef.current?.animateToRegion(
                 {
-                    ...eventLocation,
+                    ...focusedCoordinates,
                     ...Constants.DEFAULT_REGION_DELTA,
                 },
                 500,
             );
         }
-    }, [navigation, eventLocation]);
+    }, [coordinates, locationsData, navigation, route.params]);
 
     const onRegionChangeComplete = (newRegion: Region) => {
         setCurrentRegion(newRegion);
@@ -109,6 +126,25 @@ export default function MapScreen({ route }: Props) {
         }
     };
 
+    const handleMapReady = async () => {
+        await getInitialRegion();
+
+        const url = await Linking.getInitialURL();
+        if (
+            url?.includes('coordinates') &&
+            mapViewRef.current &&
+            sharedLocationCoordinates
+        ) {
+            mapViewRef.current.animateToRegion(
+                {
+                    ...sharedLocationCoordinates,
+                    ...Constants.DEFAULT_ZOOMED_IN_REGION_DELTA,
+                },
+                500,
+            );
+        }
+    };
+
     const handleMapPress = () => {
         inputRef.current?.blur();
         bottomSheetModalRef.current?.dismiss();
@@ -143,7 +179,7 @@ export default function MapScreen({ route }: Props) {
         <View style={styles.container}>
             <MapView
                 followsUserLocation={followUserLocation}
-                onMapReady={async () => await getInitialRegion()}
+                onMapReady={async () => await handleMapReady()}
                 onRegionChangeComplete={onRegionChangeComplete}
                 onRegionChange={onRegionChange}
                 customMapStyle={BASE_MAP_STYLE_LIGHT}
@@ -171,6 +207,14 @@ export default function MapScreen({ route }: Props) {
                             selectMarker={setSelectedMarkerID}
                         />
                     ))}
+                {sharedLocationCoordinates && (
+                    <SharedLocationMarker
+                        coordinate={sharedLocationCoordinates}
+                        mapViewRef={mapViewRef}
+                        bottomSheetModalRef={bottomSheetModalRef}
+                        selectMarker={() => setSelectedMarkerID('SHARED')}
+                    />
+                )}
             </MapView>
             <View style={styles.topContentOverlay}>
                 <SearchBar inputRef={inputRef} onPress={handleSettingsPress} />
@@ -184,11 +228,14 @@ export default function MapScreen({ route }: Props) {
             <LocationDetails
                 bottomSheetModalRef={bottomSheetModalRef}
                 selectedLocationID={selectedMarkerID}
+                locationCoordinates={sharedLocationCoordinates}
+                clearSelectedMarker={() => setSelectedMarkerID('')}
             />
             <View style={styles.opacityOverlay}>
                 <TouchableOpacity
                     activeOpacity={Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY}
-                    onPress={animateToUserRegion}>
+                    onPress={animateToUserRegion}
+                    onLongPress={shareCurrentLocation}>
                     <View style={[styles.locationButton, Shadows.depth2]}>
                         <Icon
                             asset={

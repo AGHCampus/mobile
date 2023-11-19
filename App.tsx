@@ -9,7 +9,7 @@ import i18n from './src/utils/i18n';
 import { Colors } from './src/lib/Colors';
 import { Constants } from './src/lib/Constants';
 import useLocationsData, { LocationsMap } from './src/hooks/useLocationsData';
-import { setTopLevelNavigator } from './src/lib/Navigation';
+import { linking, setTopLevelNavigator } from './src/lib/Navigation';
 import MainStackNavigator from './src/components/navigation/MainStackNavigator';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 import store, { persistor } from './src/lib/Store';
@@ -61,6 +61,7 @@ export default function App() {
                                     <AppDimensionsContext.Provider
                                         value={dimensions}>
                                         <NavigationContainer
+                                            linking={linking}
                                             ref={navigatorRef =>
                                                 setTopLevelNavigator(
                                                     navigatorRef ?? undefined,
