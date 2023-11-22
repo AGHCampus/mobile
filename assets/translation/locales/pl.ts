@@ -9,6 +9,7 @@ export default {
         login: 'Logowanie',
         register: 'Rejestracja',
         create_event: 'Utwórz wydarzenie',
+        change_password: 'Zmiana hasła',
     },
     events: {
         show_on_map: 'pokaż na mapie',
@@ -67,6 +68,18 @@ export default {
         register_error: 'Błąd rejestracji',
         register_success:
             'Rejestracja zakończona sukcesem. Na wskazany adres email otrzymasz wiadomość z linkiem do aktywacji konta.',
+        server_error: 'Niespodziewany błąd, spróbuj ponownie później',
+        reset_password: 'Zresetuj hasło',
+        reset_password_error: 'Podaj adres email aby zresetować hasło',
+        invalid_email_error: 'Nieprawidłowy adres email',
+        reset_password_success:
+            'Na wskazany adres email otrzymasz wiadomość z linkiem do zresetowania hasła.',
+        change_password: 'Zmień hasło',
+        old_password: 'Poprzednie hasło',
+        new_password: 'Nowe hasło',
+        confirm_new_password: 'Potwierdź nowe hasło',
+        change_password_error: 'Nieprawidłowe dane logowania',
+        change_password_success: 'Hasło zostało zmienione',
     },
     create_event: {
         title: 'Nazwa wydarzenia',

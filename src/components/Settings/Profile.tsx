@@ -6,12 +6,16 @@ import Icon from '../Icon';
 import i18n from '../../utils/i18n';
 import { Colors } from '../../lib/Colors';
 
-export default function Profile() {
+interface Props {
+    username: string;
+}
+
+export default function Profile({ username }: Props) {
     return (
         <View style={styles.profileRow}>
             <Image source={ProfileImage} style={styles.profileImage} />
             <View style={styles.profileText}>
-                <Text style={styles.usernameText}>Roman</Text>
+                <Text style={styles.usernameText}>{username}</Text>
                 <VerticalSpacer height={4} />
                 <View style={styles.settingsIconRow}>
                     <Icon

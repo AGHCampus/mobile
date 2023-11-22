@@ -29,6 +29,7 @@ export type StackParamList = {
     Settings: undefined;
     Login: undefined;
     Register: undefined;
+    ChangePassword: { email: string };
     CreateEvent: undefined;
 };
 

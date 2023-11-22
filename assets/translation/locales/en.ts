@@ -9,6 +9,7 @@ export default {
         login: 'Login',
         register: 'Sign up',
         create_event: 'Create an event',
+        change_password: 'Change password',
     },
     events: {
         show_on_map: 'show on map',
@@ -66,6 +67,18 @@ export default {
         register_error: 'Registration error',
         register_success:
             'Registration successful. You will receive an email with a link to activate your account.',
+        server_error: 'Unexpected error, please try again later',
+        reset_password: 'Reset password',
+        reset_password_error: 'Input your email address to reset password',
+        reset_password_success:
+            'Link to reset password has been sent to your email address',
+        invalid_email_error: 'Email address appears to be invalid',
+        change_password: 'Change password',
+        old_password: 'Old password',
+        new_password: 'New password',
+        confirm_new_password: 'Confirm new password',
+        change_password_error: 'Credentials are invalid',
+        change_password_success: 'Password has been changed',
     },
     create_event: {
         title: 'Event title',

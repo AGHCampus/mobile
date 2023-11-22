@@ -15,10 +15,10 @@ import { logout, useAppDispatch, useAppSelector } from '../lib/Store';
 import IconButton from '../components/IconButton';
 import { shareCurrentLocation } from '../utils/sharing';
 
-// TODO: Add proper card animation
 export default function SettingsModal() {
     const navigation = useNavigation<StackNavigation>();
     const username = useAppSelector(state => state.username);
+    const email = useAppSelector(state => state.email);
     const dispatch = useAppDispatch();
     return (
         <View style={styles.modal}>
@@ -34,7 +34,7 @@ export default function SettingsModal() {
                     <VerticalSpacer height={16} />
                     {username && (
                         <>
-                            <Profile />
+                            <Profile username={username} />
                             <VerticalSpacer height={40} />
                             <SettingRow
                                 iconAsset={'Location'}
@@ -49,6 +49,18 @@ export default function SettingsModal() {
                                 onPress={() =>
                                     navigation.navigate('CreateEvent')
                                 }
+                            />
+                            <SettingRow
+                                iconAsset={'Portrait'}
+                                text={i18n.t('settings.change_password')}
+                                divider={true}
+                                onPress={() => {
+                                    if (email) {
+                                        navigation.navigate('ChangePassword', {
+                                            email,
+                                        });
+                                    }
+                                }}
                             />
                             <SettingRow
                                 iconAsset={'SignOut'}

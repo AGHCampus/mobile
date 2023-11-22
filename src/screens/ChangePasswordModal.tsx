@@ -12,78 +12,86 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { VerticalSpacer } from '../components/Spacers';
 import i18n from '../utils/i18n';
-import { StackNavigation } from '../lib/Navigation';
+import { StackNavigation, StackParamList } from '../lib/Navigation';
 import { Constants } from '../lib/Constants';
 import IconButton from '../components/IconButton';
-import { register } from '../api/auth';
+import { changePassword } from '../api/auth';
+import { StackScreenProps } from '@react-navigation/stack';
 interface RegisterFormProps {
+    email: string;
     onSuccess: () => void;
 }
 
-function RegisterForm({ onSuccess }: RegisterFormProps) {
+function ChangePasswordForm({ onSuccess, email }: RegisterFormProps) {
+    const [showOldPassword, setShowOldPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState<string>('');
-    const [RegisterButtonEnabled, setRegisterButtonEnabled] = useState(false);
-    const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [buttonEnabled, setButtonEnabled] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-    const handleRegister = async () => {
-        if (email && password && password === confirmPassword) {
-            register(email, username, password).then(res => {
+    const handlePasswordChange = async () => {
+        if (oldPassword && oldPassword && newPassword === confirmNewPassword) {
+            changePassword(email, oldPassword, newPassword).then(res => {
                 if (res) {
                     if (res.status < 300) {
                         onSuccess();
                     } else {
-                        setError(i18n.t('settings.register_error'));
+                        setError(i18n.t('settings.change_password_error'));
                     }
                 } else {
-                    setError(i18n.t('settings.register_error'));
+                    setError(i18n.t('settings.server_error'));
                 }
             });
         } else {
-            if (confirmPassword !== password) {
+            if (confirmNewPassword !== newPassword) {
                 setError(i18n.t('settings.password_match_error'));
                 return;
             }
-            setError(i18n.t('settings.register_error'));
+            setError(i18n.t('settings.change_password_error'));
         }
     };
 
     useEffect(() => {
-        setRegisterButtonEnabled(
-            email.length > 0 &&
-                password.length > 0 &&
-                confirmPassword.length > 0,
+        setButtonEnabled(
+            oldPassword.length > 0 &&
+                newPassword.length > 0 &&
+                confirmNewPassword.length > 0,
         );
         setError('');
-    }, [email, password, confirmPassword]);
+    }, [oldPassword, newPassword, confirmNewPassword]);
 
     return (
         <>
-            <Text style={styles.inputLabel}>Email</Text>
-            <TextInput
-                style={styles.input}
-                autoCapitalize="none"
-                onChangeText={setEmail}
-            />
+            <Text style={styles.inputLabel}>
+                {i18n.t('settings.old_password')}
+            </Text>
+            <View style={styles.row}>
+                <TextInput
+                    secureTextEntry={!showOldPassword}
+                    style={styles.input}
+                    autoCapitalize="none"
+                    onChangeText={setOldPassword}
+                />
+                <IconButton
+                    asset={showOldPassword ? 'CrossedEye' : 'Eye'}
+                    color={Colors.black}
+                    onPress={() => setShowOldPassword(!showOldPassword)}
+                    style={styles.passwordToggle}
+                />
+            </View>
             <VerticalSpacer height={20} />
-            <Text style={styles.inputLabel}>Username</Text>
-            <TextInput
-                style={styles.input}
-                autoCapitalize="none"
-                onChangeText={setUsername}
-            />
-            <VerticalSpacer height={20} />
-            <Text style={styles.inputLabel}>{i18n.t('settings.password')}</Text>
+            <Text style={styles.inputLabel}>
+                {i18n.t('settings.new_password')}
+            </Text>
             <View style={styles.row}>
                 <TextInput
                     secureTextEntry={!showPassword}
                     style={styles.input}
                     autoCapitalize="none"
-                    onChangeText={setPassword}
+                    onChangeText={setNewPassword}
                 />
                 <IconButton
                     asset={showPassword ? 'CrossedEye' : 'Eye'}
@@ -95,14 +103,14 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
 
             <VerticalSpacer height={20} />
             <Text style={styles.inputLabel}>
-                {i18n.t('settings.confirm_password')}
+                {i18n.t('settings.confirm_new_password')}
             </Text>
             <View style={styles.row}>
                 <TextInput
                     secureTextEntry={!showConfirmPassword}
                     style={styles.input}
                     autoCapitalize="none"
-                    onChangeText={setConfirmPassword}
+                    onChangeText={setConfirmNewPassword}
                 />
                 <IconButton
                     asset={showConfirmPassword ? 'CrossedEye' : 'Eye'}
@@ -121,32 +129,35 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
             )}
 
             <TouchableOpacity
-                disabled={!RegisterButtonEnabled}
+                disabled={!buttonEnabled}
                 activeOpacity={0.6}
                 style={[
                     styles.RegisterButton,
-                    RegisterButtonEnabled
+                    buttonEnabled
                         ? styles.RegisterButtonActive
                         : styles.RegisterButtonInactive,
                 ]}
-                onPress={handleRegister}>
+                onPress={handlePasswordChange}>
                 <Text
                     style={[
                         styles.RegisterButtonText,
-                        RegisterButtonEnabled
+                        buttonEnabled
                             ? styles.RegisterButtonTextActive
                             : styles.RegisterButtonTextInactive,
                     ]}>
-                    {i18n.t('settings.register')}
+                    {i18n.t('settings.change_password')}
                 </Text>
             </TouchableOpacity>
         </>
     );
 }
 
-export default function RegisterModal() {
-    const [registerSuccess, setRegisterSuccess] = useState(false);
+export default function ChangePasswordModal({
+    route,
+}: StackScreenProps<StackParamList, 'ChangePassword'>) {
+    const [passwordChangeSuccess, setPasswordChangeSuccess] = useState(false);
     const navigation = useNavigation<StackNavigation>();
+    const { email } = route.params;
 
     return (
         <View style={styles.modal}>
@@ -161,17 +172,18 @@ export default function RegisterModal() {
                     />
                     <VerticalSpacer height={16} />
                     <Text style={styles.titleText}>
-                        {i18n.t('tabs.register')}
+                        {i18n.t('tabs.change_password')}
                     </Text>
                     <VerticalSpacer height={40} />
-                    {registerSuccess && (
+                    {passwordChangeSuccess && (
                         <Text style={styles.inputLabel}>
-                            {i18n.t('settings.register_success')}
+                            {i18n.t('settings.change_password_success')}
                         </Text>
                     )}
-                    {!registerSuccess && (
-                        <RegisterForm
-                            onSuccess={() => setRegisterSuccess(true)}
+                    {!passwordChangeSuccess && (
+                        <ChangePasswordForm
+                            onSuccess={() => setPasswordChangeSuccess(true)}
+                            email={email}
                         />
                     )}
                 </SafeAreaView>
