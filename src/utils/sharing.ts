@@ -3,6 +3,8 @@ import { LocationData } from '../api/locations';
 import i18n from './i18n';
 import { getCurrentLocation } from './geolocation';
 import { Share } from 'react-native';
+import { EventData } from '../api/events';
+import { getEventDatetimeStringLong } from './time';
 
 export const getLocationShareText = (locationData: LocationData) => {
     const shareText = `
@@ -10,6 +12,16 @@ export const getLocationShareText = (locationData: LocationData) => {
     ${i18n.t('share.location_id')}\n
     ${getLocationIdDeeplink(locationData)}`;
     return shareText;
+};
+
+export const getEventShareText = (event: EventData, location: LocationData) => {
+    const shareText = `
+    ${i18n.t('share.event')}\n
+    ${event.title}\n
+    ${location.name}\n
+    ${getEventDatetimeStringLong(new Date(event.startDate))}\n
+    ${event.websiteUrl}`;
+    return { message: shareText };
 };
 
 export const getCurrentLocationShareText = (coordinates: LatLng) => {

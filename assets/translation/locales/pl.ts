@@ -53,6 +53,7 @@ export default {
         location_id: 'Dowiedz się więcej o tym obiekcie w aplikacji AGH Map!',
         current_location:
             'Zobacz moją aktualną lokalizację w aplikacji AGH Map!',
+        event: 'Sprawdź to wydarzenie!',
     },
     settings: {
         share_location: 'Udostępnij swoją lokalizację',

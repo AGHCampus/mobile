@@ -52,6 +52,7 @@ export default {
     share: {
         location_id: 'Check out this location on AGH Map!',
         current_location: 'Check out my current location in AGH Map app!',
+        event: 'Check out this event!',
     },
     settings: {
         share_location: 'Share location',

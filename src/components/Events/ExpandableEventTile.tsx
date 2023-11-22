@@ -25,6 +25,7 @@ import { Shadows } from '../../lib/Shadows';
 import { EventData } from '../../api/events';
 import { LocationData } from '../../api/locations';
 import { AppDimensionsContext } from '../../../App';
+import { getEventShareText } from '../../utils/sharing';
 
 interface Props {
     location: LocationData;
@@ -200,10 +201,9 @@ export default function EventTile({
                             {description}
                         </Text>
                         <VerticalSpacer height={Constants.SPACING_UNIT_16} />
-                        {/* TODO: Proper sharing */}
                         <EventButtonRow
                             url={websiteUrl}
-                            shareContent={{ message: 'test' }}
+                            shareContent={getEventShareText(event, location)}
                         />
                         <VerticalSpacer height={Constants.SPACING_UNIT_16} />
                     </Animated.View>
