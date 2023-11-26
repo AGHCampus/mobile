@@ -16,12 +16,13 @@ import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StackNavigation } from '../lib/Navigation';
+import { StackNavigation, TabNavigation } from '../lib/Navigation';
 import { Constants } from '../lib/Constants';
 import { getMarkerImageByCategory } from '../components/Markers';
 import IconButton from '../components/IconButton';
 import i18n from '../utils/i18n';
 import { LocationsDataContext } from '../../App';
+import { VerticalSpacer } from '../components/Spacers';
 
 const FUSE_SEARCH_OPTIONS = {
     threshold: 0.4,
@@ -107,11 +108,12 @@ export default function SearchModal() {
                                         {location.name}
                                     </Text>
                                     <Text style={styles.locationAddress}>
-                                        ul. Testowa 21/15
+                                        {location.address ?? '-'}
                                     </Text>
                                 </View>
                             </TouchableOpacity>
                         ))}
+                        <VerticalSpacer height={200} />
                     </ScrollView>
                 </View>
             </SafeAreaView>
