@@ -63,4 +63,7 @@ export default {
         register_success:
             'Registration successful. You will receive an email with a link to activate your account.',
     },
+    search: {
+        placeholder: 'Search locations...',
+    },
 };

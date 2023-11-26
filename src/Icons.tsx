@@ -6,8 +6,10 @@ import Location from '../assets/Location.png';
 import EmptyLocation from '../assets/Location_empty.png';
 import AngleDown from '../assets/Angle_down.png';
 import AngleUp from '../assets/Angle_up.png';
+import ArrowLeft from '../assets/Arrow_left.png';
 import Search from '../assets/Search.png';
 import MenuDots from '../assets/Menu_dots.png';
+import MenuBurger from '../assets/Menu_burger.png';
 import Website from '../assets/Website.png';
 import Phone from '../assets/Phone.png';
 import Share from '../assets/Share.png';
@@ -19,7 +21,6 @@ import Restaurant from '../assets/Restaurant.png';
 import Sliders from '../assets/Sliders.png';
 import SignOut from '../assets/SignOut.png';
 import Portrait from '../assets/Portrait.png';
-import Left from '../assets/Left.png';
 import SignUp from '../assets/SignUp.png';
 import Marker from '../assets/Marker.png';
 
@@ -48,11 +49,17 @@ export const icons = {
     AngleUp: {
         src: AngleUp,
     },
+    ArrowLeft: {
+        src: ArrowLeft,
+    },
     Search: {
         src: Search,
     },
     MenuDots: {
         src: MenuDots,
+    },
+    MenuBurger: {
+        src: MenuBurger,
     },
     Website: {
         src: Website,
@@ -90,10 +97,10 @@ export const icons = {
     Portrait: {
         src: Portrait,
     },
-    Left: {
-        src: Left,
-    },
     SignUp: {
         src: SignUp,
+    },
+    Marker: {
+        src: Marker,
     },
 };

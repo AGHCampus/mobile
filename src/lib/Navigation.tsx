@@ -24,6 +24,7 @@ export type StackParamList = {
     Settings: undefined;
     Login: undefined;
     Register: undefined;
+    Search: undefined;
 };
 
 export type StackNavigation = StackNavigationProp<StackParamList>;

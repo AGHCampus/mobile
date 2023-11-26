@@ -117,7 +117,7 @@ export default function RegisterModal() {
             <View style={[styles.container, Shadows.depth2]}>
                 <SafeAreaView style={styles.settingsContainer}>
                     <IconButton
-                        asset={'Left'}
+                        asset={'ArrowLeft'}
                         color={Colors.black}
                         onPress={navigation.goBack}
                         iconStyle={styles.backIcon}

@@ -93,12 +93,12 @@ export default {
 
 const styles = StyleSheet.create({
     container: {
-        height: 34,
+        height: 38,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         gap: Constants.SPACING_UNIT_10,
-        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
+        borderRadius: Constants.BORDER_RADIUS_BUTTON,
         borderColor: 'transparent',
         paddingHorizontal: Constants.SPACING_UNIT_16 + 2,
     },
