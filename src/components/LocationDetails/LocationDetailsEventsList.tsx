@@ -1,14 +1,18 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { StyleSheet, FlatList, RefreshControl, View } from 'react-native';
 import ColumnEventTile from '../Events/ColumnEventTile';
 import { VerticalSpacer } from '../Spacers';
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
 import { EventData } from '../../api/events';
+import useRefreshControl from '../../hooks/useRefreshControl';
+import { DataFetchingStatus } from '../../lib/CommonTypes';
 
 interface Props {
     eventsData: ReadonlyArray<EventData>;
     showEventButtonRow: boolean;
+    dataStatus: DataFetchingStatus;
+    refresh: () => void;
 }
 
 function ListHeader() {
@@ -26,13 +30,10 @@ function ListFooter() {
 const LocationDetailsEventsList = ({
     eventsData,
     showEventButtonRow,
+    dataStatus,
+    refresh,
 }: Props) => {
-    const [refreshing, setRefreshing] = useState(false);
-
-    const onRefresh = useCallback(() => {
-        setRefreshing(true);
-        setTimeout(() => setRefreshing(false), 1000);
-    }, []);
+    const { onRefresh, refreshing } = useRefreshControl(dataStatus, refresh);
 
     return (
         <View style={styles.container}>

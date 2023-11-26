@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 import SafeView from './SafeView';
 import { VerticalSpacer } from '../components/Spacers';
@@ -8,6 +8,7 @@ import { Colors } from '../lib/Colors';
 import DataFetchStatusWrapper from '../components/DataFetchStatusWrapper';
 import { LocationsDataContext } from '../../App';
 import useOffersData from '../hooks/useOffersData';
+import useRefreshControl from '../hooks/useRefreshControl';
 
 function ListHeader() {
     return <VerticalSpacer height={Constants.SPACING_UNIT_16} />;
@@ -22,14 +23,12 @@ function ListFooter() {
 }
 
 export default function OffersScreen() {
-    const { offersData, offersDataStatus } = useOffersData();
+    const { offersData, offersDataStatus, refresh } = useOffersData();
     const locationsData = useContext(LocationsDataContext);
-
-    const [refreshing, setRefreshing] = useState(false);
-    const onRefresh = useCallback(() => {
-        setRefreshing(true);
-        setTimeout(() => setRefreshing(false), 1000);
-    }, []);
+    const { onRefresh, refreshing } = useRefreshControl(
+        offersDataStatus,
+        refresh,
+    );
 
     return (
         <SafeView style={styles.container}>

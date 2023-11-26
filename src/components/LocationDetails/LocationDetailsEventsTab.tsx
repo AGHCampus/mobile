@@ -8,9 +8,14 @@ import DataFetchStatusWrapper from '../DataFetchStatusWrapper';
 interface Props {
     eventsData: ReadonlyArray<EventData>;
     eventsDataStatus: DataFetchingStatus;
+    refresh: () => void;
 }
 
-const LocationDetailsEventsTab = ({ eventsData, eventsDataStatus }: Props) => {
+const LocationDetailsEventsTab = ({
+    eventsData,
+    eventsDataStatus,
+    refresh,
+}: Props) => {
     return (
         <DataFetchStatusWrapper
             status={eventsDataStatus}
@@ -18,6 +23,8 @@ const LocationDetailsEventsTab = ({ eventsData, eventsDataStatus }: Props) => {
             <LocationDetailsEventsList
                 eventsData={eventsData}
                 showEventButtonRow={true}
+                refresh={refresh}
+                dataStatus={eventsDataStatus}
             />
         </DataFetchStatusWrapper>
     );

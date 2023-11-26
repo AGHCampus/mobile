@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 import SafeView from './SafeView';
 import { VerticalSpacer } from '../components/Spacers';
@@ -7,19 +7,18 @@ import { Colors } from '../lib/Colors';
 import InfoTile from '../components/Info/InfoTile';
 import useInfoData from '../hooks/useInfoData';
 import DataFetchStatusWrapper from '../components/DataFetchStatusWrapper';
+import useRefreshControl from '../hooks/useRefreshControl';
 
 function ListSpacer() {
     return <VerticalSpacer height={Constants.SPACING_UNIT_16} />;
 }
 
 export default function InfoScreen() {
-    const { infoData, infoDataStatus } = useInfoData();
-
-    const [refreshing, setRefreshing] = useState(false);
-    const onRefresh = useCallback(() => {
-        setRefreshing(true);
-        setTimeout(() => setRefreshing(false), 1000);
-    }, []);
+    const { infoData, infoDataStatus, refresh } = useInfoData();
+    const { onRefresh, refreshing } = useRefreshControl(
+        infoDataStatus,
+        refresh,
+    );
 
     return (
         <SafeView style={styles.container}>

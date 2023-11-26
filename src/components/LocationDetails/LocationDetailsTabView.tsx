@@ -44,6 +44,7 @@ const LocationDetailsTabView = ({
         eventsDataStatus,
         offersData,
         offersDataStatus,
+        refresh,
     } = useLocationData({
         selectedLocationID,
     });
@@ -83,6 +84,7 @@ const LocationDetailsTabView = ({
                         <LocationDetailsEventsTab
                             eventsData={eventsData}
                             eventsDataStatus={eventsDataStatus}
+                            refresh={refresh}
                         />
                     );
                 case 'offers':
@@ -90,6 +92,7 @@ const LocationDetailsTabView = ({
                         <LocationDetailsOffersTab
                             offersData={offersData}
                             offersDataStatus={offersDataStatus}
+                            refresh={refresh}
                         />
                     );
                 default:
@@ -106,6 +109,7 @@ const LocationDetailsTabView = ({
             offersDataStatus,
             bottomSheetSnapToIndex,
             bottomSheetCurrentIndex,
+            refresh,
         ],
     );
 
