@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { API_URL } from './config';
+import { LatLng } from 'react-native-maps';
 
 export interface EventData {
     id: string;
@@ -69,23 +70,12 @@ export const fetchLocationOffers = async (locationId: string) => {
 
 let privateEvent: PrivateEventData | null = null;
 
-// TODO: Remove mock, add endpoint
 export const fetchPrivateEvent = async (eventId: string) => {
     try {
-        // const response: AxiosResponse<EventData> = await axios.get(
-        //     `${API_URL}/private-events/${eventId}`,
-        // );
-        // return response.data;
-        return {
-            id: '1',
-            coordinates: {
-                latitude: 50.065638899794024,
-                longitude: 19.91969686063426,
-            },
-            title: 'Private Event',
-            description: 'Private Event',
-            startTime: '2024-06-01T12:00:00.000Z',
-        };
+        const response: AxiosResponse<PrivateEventData> = await axios.get(
+            `${API_URL}/private-events/${eventId}`,
+        );
+        return response.data;
     } catch (error) {
         console.error('Error while fetching private event', error);
         return null;
@@ -101,5 +91,31 @@ export const getPrivateEvent = async (
         const eventData = await fetchPrivateEvent(eventId);
         privateEvent = eventData;
         return eventData;
+    }
+};
+
+export const createPrivateEvent = async (
+    coordinate: LatLng,
+    title: string,
+    startDate: Date,
+    description?: string,
+) => {
+    try {
+        const response: AxiosResponse = await axios.post(
+            `${API_URL}/private-events`,
+            {
+                coordinate,
+                title,
+                startDate: startDate
+                    .toISOString()
+                    .slice(0, 19)
+                    .replace('T', ' '),
+                description,
+            },
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error while creating private event', error);
+        return null;
     }
 };

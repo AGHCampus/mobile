@@ -6,6 +6,7 @@ import {
     Text,
     TextInput,
     ScrollView,
+    Share,
 } from 'react-native';
 import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
@@ -19,9 +20,29 @@ import IconButton from '../components/IconButton';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import type { LatLng } from 'react-native-maps';
 import LocationSelector from '../components/Settings/LocationSelector';
+import { createPrivateEvent } from '../api/events';
+import AccentButton from '../components/AccentButton';
 
-function EventForm() {
+function ScreenHeader() {
     const navigation = useNavigation<StackNavigation>();
+
+    return (
+        <>
+            <IconButton
+                asset={'ArrowLeft'}
+                color={Colors.black}
+                onPress={navigation.goBack}
+                iconStyle={styles.backIcon}
+                style={styles.backButton}
+            />
+            <VerticalSpacer height={16} />
+            <Text style={styles.titleText}>{i18n.t('tabs.create_event')}</Text>
+            <VerticalSpacer height={40} />
+        </>
+    );
+}
+
+function EventForm({ onSuccess }: { onSuccess: (id: string) => void }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [startDateTime, _] = useState(new Date());
@@ -32,7 +53,6 @@ function EventForm() {
     });
 
     const handleCreateEvent = () => {
-        // TODO Proper creation
         startDateTime.setSeconds(0);
         startDateTime.setMilliseconds(0);
         console.log('Create event params:');
@@ -43,21 +63,28 @@ function EventForm() {
         if (startDateTime < new Date()) {
             setError(i18n.t('create_event.date_error'));
             return;
+        } else if (!title) {
+            setError(i18n.t('create_event.title_error'));
+            return;
+        } else {
+            createPrivateEvent(
+                location,
+                title,
+                startDateTime,
+                description,
+            ).then(res => {
+                if (res) {
+                    onSuccess(res.id);
+                } else {
+                    setError(i18n.t('settings.server_error'));
+                }
+            });
         }
     };
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
-            <IconButton
-                asset={'Left'}
-                color={Colors.black}
-                onPress={navigation.goBack}
-                iconStyle={styles.backIcon}
-                style={styles.backButton}
-            />
-            <VerticalSpacer height={16} />
-            <Text style={styles.titleText}>{i18n.t('tabs.create_event')}</Text>
-            <VerticalSpacer height={40} />
+            <ScreenHeader />
             <Text style={styles.inputLabel}>
                 {i18n.t('create_event.title')}
             </Text>
@@ -138,11 +165,41 @@ function EventForm() {
 
 export default function CreatePrivateEventModal() {
     const navigation = useNavigation<StackNavigation>();
+    const [eventID, setEventID] = useState('1');
+
     return (
         <View style={styles.modal}>
             <View style={[styles.container, Shadows.depth2]}>
                 <SafeAreaView style={styles.settingsContainer}>
-                    <EventForm />
+                    {!eventID && <EventForm onSuccess={setEventID} />}
+                    {eventID && (
+                        <>
+                            <IconButton
+                                asset={'ArrowLeft'}
+                                color={Colors.black}
+                                onPress={navigation.goBack}
+                                iconStyle={styles.backIcon}
+                                style={styles.backButton}
+                            />
+                            <VerticalSpacer height={16} />
+                            <Text style={styles.inputLabel}>
+                                {i18n.t('create_event.success')}
+                            </Text>
+                            <VerticalSpacer height={20} />
+                            <AccentButton.Primary
+                                onPress={() =>
+                                    Share.share({
+                                        message:
+                                            'aghmap://map?eventID=' + eventID,
+                                    })
+                                }
+                                icon={'Share'}
+                                color={Colors.accentGreen}
+                                label={i18n.t('events.share')}
+                                style={styles.shareButton}
+                            />
+                        </>
+                    )}
                 </SafeAreaView>
             </View>
             <TouchableOpacity
@@ -177,6 +234,11 @@ const styles = StyleSheet.create({
         lineHeight: 16,
         paddingBottom: 4,
         fontWeight: '500',
+        textAlign: 'center',
+    },
+    shareButton: {
+        height: 36,
+        flexGrow: 2,
     },
     input: {
         borderWidth: 1,

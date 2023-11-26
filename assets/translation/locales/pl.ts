@@ -90,6 +90,9 @@ export default {
         location: 'Lokalizacja',
         start_date: 'Czas rozpoczęcia',
         date_error: 'Czas rozpoczęcia nie może być wcześniejszy niż aktualny',
+        success: 'Wydarzenie zostało utworzone',
+        title_error: 'Nazwa wydarzenia jest wymagana',
+        share_link: 'Udostępnij link do wydarzenia',
     },
     search: {
         placeholder: 'Wyszukaj miejsca...',

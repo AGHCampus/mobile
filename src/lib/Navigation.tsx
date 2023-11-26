@@ -50,6 +50,20 @@ export function setTopLevelNavigator(
     }
 }
 
+export function navigateFromSearch(locationID: string) {
+    if (topLevelNavigator) {
+        topLevelNavigator.goBack();
+        setTimeout(() => {
+            topLevelNavigator!.dispatch(
+                CommonActions.navigate({
+                    name: 'Map',
+                    params: { id: locationID },
+                }),
+            );
+        }, 100);
+    }
+}
+
 export const linking: LinkingOptions<StackParamList> = {
     prefixes: ['aghmap://'],
     config: {

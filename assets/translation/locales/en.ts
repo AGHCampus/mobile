@@ -89,6 +89,9 @@ export default {
         location: 'Location',
         start_date: 'Start date and time',
         date_error: 'Event start time must be in the future',
+        success: 'Event has been created',
+        title_error: 'Event title is required',
+        share_link: 'Share event link',
     },
     search: {
         placeholder: 'Search locations...',

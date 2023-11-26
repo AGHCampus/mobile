@@ -16,7 +16,7 @@ import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StackNavigation, TabNavigation } from '../lib/Navigation';
+import { StackNavigation, navigateFromSearch } from '../lib/Navigation';
 import { Constants } from '../lib/Constants';
 import { getMarkerImageByCategory } from '../components/Markers';
 import IconButton from '../components/IconButton';
@@ -32,7 +32,6 @@ const FUSE_SEARCH_OPTIONS = {
 export default function SearchModal() {
     const locationsData = useContext(LocationsDataContext);
     const inputRef = useRef<TextInput>(null);
-    const tabNavigation = useNavigation<TabNavigation>();
     const navigation = useNavigation<StackNavigation>();
 
     const [searchText, setSearchText] = useState('');
@@ -76,10 +75,11 @@ export default function SearchModal() {
                             <TouchableOpacity
                                 key={index}
                                 style={[styles.locationRow]}
-                                onPress={() =>
-                                    tabNavigation.navigate('Map', {
-                                        eventLocation: location.coordinate,
-                                    })
+                                onPress={
+                                    () => navigateFromSearch(location.id)
+                                    // tabNavigation.navigate('Map', {
+                                    //     id: location.id,
+                                    // })
                                 }>
                                 <View style={styles.iconContainer}>
                                     {location.logoUrl ? (
