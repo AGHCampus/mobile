@@ -23,6 +23,7 @@ import SignOut from '../assets/SignOut.png';
 import Portrait from '../assets/Portrait.png';
 import SignUp from '../assets/SignUp.png';
 import Marker from '../assets/Marker.png';
+import MarkerSearch from '../assets/MarkerSearch.png';
 
 export const icons = {
     Calendar: {
@@ -100,7 +101,7 @@ export const icons = {
     SignUp: {
         src: SignUp,
     },
-    Marker: {
-        src: Marker,
+    MarkerSearch: {
+        src: MarkerSearch,
     },
 };

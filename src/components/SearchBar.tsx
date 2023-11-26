@@ -5,7 +5,6 @@ import {
     Text,
     TouchableOpacity,
     View,
-    SafeAreaView,
     Platform,
 } from 'react-native';
 import { Shadows } from '../lib/Shadows';
@@ -21,7 +20,7 @@ interface Props {
 
 export default function SearchBar({ onMenuPress, onSearchPress }: Props) {
     return (
-        <SafeAreaView style={styles.safeView}>
+        <View style={styles.container}>
             <TouchableOpacity
                 activeOpacity={Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY_SOFT}
                 onPress={onMenuPress}
@@ -39,7 +38,7 @@ export default function SearchBar({ onMenuPress, onSearchPress }: Props) {
                 <View>
                     <View style={styles.markerIconContainer}>
                         <Icon
-                            asset="Marker"
+                            asset="MarkerSearch"
                             color={Colors.accentGreen}
                             style={styles.markerIcon}
                         />
@@ -49,14 +48,12 @@ export default function SearchBar({ onMenuPress, onSearchPress }: Props) {
                     </Text>
                 </View>
             </TouchableOpacity>
-        </SafeAreaView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    safeView: {
-        position: 'absolute',
-        top: 0,
+    container: {
         flexDirection: 'row',
     },
     menuIcon: {
@@ -70,8 +67,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.bgWhite,
     },
     burgerIcon: {
-        width: 20,
-        height: 20,
+        width: 18,
+        height: 18,
     },
     markerIconContainer: {
         position: 'absolute',

@@ -58,22 +58,18 @@ export default function MapFilterButton({
     const { accentColor, asset } = getButtonParamsForCategory(category);
     return (
         <TouchableOpacity
-            style={[
-                styles.filterButton,
-                Shadows.depth1,
-                { borderColor: accentColor },
-                isSelected && { backgroundColor: accentColor },
-            ]}
+            activeOpacity={0.9}
+            style={[styles.filterButton, Shadows.depth1]}
             onPress={() => toggleCategory(category)}>
             <Icon
                 asset={asset}
-                color={isSelected ? Colors.bgWhite : accentColor}
+                color={isSelected ? accentColor : Colors.inactiveGray}
                 style={styles.icon}
             />
             <Text
                 style={[
                     styles.text,
-                    { color: isSelected ? Colors.bgWhite : accentColor },
+                    { color: isSelected ? accentColor : Colors.inactiveGray },
                 ]}>
                 {i18n.t(`categories.${category}`)}
             </Text>
@@ -83,19 +79,19 @@ export default function MapFilterButton({
 const styles = StyleSheet.create({
     filterButton: {
         flexDirection: 'row',
-        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
-        borderWidth: 1,
-        height: 28,
-        marginRight: 10,
-        paddingHorizontal: 10,
+        borderRadius: 16,
+        height: 32,
+        marginRight: Constants.SPACING_UNIT_8,
+        paddingHorizontal: 14,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: Colors.bgWhite,
     },
     icon: {
-        width: 20,
-        height: 20,
+        width: 16,
+        height: 16,
         marginRight: 8,
+        marginBottom: 1,
     },
     text: {
         fontSize: 14,

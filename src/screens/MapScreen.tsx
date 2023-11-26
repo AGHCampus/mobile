@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import { StyleSheet, View, TouchableOpacity, Linking } from 'react-native';
+import {
+    StyleSheet,
+    View,
+    TouchableOpacity,
+    Linking,
+    SafeAreaView,
+} from 'react-native';
 import type { Region } from 'react-native-maps';
 import RNMapView, { LatLng } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
@@ -231,7 +237,7 @@ export default function MapScreen({ route }: Props) {
                     />
                 )}
             </MapView>
-            <View style={styles.topContentOverlay}>
+            <SafeAreaView style={styles.safeView}>
                 <SearchBar
                     onMenuPress={handleSettingsPress}
                     onSearchPress={handleSearchPress}
@@ -241,7 +247,7 @@ export default function MapScreen({ route }: Props) {
                     selectedCategories={selectedCategories}
                     setSelectedCategories={setSelectedCategories}
                 />
-            </View>
+            </SafeAreaView>
 
             <LocationDetails
                 bottomSheetModalRef={bottomSheetModalRef}
@@ -266,7 +272,7 @@ export default function MapScreen({ route }: Props) {
                             color={
                                 followUserLocation
                                     ? Colors.accentGreen
-                                    : Colors.black
+                                    : Colors.inactiveGray
                             }
                             style={styles.locationIcon}
                         />
@@ -294,9 +300,9 @@ const styles = StyleSheet.create({
         borderColor: Colors.accentGreen,
         backgroundColor: Colors.bgWhite,
     },
-    topContentOverlay: {
+    safeView: {
         position: 'absolute',
-        top: 48,
+        top: 0,
     },
     locationIcon: {
         marginTop: 2,

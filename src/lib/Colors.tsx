@@ -13,6 +13,7 @@ export const Colors = {
     shadowGrey: '#171717',
     bottomSheetHandle: '#455360',
     activityIndicator: '#999999',
+    inactiveGray: '#484f54',
     red: '#FF0000',
     accentBlue: '#30417D',
     accentYellow: '#FFA800',
