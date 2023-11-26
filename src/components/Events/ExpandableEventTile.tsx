@@ -33,7 +33,9 @@ import { LocationData } from '../../api/locations';
 import { AppDimensionsContext } from '../../../App';
 import { getEventShareText } from '../../utils/sharing';
 
-const IMAGE_WIDTH = 200;
+const IMAGE_WIDTH = 180;
+const FADE_DURATION = 150;
+const BLUR_DURATION = 400;
 
 interface Props {
     location: LocationData;
@@ -65,17 +67,25 @@ export default function EventTile({
     const animateFocus = () => {
         setAnimationStatus(AnimationState.EXPANDING);
         setIsCollapsed(false);
-        animationState.value = withTiming(1, { duration: 400 }, () => {
-            runOnJS(setAnimationStatus)(AnimationState.IDLE);
-        });
+        animationState.value = withTiming(
+            1,
+            { duration: BLUR_DURATION },
+            () => {
+                runOnJS(setAnimationStatus)(AnimationState.IDLE);
+            },
+        );
     };
 
     const animateBlur = () => {
         setAnimationStatus(AnimationState.COLLAPSING);
-        animationState.value = withTiming(0, { duration: 400 }, () => {
-            runOnJS(setIsCollapsed)(true);
-            runOnJS(setAnimationStatus)(AnimationState.IDLE);
-        });
+        animationState.value = withTiming(
+            0,
+            { duration: BLUR_DURATION },
+            () => {
+                runOnJS(setIsCollapsed)(true);
+                runOnJS(setAnimationStatus)(AnimationState.IDLE);
+            },
+        );
     };
 
     const eventTileAnimatedStyle = useAnimatedStyle(() => {
@@ -83,7 +93,7 @@ export default function EventTile({
             height: interpolate(
                 animationState.value,
                 [0, 1],
-                [133, (2 / 3) * tileWidth + expandHeight],
+                [120, (2 / 3) * tileWidth + expandHeight],
             ),
         };
     }, [animationState.value, expandHeight]);
@@ -151,10 +161,14 @@ export default function EventTile({
                         {!isCollapsed ||
                         animationStatus === AnimationState.EXPANDING ? null : (
                             <Animated.View
-                                entering={FadeInRight.duration(IMAGE_WIDTH)}
-                                exiting={FadeOutRight.duration(IMAGE_WIDTH)}
-                                style={[styles.collapsedEventDetails]}>
-                                <View style={styles.columnCenter}>
+                                entering={FadeInRight.duration(FADE_DURATION)}
+                                exiting={FadeOutRight.duration(FADE_DURATION)}
+                                style={styles.collapsedEventDetails}>
+                                <View
+                                    style={[
+                                        styles.columnCenter,
+                                        styles.collapsedEventTitle,
+                                    ]}>
                                     <Text style={styles.time}>
                                         {endTime
                                             ? getEventDatetimeRangeString(
@@ -171,15 +185,13 @@ export default function EventTile({
                                         {title}
                                     </Text>
                                 </View>
-                                <View style={styles.angleDownContainer}>
+                                <View style={styles.columnCenter}>
                                     <Icon
                                         asset={'AngleDown'}
                                         color={Colors.gray}
-                                        style={[styles.icon]}
+                                        style={styles.icon}
                                     />
                                 </View>
-
-                                {/* <View style={[styles.columnCenter]}></View> */}
                             </Animated.View>
                         )}
                     </View>
@@ -197,7 +209,7 @@ export default function EventTile({
                             eventInfoExpandedAnimatedStyle,
                             styles.eventInfoExpandedStyle,
                         ]}
-                        exiting={FadeOutUp.duration(IMAGE_WIDTH)}>
+                        exiting={FadeOutUp.duration(FADE_DURATION)}>
                         <VerticalSpacer height={Constants.SPACING_UNIT_10} />
                         <Text style={styles.time}>
                             {endTime
@@ -259,27 +271,23 @@ const styles = StyleSheet.create({
     },
 
     collapsedEventDetails: {
-        display: 'flex',
-        justifyContent: 'center',
-        marginLeft: Constants.SPACING_UNIT_8,
+        flexDirection: 'row',
+        marginHorizontal: Constants.SPACING_UNIT_8,
+    },
+
+    collapsedEventTitle: {
         width:
             Dimensions.get('window').width -
             IMAGE_WIDTH -
-            2 * Constants.SPACING_UNIT_8 -
-            2 * Constants.SPACING_UNIT_10,
+            // margin + icon + spacers
+            3 * Constants.SPACING_UNIT_10 -
+            2 * Constants.SPACING_UNIT_16 +
+            2,
     },
 
     columnCenter: {
-        flex: 1,
         display: 'flex',
         justifyContent: 'center',
-    },
-
-    angleDownContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        paddingRight: 10,
-        paddingBottom: 16,
     },
 
     icon: {

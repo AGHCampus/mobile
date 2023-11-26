@@ -26,7 +26,7 @@ import { VerticalSpacer } from '../components/Spacers';
 
 const FUSE_SEARCH_OPTIONS = {
     threshold: 0.4,
-    keys: ['name'],
+    keys: ['name', 'address'],
 };
 
 export default function SearchModal() {
