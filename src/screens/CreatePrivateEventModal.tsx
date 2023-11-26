@@ -165,7 +165,7 @@ function EventForm({ onSuccess }: { onSuccess: (id: string) => void }) {
 
 export default function CreatePrivateEventModal() {
     const navigation = useNavigation<StackNavigation>();
-    const [eventID, setEventID] = useState('1');
+    const [eventID, setEventID] = useState('');
 
     return (
         <View style={styles.modal}>
