@@ -15,8 +15,8 @@ export default function MapFilterButtonsRow({
     const markerCategories = [
         'faculty',
         'dormitory',
-        'shop',
         'club',
+        'shop',
         'restaurant',
     ];
     const toggleCategory = useCallback(
