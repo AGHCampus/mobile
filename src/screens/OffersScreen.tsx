@@ -15,7 +15,7 @@ function ListHeader() {
 }
 
 function ListSpacer() {
-    return <VerticalSpacer height={Constants.SPACING_UNIT_28} />;
+    return <VerticalSpacer height={Constants.SPACING_UNIT_20} />;
 }
 
 function ListFooter() {

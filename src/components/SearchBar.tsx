@@ -1,69 +1,106 @@
-import React, { RefObject } from 'react';
+import React from 'react';
 import {
     Dimensions,
     StyleSheet,
-    TextInput,
+    Text,
     TouchableOpacity,
     View,
+    Platform,
 } from 'react-native';
 import { Shadows } from '../lib/Shadows';
 import Icon from './Icon';
 import { Colors } from '../lib/Colors';
 import { Constants } from '../lib/Constants';
+import i18n from '../utils/i18n';
 
 interface Props {
-    inputRef: RefObject<TextInput>;
-    onPress: () => void;
+    onMenuPress: () => void;
+    onSearchPress: () => void;
 }
 
-export default function SearchBar({ inputRef, onPress }: Props) {
+export default function SearchBar({ onMenuPress, onSearchPress }: Props) {
     return (
-        <View style={styles.topBar}>
+        <View style={styles.container}>
             <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={onPress}
+                activeOpacity={Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY_SOFT}
+                onPress={onMenuPress}
                 style={[styles.menuIcon, Shadows.depth2]}>
-                <Icon asset="MenuDots" color={Colors.black} />
-            </TouchableOpacity>
-            <View style={[styles.searchBar, Shadows.depth2]}>
-                <TextInput
-                    ref={inputRef}
-                    placeholder="Search..."
-                    style={styles.searchBarInput}
+                <Icon
+                    asset="MenuBurger"
+                    color={Colors.black}
+                    style={styles.burgerIcon}
                 />
-            </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={onSearchPress}
+                style={[styles.searchBar, Shadows.depth2]}>
+                <View>
+                    <View style={styles.markerIconContainer}>
+                        <Icon
+                            asset="MarkerSearch"
+                            color={Colors.accentGreen}
+                            style={styles.markerIcon}
+                        />
+                    </View>
+                    <Text style={styles.searchBarText}>
+                        {i18n.t('search.placeholder')}
+                    </Text>
+                </View>
+            </TouchableOpacity>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    topBar: {
+    container: {
         flexDirection: 'row',
     },
     menuIcon: {
-        width: Constants.MARGIN_UNIT_24 + Constants.SPACING_UNIT_16,
-        marginLeft: Constants.MARGIN_UNIT_24,
+        width: Constants.TAP_UNIT_MAP_ICONS,
+        height: Constants.TAP_UNIT_MAP_ICONS,
+        marginTop: Constants.SPACING_UNIT_10,
+        marginLeft: Constants.SPACING_UNIT_10,
+        borderRadius: Constants.BORDER_RADIUS_LARGE,
         justifyContent: 'center',
         alignItems: 'center',
-        height: Constants.MARGIN_UNIT_24 + Constants.SPACING_UNIT_16,
-        borderRadius: Constants.BORDER_UNIT_8,
-        backgroundColor: 'white',
+        backgroundColor: Colors.bgWhite,
+    },
+    burgerIcon: {
+        width: 18,
+        height: 18,
+    },
+    markerIconContainer: {
+        position: 'absolute',
+        width: Constants.TAP_UNIT_MAP_ICONS,
+        height: Constants.TAP_UNIT_MAP_ICONS,
+        marginLeft: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    markerIcon: {
+        marginTop: 1,
+        width: 20,
+        height: 20,
     },
     searchBar: {
         width:
             Dimensions.get('window').width -
-            2 * Constants.TAP_UNIT_48 -
+            Constants.TAP_UNIT_MAP_ICONS -
+            2 * Constants.SPACING_UNIT_10 -
             Constants.SPACING_UNIT_8,
-        backgroundColor: 'white',
-        height: Constants.MARGIN_UNIT_24 + Constants.SPACING_UNIT_16,
-        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
-        paddingHorizontal: Constants.BORDER_UNIT_8,
-        marginRight: Constants.MARGIN_UNIT_24,
-        marginLeft: Constants.SPACING_UNIT_16,
-        justifyContent: 'center',
+        height: Constants.TAP_UNIT_MAP_ICONS,
+        marginTop: Constants.SPACING_UNIT_10,
+        marginLeft: Constants.SPACING_UNIT_8,
+        borderRadius: Constants.BORDER_RADIUS_LARGE,
+        backgroundColor: Colors.bgWhite,
     },
-    searchBarInput: {
-        lineHeight: 20,
+    searchBarText: {
+        fontWeight: '400',
         fontSize: 16,
+        color: Colors.gray,
+        marginLeft: Constants.TAP_UNIT_MAP_ICONS - 4,
+        marginRight: 14,
+        marginTop: Platform.OS === 'ios' ? 15 : 13,
     },
 });

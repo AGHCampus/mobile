@@ -219,7 +219,7 @@ const LocationDetailsOverviewTab = ({
                                                 ],
                                                 [
                                                     i18n.t('location.address'),
-                                                    locationDetailsData.address,
+                                                    locationData.address,
                                                 ],
                                             ]}
                                         />

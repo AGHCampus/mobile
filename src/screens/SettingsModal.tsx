@@ -12,7 +12,6 @@ import i18n from '../utils/i18n';
 import AghLogo from '../../assets/Agh.png';
 import { StackNavigation } from '../lib/Navigation';
 import { logout, useAppDispatch, useAppSelector } from '../lib/Store';
-import IconButton from '../components/IconButton';
 import { shareCurrentLocation } from '../utils/sharing';
 
 export default function SettingsModal() {
@@ -24,13 +23,6 @@ export default function SettingsModal() {
         <View style={styles.modal}>
             <View style={[styles.container, Shadows.depth2]}>
                 <SafeAreaView style={styles.settingsContainer}>
-                    <IconButton
-                        asset={'Left'}
-                        color={Colors.black}
-                        onPress={navigation.goBack}
-                        iconStyle={styles.backIcon}
-                        style={styles.backButton}
-                    />
                     <VerticalSpacer height={16} />
                     {username && (
                         <>

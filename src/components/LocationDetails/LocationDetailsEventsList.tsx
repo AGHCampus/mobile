@@ -20,7 +20,7 @@ function ListHeader() {
 }
 
 function ListSpacer() {
-    return <VerticalSpacer height={Constants.SPACING_UNIT_20} />;
+    return <VerticalSpacer height={Constants.SPACING_UNIT_24} />;
 }
 
 function ListFooter() {

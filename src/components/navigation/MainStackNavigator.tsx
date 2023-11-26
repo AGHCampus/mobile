@@ -2,9 +2,13 @@ import React from 'react';
 import { StackParamList } from '../../lib/Navigation';
 import MainTabNavigator from './MainTabNavigator';
 import SettingsModal from '../../screens/SettingsModal';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+    createStackNavigator,
+    TransitionPresets,
+} from '@react-navigation/stack';
 import LoginModal from '../../screens/LoginModal';
 import RegisterModal from '../../screens/RegisterModal';
+import SearchModal from '../../screens/SearchModal';
 import CreatePrivateEventModal from '../../screens/CreatePrivateEventModal';
 import ChangePasswordModal from '../../screens/ChangePasswordModal';
 
@@ -44,6 +48,14 @@ export default function MainStackNavigator() {
                     presentation: 'transparentModal',
                     headerShown: false,
                     cardOverlayEnabled: false,
+                }}
+            />
+            <Stack.Screen
+                name="Search"
+                component={SearchModal}
+                options={{
+                    presentation: 'modal',
+                    ...TransitionPresets.ModalFadeTransition,
                 }}
             />
             <Stack.Screen

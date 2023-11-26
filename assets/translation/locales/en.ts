@@ -90,4 +90,7 @@ export default {
         start_date: 'Start date and time',
         date_error: 'Event start time must be in the future',
     },
+    search: {
+        placeholder: 'Search locations...',
+    },
 };

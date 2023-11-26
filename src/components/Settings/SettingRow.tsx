@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
         lineHeight: 20,
     },
     divider: {
-        borderBottomColor: Colors.gray,
+        borderBottomColor: Colors.bgDivider,
         borderBottomWidth: 1,
     },
 });

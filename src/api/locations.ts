@@ -7,6 +7,7 @@ export interface LocationData {
     name: string;
     category: string;
     coordinate: LatLng;
+    address: string;
     logoUrl?: string;
 }
 
@@ -23,7 +24,6 @@ export const fetchAllLocations = async () => {
 };
 
 export interface LocationDetailsData {
-    address: string;
     description: string;
     phoneNumber: string;
     websiteUrl: string;

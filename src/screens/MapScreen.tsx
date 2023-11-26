@@ -3,8 +3,8 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
-    TextInput,
     Linking,
+    SafeAreaView,
 } from 'react-native';
 import type { Region } from 'react-native-maps';
 import RNMapView, { LatLng } from 'react-native-maps';
@@ -41,7 +41,6 @@ export default function MapScreen({ route }: Props) {
     const locationsData = useContext(LocationsDataContext);
 
     const mapViewRef = useRef<RNMapView>(null);
-    const inputRef = useRef<TextInput>(null);
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const [region, setRegion] = useState<Region>({
         latitude: 50.065638899794024,
@@ -55,6 +54,7 @@ export default function MapScreen({ route }: Props) {
         useState<PrivateEventData | null>(null);
     const [selectedMarkerID, setSelectedMarkerID] = useState<string>('');
     const [settingsButtonEnabled, setSettingsButtonEnabled] = useState(true);
+    const [searchButtonEnabled, setSearchButtonEnabled] = useState(true);
     const [followUserLocation, setFollowUserLocation] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
@@ -166,8 +166,7 @@ export default function MapScreen({ route }: Props) {
     };
 
     const handleMapPress = () => {
-        inputRef.current?.blur();
-        bottomSheetModalRef.current?.dismiss();
+        bottomSheetModalRef.current?.forceClose();
         setSelectedMarkerID('');
     };
 
@@ -176,15 +175,37 @@ export default function MapScreen({ route }: Props) {
         if (!settingsButtonEnabled) {
             return;
         }
-        inputRef.current?.blur();
-        setSelectedMarkerID('');
-        bottomSheetModalRef.current?.forceClose();
-        setSettingsButtonEnabled(false);
 
-        setTimeout(() => {
+        if (selectedMarkerID === '') {
             navigation.navigate('Settings');
-            setSettingsButtonEnabled(true);
-        }, 100);
+        } else {
+            setSelectedMarkerID('');
+            bottomSheetModalRef.current?.forceClose();
+            setSettingsButtonEnabled(false);
+            setTimeout(() => {
+                navigation.navigate('Settings');
+                setSettingsButtonEnabled(true);
+            }, 100);
+        }
+    };
+
+    const handleSearchPress = () => {
+        // Prevent multiple taps and delay navigation to allow bottom sheet dismiss
+        if (!searchButtonEnabled) {
+            return;
+        }
+
+        if (selectedMarkerID === '') {
+            navigation.navigate('Search');
+        } else {
+            setSelectedMarkerID('');
+            bottomSheetModalRef.current?.forceClose();
+            setSearchButtonEnabled(false);
+            setTimeout(() => {
+                navigation.navigate('Search');
+                setSearchButtonEnabled(true);
+            }, 100);
+        }
     };
 
     const shouldDisplayMarker = (marker: LocationData) => {
@@ -246,14 +267,17 @@ export default function MapScreen({ route }: Props) {
                     />
                 )}
             </MapView>
-            <View style={styles.topContentOverlay}>
-                <SearchBar inputRef={inputRef} onPress={handleSettingsPress} />
+            <SafeAreaView style={styles.safeView}>
+                <SearchBar
+                    onMenuPress={handleSettingsPress}
+                    onSearchPress={handleSearchPress}
+                />
                 <VerticalSpacer height={Constants.SPACING_UNIT_8} />
                 <MapFilterButtonsRow
                     selectedCategories={selectedCategories}
                     setSelectedCategories={setSelectedCategories}
                 />
-            </View>
+            </SafeAreaView>
 
             <LocationDetails
                 bottomSheetModalRef={bottomSheetModalRef}
@@ -264,7 +288,9 @@ export default function MapScreen({ route }: Props) {
             />
             <View style={styles.opacityOverlay}>
                 <TouchableOpacity
-                    activeOpacity={Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY}
+                    activeOpacity={
+                        Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY_SOFT
+                    }
                     onPress={animateToUserRegion}
                     onLongPress={shareCurrentLocation}>
                     <View style={[styles.locationButton, Shadows.depth2]}>
@@ -277,7 +303,7 @@ export default function MapScreen({ route }: Props) {
                             color={
                                 followUserLocation
                                     ? Colors.accentGreen
-                                    : Colors.black
+                                    : Colors.inactiveGray
                             }
                             style={styles.locationIcon}
                         />
@@ -293,21 +319,26 @@ const styles = StyleSheet.create({
     map: { flex: 1 },
     opacityOverlay: {
         position: 'absolute',
-        bottom: 8,
-        right: 8,
+        bottom: Constants.SPACING_UNIT_10,
+        right: Constants.SPACING_UNIT_10,
     },
     locationButton: {
-        width: Constants.TAP_UNIT_48,
-        height: Constants.TAP_UNIT_48,
+        width: Constants.TAP_UNIT_MAP_ICONS,
+        height: Constants.TAP_UNIT_MAP_ICONS,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: Constants.BORDER_RADIUS_LARGE,
         borderColor: Colors.accentGreen,
         backgroundColor: Colors.bgWhite,
     },
-    locationIcon: { width: 28, height: 28 },
-    topContentOverlay: {
+    safeView: {
         position: 'absolute',
-        top: 48,
+        top: 0,
+    },
+    locationIcon: {
+        marginTop: 2,
+        marginRight: 2,
+        width: 22,
+        height: 22,
     },
 });

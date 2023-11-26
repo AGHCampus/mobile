@@ -91,4 +91,7 @@ export default {
         start_date: 'Czas rozpoczęcia',
         date_error: 'Czas rozpoczęcia nie może być wcześniejszy niż aktualny',
     },
+    search: {
+        placeholder: 'Wyszukaj miejsca...',
+    },
 };
