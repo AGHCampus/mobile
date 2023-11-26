@@ -61,6 +61,7 @@ export default {
         logout: 'Logout',
         create_event: 'Create event',
         password: 'Password',
+        username: 'Username',
         credential_error: 'Invalid email or password',
         register: 'Sign up',
         confirm_password: 'Confirm password',

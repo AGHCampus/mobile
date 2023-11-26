@@ -66,11 +66,12 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
             <Text style={styles.inputLabel}>Email</Text>
             <TextInput
                 style={styles.input}
+                autoCorrect={false}
                 autoCapitalize="none"
                 onChangeText={setEmail}
             />
             <VerticalSpacer height={20} />
-            <Text style={styles.inputLabel}>Username</Text>
+            <Text style={styles.inputLabel}>{i18n.t('settings.username')}</Text>
             <TextInput
                 style={styles.input}
                 autoCapitalize="none"
