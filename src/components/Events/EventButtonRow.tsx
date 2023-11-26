@@ -49,14 +49,14 @@ export default function EventButtonRow({ url, shareContent, style }: Props) {
 const styles = StyleSheet.create({
     infoButton: {
         flexGrow: 3,
-        height: 32,
+        height: 36,
     },
     shareButton: {
-        height: 32,
+        height: 36,
         flexGrow: 2,
     },
     singleButton: {
-        height: 32,
+        height: 36,
         marginHorizontal: 24,
         flex: 1,
     },

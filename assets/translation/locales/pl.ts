@@ -64,4 +64,7 @@ export default {
         register_success:
             'Rejestracja zakończona sukcesem. Na wskazany adres email otrzymasz wiadomość z linkiem do aktywacji konta.',
     },
+    search: {
+        placeholder: 'Wyszukaj miejsca...',
+    },
 };

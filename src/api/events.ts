@@ -15,7 +15,7 @@ export interface EventData {
 export const fetchAllEvents = async () => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/events/`);
+            await axios.get(`${API_URL}/events`);
         return response.data;
     } catch (error) {
         console.error('Error while fetching all events', error);
@@ -26,7 +26,7 @@ export const fetchAllEvents = async () => {
 export const fetchLocationEvents = async (locationId: string) => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/events/${locationId}`);
+            await axios.get(`${API_URL}/events?locationId=${locationId}`);
         return response.data;
     } catch (error) {
         console.error('Error while fetching location events', error);
@@ -37,7 +37,7 @@ export const fetchLocationEvents = async (locationId: string) => {
 export const fetchAllOffers = async () => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/offers/`);
+            await axios.get(`${API_URL}/offers`);
         return response.data;
     } catch (error) {
         console.error('Error while fetching all offers', error);
@@ -48,7 +48,7 @@ export const fetchAllOffers = async () => {
 export const fetchLocationOffers = async (locationId: string) => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/offers/${locationId}`);
+            await axios.get(`${API_URL}/offers?locationId=${locationId}`);
         return response.data;
     } catch (error) {
         console.error('Error while fetching location offers', error);

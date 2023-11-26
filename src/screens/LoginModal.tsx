@@ -45,7 +45,7 @@ function LoginForm() {
     return (
         <>
             <IconButton
-                asset={'Left'}
+                asset={'ArrowLeft'}
                 color={Colors.black}
                 onPress={navigation.goBack}
                 iconStyle={styles.backIcon}
