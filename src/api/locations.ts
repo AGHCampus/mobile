@@ -19,7 +19,7 @@ function getLocale() {
 export const fetchAllLocations = async () => {
     try {
         const response: AxiosResponse<LocationData[]> = await axios.get(
-            `${API_URL}/locations&lang=${getLocale()}`,
+            `${API_URL}/locations?lang=${getLocale()}`,
         );
         return response.data;
     } catch (error) {
@@ -39,7 +39,7 @@ export interface LocationDetailsData {
 export const fetchLocationDetails = async (locationId: string) => {
     try {
         const response: AxiosResponse<LocationDetailsData> = await axios.get(
-            `${API_URL}/locations/${locationId}/details&lang=${getLocale()}`,
+            `${API_URL}/locations/${locationId}/details?lang=${getLocale()}`,
         );
         return response.data;
     } catch (error) {

@@ -32,7 +32,7 @@ function getLocale() {
 export const fetchAllEvents = async () => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/events&lang=${getLocale()}`);
+            await axios.get(`${API_URL}/events?lang=${getLocale()}`);
         return response.data;
     } catch (error) {
         console.error('Error while fetching all events', error);
@@ -56,7 +56,7 @@ export const fetchLocationEvents = async (locationId: string) => {
 export const fetchAllOffers = async () => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/offers&lang=${getLocale()}`);
+            await axios.get(`${API_URL}/offers?lang=${getLocale()}`);
         return response.data;
     } catch (error) {
         console.error('Error while fetching all offers', error);
