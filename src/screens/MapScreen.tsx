@@ -285,6 +285,8 @@ export default function MapScreen({ route }: Props) {
                 locationCoordinates={sharedLocationCoordinates}
                 privateEventDetails={privateEventDetails}
                 clearSelectedMarker={() => setSelectedMarkerID('')}
+                onMenuPress={handleSettingsPress}
+                onSearchPress={handleSearchPress}
             />
             <View style={styles.opacityOverlay}>
                 <TouchableOpacity
