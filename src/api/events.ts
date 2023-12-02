@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { API_URL } from './config';
 import { LatLng } from 'react-native-maps';
+import i18n from '../utils/i18n';
 
 export interface EventData {
     id: string;
@@ -24,10 +25,14 @@ export interface PrivateEventData {
     startTime: string;
 }
 
+function getLocale() {
+    return i18n.locale.slice(0, 2).toLowerCase();
+}
+
 export const fetchAllEvents = async () => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/events`);
+            await axios.get(`${API_URL}/events&lang=${getLocale()}`);
         return response.data;
     } catch (error) {
         console.error('Error while fetching all events', error);
@@ -38,7 +43,9 @@ export const fetchAllEvents = async () => {
 export const fetchLocationEvents = async (locationId: string) => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/events?locationId=${locationId}`);
+            await axios.get(
+                `${API_URL}/events?locationId=${locationId}&lang=${getLocale()}`,
+            );
         return response.data;
     } catch (error) {
         console.error('Error while fetching location events', error);
@@ -49,7 +56,7 @@ export const fetchLocationEvents = async (locationId: string) => {
 export const fetchAllOffers = async () => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/offers`);
+            await axios.get(`${API_URL}/offers&lang=${getLocale()}`);
         return response.data;
     } catch (error) {
         console.error('Error while fetching all offers', error);
@@ -60,7 +67,9 @@ export const fetchAllOffers = async () => {
 export const fetchLocationOffers = async (locationId: string) => {
     try {
         const response: AxiosResponse<ReadonlyArray<EventData>> =
-            await axios.get(`${API_URL}/offers?locationId=${locationId}`);
+            await axios.get(
+                `${API_URL}/offers?locationId=${locationId}&lang=${getLocale()}`,
+            );
         return response.data;
     } catch (error) {
         console.error('Error while fetching location offers', error);
