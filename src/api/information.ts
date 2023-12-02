@@ -1,15 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
 import { API_URL } from './config';
-import i18n from '../utils/i18n';
+import { getLocale } from './utils';
 
 export interface InfoData {
     title: string;
     content: string;
     timestamp: string;
-}
-
-function getLocale() {
-    return i18n.locale.slice(0, 2).toLowerCase();
 }
 
 export const fetchAllInformation = async () => {

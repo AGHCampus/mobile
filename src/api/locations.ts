@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { API_URL } from './config';
 import { LatLng } from 'react-native-maps';
-import i18n from '../utils/i18n';
+import { getLocale } from './utils';
 
 export interface LocationData {
     id: string;
@@ -10,10 +10,6 @@ export interface LocationData {
     coordinate: LatLng;
     address: string;
     logoUrl?: string;
-}
-
-function getLocale() {
-    return i18n.locale.slice(0, 2).toLowerCase();
 }
 
 export const fetchAllLocations = async () => {
