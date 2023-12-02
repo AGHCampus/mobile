@@ -33,7 +33,8 @@ import { LocationData } from '../../api/locations';
 import { AppDimensionsContext } from '../../../App';
 import { getEventShareText } from '../../utils/sharing';
 
-const IMAGE_WIDTH = 180;
+const IMAGE_WIDTH =
+    (Dimensions.get('window').width - 2 * Constants.SPACING_UNIT_8) / 2;
 const FADE_DURATION = 150;
 const BLUR_DURATION = 400;
 
@@ -93,7 +94,7 @@ export default function EventTile({
             height: interpolate(
                 animationState.value,
                 [0, 1],
-                [120, (2 / 3) * tileWidth + expandHeight],
+                [(2 / 3) * IMAGE_WIDTH, (2 / 3) * tileWidth + expandHeight],
             ),
         };
     }, [animationState.value, expandHeight]);
@@ -185,7 +186,7 @@ export default function EventTile({
                                         {title}
                                     </Text>
                                 </View>
-                                <View style={styles.columnCenter}>
+                                <View style={styles.angleDownContainer}>
                                     <Icon
                                         asset={'AngleDown'}
                                         color={Colors.gray}
@@ -271,21 +272,22 @@ const styles = StyleSheet.create({
     },
 
     collapsedEventDetails: {
-        flexDirection: 'row',
-        marginHorizontal: Constants.SPACING_UNIT_8,
+        display: 'flex',
+        justifyContent: 'center',
+        marginLeft: Constants.SPACING_UNIT_8,
     },
 
     collapsedEventTitle: {
         width:
             Dimensions.get('window').width -
             IMAGE_WIDTH -
-            // margin + icon + spacers
-            3 * Constants.SPACING_UNIT_10 -
-            2 * Constants.SPACING_UNIT_16 +
-            2,
+            // margin + spacers
+            2 * Constants.SPACING_UNIT_8 -
+            2 * Constants.SPACING_UNIT_10,
     },
 
     columnCenter: {
+        flex: 1,
         display: 'flex',
         justifyContent: 'center',
     },
@@ -303,5 +305,12 @@ const styles = StyleSheet.create({
         aspectRatio: 3 / 2,
         borderTopLeftRadius: Constants.BORDER_RADIUS_MEDIUM,
         borderBottomRightRadius: 0,
+    },
+
+    angleDownContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingRight: 10,
+        paddingBottom: 16,
     },
 });
