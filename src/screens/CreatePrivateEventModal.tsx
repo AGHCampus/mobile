@@ -22,6 +22,7 @@ import type { LatLng } from 'react-native-maps';
 import LocationSelector from '../components/Settings/LocationSelector';
 import { createPrivateEvent } from '../api/events';
 import AccentButton from '../components/AccentButton';
+import { useAppSelector } from '../lib/Store';
 
 function ScreenHeader() {
     const navigation = useNavigation<StackNavigation>();
@@ -51,15 +52,11 @@ function EventForm({ onSuccess }: { onSuccess: (id: string) => void }) {
         latitude: 50.065638899794024,
         longitude: 19.91969686063426,
     });
+    const jwt = useAppSelector(state => state.userApiKey)!;
 
     const handleCreateEvent = () => {
         startDateTime.setSeconds(0);
         startDateTime.setMilliseconds(0);
-        console.log('Create event params:');
-        console.log('title: ', title);
-        console.log('description: ', description);
-        console.log('startDateTime: ', startDateTime);
-        console.log('location: ', location);
         if (startDateTime < new Date()) {
             setError(i18n.t('create_event.date_error'));
             return;
@@ -68,6 +65,7 @@ function EventForm({ onSuccess }: { onSuccess: (id: string) => void }) {
             return;
         } else {
             createPrivateEvent(
+                jwt,
                 location,
                 title,
                 startDateTime,

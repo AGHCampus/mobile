@@ -16,13 +16,13 @@ export interface EventData {
 
 export interface PrivateEventData {
     id: string;
-    coordinates: {
+    coordinate: {
         latitude: number;
         longitude: number;
     };
     title: string;
     description: string;
-    startTime: string;
+    startDate: string;
 }
 
 function getLocale() {
@@ -104,22 +104,27 @@ export const getPrivateEvent = async (
 };
 
 export const createPrivateEvent = async (
+    jwt: string,
     coordinate: LatLng,
     title: string,
     startDate: Date,
     description?: string,
 ) => {
+    const startTime = startDate.toISOString().slice(0, 19);
     try {
         const response: AxiosResponse = await axios.post(
             `${API_URL}/private-events`,
             {
-                coordinate,
+                coordinate: coordinate,
                 title,
-                startDate: startDate
-                    .toISOString()
-                    .slice(0, 19)
-                    .replace('T', ' '),
+                startDate: startTime,
                 description,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    'Content-Type': 'application/json',
+                },
             },
         );
         return response.data;

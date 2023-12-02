@@ -138,7 +138,7 @@ export default function EventTile({
     return (
         <View>
             <EventLocation
-                name={location.name}
+                name={location.address ? location.name : 'global'}
                 coordinate={location.coordinate}
                 logoUrl={location.logoUrl}
             />

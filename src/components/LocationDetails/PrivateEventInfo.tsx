@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function PrivateEventInfo({
-    eventDetails: { title, description, startTime },
+    eventDetails: { title, description, startDate },
 }: Props) {
     return (
         <View style={styles.container}>
@@ -27,7 +27,7 @@ export default function PrivateEventInfo({
                     data={[
                         [
                             i18n.t('events.startTime'),
-                            getEventDatetimeStringLong(new Date(startTime)),
+                            getEventDatetimeStringLong(new Date(startDate)),
                         ],
                         [i18n.t('events.description'), description],
                     ]}

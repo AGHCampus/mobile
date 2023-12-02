@@ -37,7 +37,10 @@ function LoginForm() {
             login(email, password).then(res => {
                 if (res) {
                     if (res.status < 300) {
-                        const { username, jwt } = res.data.user;
+                        const {
+                            user: { username },
+                            jwt,
+                        } = res.data;
                         dispatch(setUsername(username));
                         dispatch(setUserApiKey(jwt));
                         dispatch(setUserEmail(email));
@@ -48,7 +51,6 @@ function LoginForm() {
                         setError(i18n.t('settings.server_error'));
                     }
                 } else {
-                    console.warn(res);
                     setError(i18n.t('settings.server_error'));
                 }
             });

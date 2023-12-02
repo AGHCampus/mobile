@@ -78,7 +78,7 @@ export default function MapScreen({ route }: Props) {
                     setPrivateEventDetails(eventData);
                     mapViewRef.current?.animateToRegion(
                         {
-                            ...eventData.coordinates,
+                            ...eventData.coordinate,
                             ...Constants.DEFAULT_REGION_DELTA,
                         },
                         500,
@@ -258,7 +258,7 @@ export default function MapScreen({ route }: Props) {
                 )}
                 {privateEventDetails && (
                     <SharedLocationMarker
-                        coordinate={privateEventDetails.coordinates}
+                        coordinate={privateEventDetails.coordinate}
                         mapViewRef={mapViewRef}
                         bottomSheetModalRef={bottomSheetModalRef}
                         selectMarker={() =>
