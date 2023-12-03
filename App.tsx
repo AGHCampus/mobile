@@ -15,7 +15,6 @@ import { Provider as ReduxStoreProvider } from 'react-redux';
 import store, { persistor } from './src/lib/Store';
 import { PersistGate } from 'redux-persist/integration/react';
 
-// TODO: Investigate the warnings or move this somewhere else
 LogBox.ignoreLogs(['Overriding previous layout', 'Encountered']);
 
 export interface Dimensions {

@@ -9,6 +9,8 @@ import {
 import LoginModal from '../../screens/LoginModal';
 import RegisterModal from '../../screens/RegisterModal';
 import SearchModal from '../../screens/SearchModal';
+import CreatePrivateEventModal from '../../screens/CreatePrivateEventModal';
+import ChangePasswordModal from '../../screens/ChangePasswordModal';
 
 const navigationOptions = {
     headerShown: false,
@@ -54,6 +56,24 @@ export default function MainStackNavigator() {
                 options={{
                     presentation: 'modal',
                     ...TransitionPresets.ModalFadeTransition,
+                }}
+            />
+            <Stack.Screen
+                name="CreateEvent"
+                component={CreatePrivateEventModal}
+                options={{
+                    presentation: 'transparentModal',
+                    headerShown: false,
+                    cardOverlayEnabled: false,
+                }}
+            />
+            <Stack.Screen
+                name="ChangePassword"
+                component={ChangePasswordModal}
+                options={{
+                    presentation: 'transparentModal',
+                    headerShown: false,
+                    cardOverlayEnabled: false,
                 }}
             />
         </Stack.Navigator>

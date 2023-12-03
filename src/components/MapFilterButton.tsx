@@ -19,32 +19,32 @@ function getButtonParamsForCategory(category: string): {
     switch (category) {
         case 'faculty':
             return {
-                accentColor: Colors.accentGreen,
+                accentColor: Colors.faculty,
                 asset: 'Faculty',
             };
         case 'dormitory':
             return {
-                accentColor: Colors.accentBlue,
+                accentColor: Colors.dormitory,
                 asset: 'Dorm',
             };
         case 'shop':
             return {
-                accentColor: Colors.accentRed,
+                accentColor: Colors.shop,
                 asset: 'Shop',
             };
         case 'club':
             return {
-                accentColor: Colors.accentYellow,
+                accentColor: Colors.club,
                 asset: 'Club',
             };
         case 'restaurant':
             return {
-                accentColor: Colors.accentRed,
+                accentColor: Colors.restaurant,
                 asset: 'Restaurant',
             };
         default:
             return {
-                accentColor: Colors.accentGreen,
+                accentColor: Colors.black,
                 asset: 'Info',
             };
     }

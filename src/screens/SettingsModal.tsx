@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image, Text } from 'react-native';
 import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
 import { useNavigation } from '@react-navigation/native';
@@ -14,67 +14,95 @@ import { StackNavigation } from '../lib/Navigation';
 import { logout, useAppDispatch, useAppSelector } from '../lib/Store';
 import { shareCurrentLocation } from '../utils/sharing';
 
-// TODO: Add proper card animation
 export default function SettingsModal() {
     const navigation = useNavigation<StackNavigation>();
     const username = useAppSelector(state => state.username);
+    const email = useAppSelector(state => state.email);
     const dispatch = useAppDispatch();
     return (
         <View style={styles.modal}>
             <View style={[styles.container, Shadows.depth2]}>
                 <SafeAreaView style={styles.settingsContainer}>
-                    <VerticalSpacer height={16} />
-                    {username && (
-                        <>
-                            <Profile />
-                            <VerticalSpacer height={40} />
-                            <SettingRow
-                                iconAsset={'Location'}
-                                text={i18n.t('settings.share_location')}
-                                divider={true}
-                                onPress={shareCurrentLocation}
-                            />
-                            <SettingRow
-                                iconAsset={'Calendar'}
-                                text={i18n.t('settings.create_event')}
-                                divider={true}
-                                onPress={() => {}}
-                            />
-                            <SettingRow
-                                iconAsset={'SignOut'}
-                                text={i18n.t('settings.logout')}
-                                divider={true}
-                                onPress={() => {
-                                    dispatch(logout());
-                                }}
-                            />
-                        </>
-                    )}
-                    {!username && (
-                        <>
-                            <SettingRow
-                                iconAsset={'Portrait'}
-                                text={i18n.t('settings.login')}
-                                divider={false}
-                                onPress={() => {
-                                    navigation.navigate('Login');
-                                }}
-                            />
-                            <SettingRow
-                                iconAsset={'SignUp'}
-                                text={i18n.t('settings.register')}
-                                divider={false}
-                                onPress={() => {
-                                    navigation.navigate('Register');
-                                }}
-                            />
-                        </>
-                    )}
-                    <VerticalSpacer height={40} />
-
-                    <LearnMoreLinks />
-                    <VerticalSpacer height={80} />
-                    <Image source={AghLogo} style={styles.logo} />
+                    <View style={styles.accountAndLinksContainer}>
+                        {username && (
+                            <>
+                                <Profile
+                                    username={username}
+                                    email={email ?? ''}
+                                />
+                                <VerticalSpacer height={25} />
+                                <Text style={styles.sectionTitle}>
+                                    {i18n.t('settings.account')}
+                                </Text>
+                                <VerticalSpacer height={6} />
+                                <SettingRow
+                                    iconAsset={'EmptyLocation'}
+                                    text={i18n.t('settings.share_location')}
+                                    onPress={shareCurrentLocation}
+                                />
+                                <View style={styles.divider} />
+                                <SettingRow
+                                    iconAsset={'Calendar'}
+                                    text={i18n.t('settings.create_event')}
+                                    onPress={() =>
+                                        navigation.navigate('CreateEvent')
+                                    }
+                                />
+                                <View style={styles.divider} />
+                                <SettingRow
+                                    iconAsset={'Password'}
+                                    text={i18n.t('settings.change_password')}
+                                    onPress={() => {
+                                        if (email) {
+                                            navigation.navigate(
+                                                'ChangePassword',
+                                                {
+                                                    email,
+                                                },
+                                            );
+                                        }
+                                    }}
+                                />
+                                <View style={styles.divider} />
+                                <SettingRow
+                                    iconAsset={'SignOut'}
+                                    text={i18n.t('settings.logout')}
+                                    onPress={() => {
+                                        dispatch(logout());
+                                    }}
+                                />
+                            </>
+                        )}
+                        {!username && (
+                            <>
+                                <VerticalSpacer height={10} />
+                                <Text style={styles.sectionTitle}>
+                                    {i18n.t('settings.account')}
+                                </Text>
+                                <VerticalSpacer height={6} />
+                                <SettingRow
+                                    iconAsset={'SignIn'}
+                                    text={i18n.t('settings.login')}
+                                    onPress={() => {
+                                        navigation.navigate('Login');
+                                    }}
+                                />
+                                <View style={styles.divider} />
+                                <SettingRow
+                                    iconAsset={'SignUp'}
+                                    text={i18n.t('settings.register')}
+                                    onPress={() => {
+                                        navigation.navigate('Register');
+                                    }}
+                                />
+                            </>
+                        )}
+                        <VerticalSpacer height={30} />
+                        <LearnMoreLinks />
+                    </View>
+                    <View style={styles.logoContainer}>
+                        <Image source={AghLogo} style={styles.logo} />
+                    </View>
                 </SafeAreaView>
             </View>
             <TouchableOpacity
@@ -93,6 +121,9 @@ const styles = StyleSheet.create({
     },
     settingsContainer: {
         marginHorizontal: 22,
+        height: '100%',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
     },
     container: {
         width: '75%',
@@ -102,10 +133,28 @@ const styles = StyleSheet.create({
     opacity: {
         flex: 1,
     },
+    sectionTitle: {
+        fontSize: 20,
+        lineHeight: 24,
+        color: Colors.accentGreen,
+        textAlign: 'center',
+    },
+    accountAndLinksContainer: {
+        marginTop: 30,
+    },
+    logoContainer: {
+        paddingVertical: 20,
+        marginBottom: 20,
+    },
     logo: {
         alignSelf: 'center',
         height: 80,
         width: 80,
+    },
+    divider: {
+        backgroundColor: Colors.bgDivider,
+        width: '100%',
+        height: 1,
     },
     backIcon: { width: 24, height: 24 },
     backButton: { alignSelf: 'flex-end' },

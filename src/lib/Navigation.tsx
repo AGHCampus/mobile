@@ -11,7 +11,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 export type TabsParamList = {
     Map:
         | undefined
-        | { eventLocation?: LatLng; id?: string; coordinates?: LatLng };
+        | {
+              eventLocation?: LatLng;
+              id?: string;
+              coordinates?: LatLng;
+              eventID?: string;
+          };
     Events: undefined;
     Offers: undefined;
     Info: undefined;
@@ -25,6 +30,8 @@ export type StackParamList = {
     Login: undefined;
     Register: undefined;
     Search: undefined;
+    ChangePassword: { email: string };
+    CreateEvent: undefined;
 };
 
 export type StackNavigation = StackNavigationProp<StackParamList>;
@@ -43,6 +50,20 @@ export function setTopLevelNavigator(
     }
 }
 
+export function navigateFromSearch(locationID: string) {
+    if (topLevelNavigator) {
+        topLevelNavigator.goBack();
+        setTimeout(() => {
+            topLevelNavigator!.dispatch(
+                CommonActions.navigate({
+                    name: 'Map',
+                    params: { id: locationID },
+                }),
+            );
+        }, 100);
+    }
+}
+
 export const linking: LinkingOptions<StackParamList> = {
     prefixes: ['aghmap://'],
     config: {
@@ -50,7 +71,7 @@ export const linking: LinkingOptions<StackParamList> = {
             Home: {
                 screens: {
                     Map: {
-                        path: 'map/:id?/:coordinates?',
+                        path: 'map/:id?/:coordinates?/:eventID?',
                         parse: {
                             id: id => `${id}`,
                             coordinates: coordinates => {
@@ -62,6 +83,7 @@ export const linking: LinkingOptions<StackParamList> = {
                                     longitude,
                                 };
                             },
+                            eventID: eventID => `${eventID}`,
                         },
                         stringify: {
                             id: id => id,
@@ -69,6 +91,7 @@ export const linking: LinkingOptions<StackParamList> = {
                                 const { latitude, longitude } = coordinates;
                                 return `${latitude},${longitude}`;
                             },
+                            eventID: eventID => eventID,
                         },
                     },
                     Events: {

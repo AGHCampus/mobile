@@ -31,8 +31,12 @@ import { Shadows } from '../../lib/Shadows';
 import { EventData } from '../../api/events';
 import { LocationData } from '../../api/locations';
 import { AppDimensionsContext } from '../../../App';
+import { getEventShareText } from '../../utils/sharing';
 
-const IMAGE_WIDTH = 200;
+const IMAGE_WIDTH =
+    (Dimensions.get('window').width - 2 * Constants.SPACING_UNIT_8) / 2;
+const FADE_DURATION = 150;
+const BLUR_DURATION = 400;
 
 interface Props {
     location: LocationData;
@@ -64,17 +68,25 @@ export default function EventTile({
     const animateFocus = () => {
         setAnimationStatus(AnimationState.EXPANDING);
         setIsCollapsed(false);
-        animationState.value = withTiming(1, { duration: 400 }, () => {
-            runOnJS(setAnimationStatus)(AnimationState.IDLE);
-        });
+        animationState.value = withTiming(
+            1,
+            { duration: BLUR_DURATION },
+            () => {
+                runOnJS(setAnimationStatus)(AnimationState.IDLE);
+            },
+        );
     };
 
     const animateBlur = () => {
         setAnimationStatus(AnimationState.COLLAPSING);
-        animationState.value = withTiming(0, { duration: 400 }, () => {
-            runOnJS(setIsCollapsed)(true);
-            runOnJS(setAnimationStatus)(AnimationState.IDLE);
-        });
+        animationState.value = withTiming(
+            0,
+            { duration: BLUR_DURATION },
+            () => {
+                runOnJS(setIsCollapsed)(true);
+                runOnJS(setAnimationStatus)(AnimationState.IDLE);
+            },
+        );
     };
 
     const eventTileAnimatedStyle = useAnimatedStyle(() => {
@@ -82,7 +94,7 @@ export default function EventTile({
             height: interpolate(
                 animationState.value,
                 [0, 1],
-                [133, (2 / 3) * tileWidth + expandHeight],
+                [(2 / 3) * IMAGE_WIDTH, (2 / 3) * tileWidth + expandHeight],
             ),
         };
     }, [animationState.value, expandHeight]);
@@ -126,7 +138,7 @@ export default function EventTile({
     return (
         <View>
             <EventLocation
-                name={location.name}
+                name={location.category !== 'global' ? location.name : 'global'}
                 coordinate={location.coordinate}
                 logoUrl={location.logoUrl}
             />
@@ -150,10 +162,14 @@ export default function EventTile({
                         {!isCollapsed ||
                         animationStatus === AnimationState.EXPANDING ? null : (
                             <Animated.View
-                                entering={FadeInRight.duration(IMAGE_WIDTH)}
-                                exiting={FadeOutRight.duration(IMAGE_WIDTH)}
-                                style={[styles.collapsedEventDetails]}>
-                                <View style={styles.columnCenter}>
+                                entering={FadeInRight.duration(FADE_DURATION)}
+                                exiting={FadeOutRight.duration(FADE_DURATION)}
+                                style={styles.collapsedEventDetails}>
+                                <View
+                                    style={[
+                                        styles.columnCenter,
+                                        styles.collapsedEventTitle,
+                                    ]}>
                                     <Text style={styles.time}>
                                         {endTime
                                             ? getEventDatetimeRangeString(
@@ -174,11 +190,9 @@ export default function EventTile({
                                     <Icon
                                         asset={'AngleDown'}
                                         color={Colors.gray}
-                                        style={[styles.icon]}
+                                        style={styles.icon}
                                     />
                                 </View>
-
-                                {/* <View style={[styles.columnCenter]}></View> */}
                             </Animated.View>
                         )}
                     </View>
@@ -196,7 +210,7 @@ export default function EventTile({
                             eventInfoExpandedAnimatedStyle,
                             styles.eventInfoExpandedStyle,
                         ]}
-                        exiting={FadeOutUp.duration(IMAGE_WIDTH)}>
+                        exiting={FadeOutUp.duration(FADE_DURATION)}>
                         <VerticalSpacer height={Constants.SPACING_UNIT_10} />
                         <Text style={styles.time}>
                             {endTime
@@ -212,10 +226,9 @@ export default function EventTile({
                             {description}
                         </Text>
                         <VerticalSpacer height={Constants.SPACING_UNIT_16} />
-                        {/* TODO: Proper sharing */}
                         <EventButtonRow
                             url={websiteUrl}
-                            shareContent={{ message: 'test' }}
+                            shareContent={getEventShareText(event, location)}
                         />
                         <VerticalSpacer height={Constants.SPACING_UNIT_16} />
                     </Animated.View>
@@ -262,9 +275,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         marginLeft: Constants.SPACING_UNIT_8,
+    },
+
+    collapsedEventTitle: {
         width:
             Dimensions.get('window').width -
             IMAGE_WIDTH -
+            // margin + spacers
             2 * Constants.SPACING_UNIT_8 -
             2 * Constants.SPACING_UNIT_10,
     },
@@ -273,13 +290,6 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         justifyContent: 'center',
-    },
-
-    angleDownContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        paddingRight: 10,
-        paddingBottom: 16,
     },
 
     icon: {
@@ -295,5 +305,12 @@ const styles = StyleSheet.create({
         aspectRatio: 3 / 2,
         borderTopLeftRadius: Constants.BORDER_RADIUS_MEDIUM,
         borderBottomRightRadius: 0,
+    },
+
+    angleDownContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingRight: 10,
+        paddingBottom: 16,
     },
 });

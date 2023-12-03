@@ -4,7 +4,7 @@ import Geolocation, {
 import type { GeolocationResponse } from '@react-native-community/geolocation';
 import { Region } from 'react-native-maps';
 import { LocationsMap } from '../hooks/useLocationsData';
-import { TabsParamList } from '../screens/navigationTypes';
+import { TabsParamList } from '../lib/Navigation';
 
 export const getCurrentLocation = () => {
     return new Promise<GeolocationResponse>((resolve, reject) => {

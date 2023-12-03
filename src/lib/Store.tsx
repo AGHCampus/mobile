@@ -16,10 +16,12 @@ import {
 interface AppState {
     userApiKey: string | null;
     username: string | null;
+    email: string | null;
 }
 const initialState: AppState = {
     userApiKey: null,
     username: null,
+    email: null,
 };
 
 const persistConfig = {
@@ -38,16 +40,21 @@ const userSlice = createSlice({
         setUserApiKey: (state, action: PayloadAction<string>) => {
             state.userApiKey = action.payload;
         },
+        setUserEmail: (state, action: PayloadAction<string>) => {
+            state.email = action.payload;
+        },
         logout: state => {
             state.username = null;
             state.userApiKey = null;
+            state.email = null;
         },
     },
 });
 
 const persistedReducer = persistReducer(persistConfig, userSlice.reducer);
 
-export const { setUsername, setUserApiKey, logout } = userSlice.actions;
+export const { setUsername, setUserApiKey, setUserEmail, logout } =
+    userSlice.actions;
 
 const store = configureStore({
     reducer: persistedReducer,

@@ -14,88 +14,90 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { VerticalSpacer } from '../components/Spacers';
 import i18n from '../utils/i18n';
 import AghLogo from '../../assets/Agh.png';
-import { StackNavigation } from '../lib/Navigation';
+import { StackNavigation, StackParamList } from '../lib/Navigation';
 import { Constants } from '../lib/Constants';
 import IconButton from '../components/IconButton';
-import { register } from '../api/auth';
+import { changePassword } from '../api/auth';
+import { StackScreenProps } from '@react-navigation/stack';
 import PageTitle from '../components/Settings/PageTitle';
 import Button from '../components/Settings/Button';
 interface RegisterFormProps {
+    email: string;
     onSuccess: () => void;
 }
 
-function RegisterForm({ onSuccess }: RegisterFormProps) {
+function ChangePasswordForm({ onSuccess, email }: RegisterFormProps) {
+    const [showOldPassword, setShowOldPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState<string>('');
-    const [RegisterButtonEnabled, setRegisterButtonEnabled] = useState(false);
-    const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [buttonEnabled, setButtonEnabled] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-    const handleRegister = async () => {
-        if (email && password && password === confirmPassword) {
-            register(email, username, password).then(res => {
+    const handlePasswordChange = async () => {
+        if (oldPassword && newPassword && newPassword === confirmNewPassword) {
+            changePassword(email, oldPassword, newPassword).then(res => {
                 if (res) {
                     if (res.status < 300) {
                         onSuccess();
                     } else {
-                        setError(i18n.t('settings.register_error'));
+                        setError(i18n.t('settings.change_password_error'));
                     }
                 } else {
-                    setError(i18n.t('settings.register_error'));
+                    setError(i18n.t('settings.change_password_error'));
                 }
             });
         } else {
-            if (confirmPassword !== password) {
+            if (confirmNewPassword !== newPassword) {
                 setError(i18n.t('settings.password_match_error'));
                 return;
             }
-            setError(i18n.t('settings.register_error'));
+            setError(i18n.t('settings.change_password_error'));
         }
     };
 
     useEffect(() => {
-        setRegisterButtonEnabled(
-            email.length > 0 &&
-                password.length > 0 &&
-                confirmPassword.length > 0,
+        setButtonEnabled(
+            oldPassword.length > 0 &&
+                newPassword.length > 0 &&
+                confirmNewPassword.length > 0,
         );
         setError('');
-    }, [email, password, confirmPassword]);
+    }, [oldPassword, newPassword, confirmNewPassword]);
 
     return (
         <View style={styles.formContainer}>
-            <PageTitle title={i18n.t('tabs.register')} />
+            <PageTitle title={i18n.t('tabs.change_password')} />
             <VerticalSpacer height={25} />
-            <Text style={styles.inputLabel}>Email</Text>
-            <TextInput
-                placeholder={i18n.t('settings.email_placeholder')}
-                style={styles.input}
-                autoCorrect={false}
-                autoCapitalize="none"
-                autoComplete="email"
-                inputMode="email"
-                onChangeText={setEmail}
-            />
-            <VerticalSpacer height={14} />
-            <Text style={styles.inputLabel}>{i18n.t('settings.username')}</Text>
-            <TextInput
-                placeholder={i18n.t('settings.username_placeholder')}
-                style={styles.input}
-                autoCapitalize="none"
-                onChangeText={setUsername}
-            />
-            <VerticalSpacer height={14} />
-            <Text style={styles.inputLabel}>{i18n.t('settings.password')}</Text>
+            <Text style={styles.inputLabel}>
+                {i18n.t('settings.old_password')}
+            </Text>
             <View style={styles.row}>
                 <TextInput
-                    placeholder={i18n.t('settings.password_placeholder')}
+                    secureTextEntry={!showOldPassword}
+                    style={styles.input}
+                    autoCapitalize="none"
+                    onChangeText={setOldPassword}
+                />
+                <IconButton
+                    asset={showOldPassword ? 'CrossedEye' : 'Eye'}
+                    color={Colors.black}
+                    onPress={() => setShowOldPassword(!showOldPassword)}
+                    style={styles.passwordToggle}
+                />
+            </View>
+            <VerticalSpacer height={14} />
+            <Text style={styles.inputLabel}>
+                {i18n.t('settings.new_password')}
+            </Text>
+            <View style={styles.row}>
+                <TextInput
                     secureTextEntry={!showPassword}
                     style={styles.input}
                     autoCapitalize="none"
-                    onChangeText={setPassword}
+                    onChangeText={setNewPassword}
                 />
                 <IconButton
                     asset={showPassword ? 'CrossedEye' : 'Eye'}
@@ -106,15 +108,14 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
             </View>
             <VerticalSpacer height={14} />
             <Text style={styles.inputLabel}>
-                {i18n.t('settings.confirm_password')}
+                {i18n.t('settings.confirm_new_password')}
             </Text>
             <View style={styles.row}>
                 <TextInput
-                    placeholder={i18n.t('settings.password_placeholder')}
                     secureTextEntry={!showConfirmPassword}
                     style={styles.input}
                     autoCapitalize="none"
-                    onChangeText={setConfirmPassword}
+                    onChangeText={setConfirmNewPassword}
                 />
                 <IconButton
                     asset={showConfirmPassword ? 'CrossedEye' : 'Eye'}
@@ -127,37 +128,43 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
                 {error && <Text style={styles.errorText}>{error}</Text>}
             </View>
             <Button
-                text={i18n.t('settings.register_button')}
-                disabled={!RegisterButtonEnabled}
-                onPress={handleRegister}
+                text={i18n.t('settings.change_password')}
+                disabled={!buttonEnabled}
+                onPress={handlePasswordChange}
             />
         </View>
     );
 }
 
-export default function RegisterModal() {
-    const [registerSuccess, setRegisterSuccess] = useState(false);
+export default function ChangePasswordModal({
+    route,
+}: StackScreenProps<StackParamList, 'ChangePassword'>) {
+    const [passwordChangeSuccess, setPasswordChangeSuccess] = useState(false);
     const navigation = useNavigation<StackNavigation>();
+    const { email } = route.params;
 
     return (
         <View style={styles.modal}>
             <View style={[styles.container, Shadows.depth2]}>
                 <SafeAreaView style={styles.settingsContainer}>
-                    {registerSuccess && (
+                    {passwordChangeSuccess && (
                         <View style={styles.formContainer}>
-                            <PageTitle title={i18n.t('tabs.register')} />
+                            <PageTitle title={i18n.t('tabs.change_password')} />
                             <VerticalSpacer height={14} />
                             <Text style={styles.successTitle}>
-                                {i18n.t('settings.register_success_title')}
+                                {i18n.t(
+                                    'settings.change_password_success_title',
+                                )}
                             </Text>
                             <Text style={styles.successText}>
-                                {i18n.t('settings.register_success')}
+                                {i18n.t('settings.change_password_success')}
                             </Text>
                         </View>
                     )}
-                    {!registerSuccess && (
-                        <RegisterForm
-                            onSuccess={() => setRegisterSuccess(true)}
+                    {!passwordChangeSuccess && (
+                        <ChangePasswordForm
+                            onSuccess={() => setPasswordChangeSuccess(true)}
+                            email={email}
                         />
                     )}
                     <View style={styles.logoContainer}>

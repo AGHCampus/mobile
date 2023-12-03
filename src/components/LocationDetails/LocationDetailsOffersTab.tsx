@@ -4,6 +4,7 @@ import { DataFetchingStatus } from '../../lib/CommonTypes';
 import { EventData } from '../../api/events';
 import { Constants } from '../../lib/Constants';
 import DataFetchStatusWrapper from '../DataFetchStatusWrapper';
+import i18n from '../../utils/i18n';
 
 interface Props {
     offersData: ReadonlyArray<EventData>;
@@ -25,6 +26,7 @@ const LocationDetailsOffersTab = ({
                 showEventButtonRow={false}
                 refresh={refresh}
                 dataStatus={offersDataStatus}
+                emptyListText={i18n.t('location.empty_offers')}
             />
         </DataFetchStatusWrapper>
     );

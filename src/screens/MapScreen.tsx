@@ -32,6 +32,7 @@ import { VerticalSpacer } from '../components/Spacers';
 import { LocationData } from '../api/locations';
 import SharedLocationMarker from '../components/SharedLocationMarker';
 import { shareCurrentLocation } from '../utils/sharing';
+import { PrivateEventData, getPrivateEvent } from '../api/events';
 
 type Props = BottomTabScreenProps<TabsParamList, 'Map'>;
 
@@ -49,6 +50,8 @@ export default function MapScreen({ route }: Props) {
 
     const [sharedLocationCoordinates, setSharedLocationCoordinates] =
         useState<LatLng | null>(null);
+    const [privateEventDetails, setPrivateEventDetails] =
+        useState<PrivateEventData | null>(null);
     const [selectedMarkerID, setSelectedMarkerID] = useState<string>('');
     const [settingsButtonEnabled, setSettingsButtonEnabled] = useState(true);
     const [searchButtonEnabled, setSearchButtonEnabled] = useState(true);
@@ -56,7 +59,7 @@ export default function MapScreen({ route }: Props) {
     const [isAnimating, setIsAnimating] = useState(false);
     const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const { coordinates } = route.params || {};
+    const { coordinates, eventID } = route.params || {};
 
     useEffect(() => {
         navigation.setOptions({ headerShown: false });
@@ -67,6 +70,23 @@ export default function MapScreen({ route }: Props) {
         if (coordinates) {
             setSharedLocationCoordinates(coordinates);
         }
+        if (eventID) {
+            // TODO Proper loading
+            const loadPrivateEventData = async () => {
+                const eventData = await getPrivateEvent(eventID);
+                if (eventData) {
+                    setPrivateEventDetails(eventData);
+                    mapViewRef.current?.animateToRegion(
+                        {
+                            ...eventData.coordinate,
+                            ...Constants.DEFAULT_REGION_DELTA,
+                        },
+                        500,
+                    );
+                }
+            };
+            loadPrivateEventData();
+        }
         if (focusedCoordinates) {
             mapViewRef.current?.animateToRegion(
                 {
@@ -76,7 +96,7 @@ export default function MapScreen({ route }: Props) {
                 500,
             );
         }
-    }, [coordinates, locationsData, navigation, route.params]);
+    }, [coordinates, locationsData, navigation, eventID, route.params]);
 
     const onRegionChangeComplete = (newRegion: Region) => {
         setCurrentRegion(newRegion);
@@ -159,11 +179,11 @@ export default function MapScreen({ route }: Props) {
         if (selectedMarkerID === '') {
             navigation.navigate('Settings');
         } else {
-            setSelectedMarkerID('');
             bottomSheetModalRef.current?.forceClose();
             setSettingsButtonEnabled(false);
             setTimeout(() => {
                 navigation.navigate('Settings');
+                setSelectedMarkerID('');
                 setSettingsButtonEnabled(true);
             }, 100);
         }
@@ -178,11 +198,11 @@ export default function MapScreen({ route }: Props) {
         if (selectedMarkerID === '') {
             navigation.navigate('Search');
         } else {
-            setSelectedMarkerID('');
             bottomSheetModalRef.current?.forceClose();
             setSearchButtonEnabled(false);
             setTimeout(() => {
                 navigation.navigate('Search');
+                setSelectedMarkerID('');
                 setSearchButtonEnabled(true);
             }, 100);
         }
@@ -233,7 +253,19 @@ export default function MapScreen({ route }: Props) {
                         coordinate={sharedLocationCoordinates}
                         mapViewRef={mapViewRef}
                         bottomSheetModalRef={bottomSheetModalRef}
+                        isSelected={selectedMarkerID === 'SHARED'}
                         selectMarker={() => setSelectedMarkerID('SHARED')}
+                    />
+                )}
+                {privateEventDetails && (
+                    <SharedLocationMarker
+                        coordinate={privateEventDetails.coordinate}
+                        mapViewRef={mapViewRef}
+                        bottomSheetModalRef={bottomSheetModalRef}
+                        isSelected={selectedMarkerID === 'PRIVATE_EVENT'}
+                        selectMarker={() =>
+                            setSelectedMarkerID('PRIVATE_EVENT')
+                        }
                     />
                 )}
             </MapView>
@@ -253,7 +285,9 @@ export default function MapScreen({ route }: Props) {
                 bottomSheetModalRef={bottomSheetModalRef}
                 selectedLocationID={selectedMarkerID}
                 locationCoordinates={sharedLocationCoordinates}
-                clearSelectedMarker={() => setSelectedMarkerID('')}
+                privateEventDetails={privateEventDetails}
+                onMenuPress={handleSettingsPress}
+                onSearchPress={handleSearchPress}
             />
             <View style={styles.opacityOverlay}>
                 <TouchableOpacity

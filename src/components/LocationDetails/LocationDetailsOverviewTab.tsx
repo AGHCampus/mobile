@@ -10,6 +10,7 @@ import {
     Image,
     NativeScrollEvent,
     NativeSyntheticEvent,
+    Linking,
 } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import FastImage from 'react-native-fast-image';
@@ -127,14 +128,20 @@ const LocationDetailsOverviewTab = ({
                                         color={Colors.accentGreen}
                                         label={i18n.t('location.website')}
                                         onPress={() =>
-                                            openURL('http://google.com')
+                                            openURL(
+                                                locationDetailsData.websiteUrl,
+                                            )
                                         }
                                     />
                                     <AccentButton.Secondary
                                         icon={'Phone'}
                                         color={Colors.accentGreen}
                                         label={i18n.t('location.call')}
-                                        onPress={() => {}}
+                                        onPress={() => {
+                                            Linking.openURL(
+                                                `tel:${locationDetailsData.phoneNumber}`,
+                                            );
+                                        }}
                                     />
                                     <AccentButton.Secondary
                                         icon={'Share'}
@@ -150,27 +157,33 @@ const LocationDetailsOverviewTab = ({
                                         }
                                     />
                                 </View>
-                                <View style={styles.sectionContainer}>
-                                    <Text style={styles.sectionTitle}>
-                                        {i18n.t('location.photos')}
-                                    </Text>
-                                    <FlatList
-                                        horizontal={true}
-                                        showsHorizontalScrollIndicator={false}
-                                        scrollEnabled
-                                        data={locationDetailsData.photos}
-                                        renderItem={imageUrl => (
-                                            <FastImage
-                                                key={imageUrl.index}
-                                                source={{
-                                                    uri: imageUrl.item,
-                                                }}
-                                                style={styles.image}
-                                            />
-                                        )}
-                                        ItemSeparatorComponent={PhotosSpacer}
-                                    />
-                                </View>
+                                {locationDetailsData.photos.length > 0 && (
+                                    <View style={styles.sectionContainer}>
+                                        <Text style={styles.sectionTitle}>
+                                            {i18n.t('location.photos')}
+                                        </Text>
+                                        <FlatList
+                                            horizontal={true}
+                                            showsHorizontalScrollIndicator={
+                                                false
+                                            }
+                                            scrollEnabled
+                                            data={locationDetailsData.photos}
+                                            renderItem={imageUrl => (
+                                                <FastImage
+                                                    key={imageUrl.index}
+                                                    source={{
+                                                        uri: imageUrl.item,
+                                                    }}
+                                                    style={styles.image}
+                                                />
+                                            )}
+                                            ItemSeparatorComponent={
+                                                PhotosSpacer
+                                            }
+                                        />
+                                    </View>
+                                )}
                                 <View style={styles.sectionContainer}>
                                     <Text style={styles.sectionTitle}>
                                         {i18n.t('location.info')}

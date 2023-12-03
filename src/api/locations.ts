@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { API_URL } from './config';
 import { LatLng } from 'react-native-maps';
+import { getLocale } from './utils';
 
 export interface LocationData {
     id: string;
@@ -14,7 +15,7 @@ export interface LocationData {
 export const fetchAllLocations = async () => {
     try {
         const response: AxiosResponse<LocationData[]> = await axios.get(
-            `${API_URL}/locations`,
+            `${API_URL}/locations?lang=${getLocale()}`,
         );
         return response.data;
     } catch (error) {
@@ -34,7 +35,7 @@ export interface LocationDetailsData {
 export const fetchLocationDetails = async (locationId: string) => {
     try {
         const response: AxiosResponse<LocationDetailsData> = await axios.get(
-            `${API_URL}/locations/${locationId}/details`,
+            `${API_URL}/locations/${locationId}/details?lang=${getLocale()}`,
         );
         return response.data;
     } catch (error) {

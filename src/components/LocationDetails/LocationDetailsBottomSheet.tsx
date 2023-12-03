@@ -4,7 +4,6 @@ import React, {
     useContext,
     RefObject,
     useEffect,
-    useCallback,
 } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,8 +21,8 @@ import { Colors } from '../../lib/Colors';
 import { AppDimensionsContext } from '../../../App';
 import SharedLocationInfo from './SharedLocationInfo';
 import { LatLng } from 'react-native-maps';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigation } from '../../lib/Navigation';
+import PrivateEventInfo from './PrivateEventInfo';
+import { PrivateEventData } from '../../api/events';
 
 const COLLAPSE_ANIMATION_DELAY = Platform.OS === 'ios' ? 100 : 0;
 
@@ -31,7 +30,9 @@ interface Props {
     bottomSheetModalRef: RefObject<BottomSheetModal>;
     selectedLocationID: string;
     locationCoordinates: LatLng | null;
-    clearSelectedMarker: () => void;
+    privateEventDetails: PrivateEventData | null;
+    onMenuPress: () => void;
+    onSearchPress: () => void;
 }
 
 const springConfig: WithSpringConfig = {
@@ -46,14 +47,10 @@ const LocationDetailsBottomSheet = ({
     bottomSheetModalRef,
     selectedLocationID,
     locationCoordinates,
-    clearSelectedMarker,
+    privateEventDetails,
+    onMenuPress,
+    onSearchPress,
 }: Props) => {
-    useEffect(() => {
-        if (!selectedLocationID) {
-            bottomSheetModalRef.current?.forceClose();
-        }
-    }, [bottomSheetModalRef, selectedLocationID]);
-    const navigation = useNavigation<StackNavigation>();
     const [selectedTabViewIndex, setSelectedTabViewIndex] = useState(0);
     const [bottomSheetCurrentIndex, setBottomSheetCurrentIndex] = useState(1);
 
@@ -77,13 +74,11 @@ const LocationDetailsBottomSheet = ({
         bottomSheetModalRef.current!.snapToIndex(1);
     };
 
-    const navigateToSettings = useCallback(() => {
-        bottomSheetModalRef.current!.dismiss();
-        setTimeout(() => {
-            navigation.navigate('Settings');
-            clearSelectedMarker();
-        }, 150);
-    }, [bottomSheetModalRef, clearSelectedMarker, navigation]);
+    useEffect(() => {
+        if (!selectedLocationID) {
+            setSelectedTabViewIndex(0);
+        }
+    }, [selectedLocationID]);
 
     const headerAnimatedStyles = useAnimatedStyle(() => {
         const opacity = interpolate(
@@ -98,6 +93,7 @@ const LocationDetailsBottomSheet = ({
             transform: [{ translateY: y }],
         };
     });
+
     return (
         <>
             <BottomSheetModal
@@ -111,6 +107,10 @@ const LocationDetailsBottomSheet = ({
                 handleStyle={styles.handle}
                 handleIndicatorStyle={styles.handleIndicator}
                 animationConfigs={springConfig}>
+                {selectedLocationID === 'PRIVATE_EVENT' &&
+                    privateEventDetails && (
+                        <PrivateEventInfo eventDetails={privateEventDetails} />
+                    )}
                 {selectedLocationID === 'SHARED' && locationCoordinates && (
                     <SharedLocationInfo coordinates={locationCoordinates} />
                 )}
@@ -132,8 +132,8 @@ const LocationDetailsBottomSheet = ({
                     ]}>
                     <BottomSheetFullScreenHeader
                         onCollapseButtonPress={handleSheetCollapsePress}
-                        onSearchButtonPress={() => console.log('search')}
-                        onMenuButtonPress={navigateToSettings}
+                        onSearchButtonPress={onSearchPress}
+                        onMenuButtonPress={onMenuPress}
                     />
                 </Animated.View>
             </Portal>

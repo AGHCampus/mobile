@@ -1,9 +1,16 @@
-import React, { Dispatch, RefObject, SetStateAction } from 'react';
+import React, {
+    Dispatch,
+    RefObject,
+    SetStateAction,
+    useCallback,
+    useEffect,
+} from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import MapView, { LatLng, Marker } from 'react-native-maps';
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
+    withSpring,
 } from 'react-native-reanimated';
 import { Constants } from '../lib/Constants';
 import { icons } from '../Icons';
@@ -12,19 +19,36 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 interface Props {
     coordinate: LatLng;
     mapViewRef: RefObject<MapView>;
+    isSelected: boolean;
     selectMarker: Dispatch<SetStateAction<void>>;
     bottomSheetModalRef: RefObject<BottomSheetModal>;
 }
+
+const SPRING_CONFIG = { mass: 0.2, stiffness: 200, damping: 5 };
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 function SharedLocationMarker({
     coordinate,
     mapViewRef,
+    isSelected,
     selectMarker,
     bottomSheetModalRef,
 }: Props) {
+    // const markerSize = useSharedValue(32);
     const markerSize = useSharedValue(32);
+
+    const focusMarker = useCallback(() => {
+        markerSize.value = withSpring(40, SPRING_CONFIG);
+    }, [markerSize]);
+
+    const blurMarker = useCallback(() => {
+        markerSize.value = withSpring(32, SPRING_CONFIG);
+    }, [markerSize]);
+
+    useEffect(() => {
+        isSelected ? focusMarker() : blurMarker();
+    }, [blurMarker, focusMarker, isSelected]);
 
     const markerImageStyle = useAnimatedStyle(() => {
         return {
