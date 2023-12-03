@@ -13,9 +13,19 @@ export default function Profile({ username, email }: Props) {
         <View style={styles.profileRow}>
             <Image source={ProfileImage} style={styles.profileImage} />
             <View style={styles.profileText}>
-                <Text style={styles.usernameText}>{username}</Text>
+                <Text
+                    style={styles.usernameText}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
+                    {username}
+                </Text>
                 <View style={styles.settingsIconRow}>
-                    <Text style={styles.settingsIconText}>{email}</Text>
+                    <Text
+                        style={styles.settingsIconText}
+                        numberOfLines={1}
+                        ellipsizeMode="tail">
+                        {email}
+                    </Text>
                 </View>
             </View>
         </View>
@@ -31,6 +41,7 @@ const styles = StyleSheet.create({
     profileRow: {
         flexDirection: 'row',
         alignItems: 'center',
+        paddingRight: 60,
     },
     profileText: {
         paddingHorizontal: 16,
