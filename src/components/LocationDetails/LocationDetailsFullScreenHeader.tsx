@@ -22,9 +22,9 @@ const BottomSheetFullScreenHeader = ({
             <View style={styles.parentRow}>
                 <View style={styles.leftRow}>
                     <IconButton
-                        asset={'AngleDown'}
+                        asset={'MenuBurger'}
                         color={Colors.black}
-                        onPress={onCollapseButtonPress}
+                        onPress={onMenuButtonPress}
                     />
                 </View>
                 <View style={styles.rightRow}>
@@ -34,9 +34,9 @@ const BottomSheetFullScreenHeader = ({
                         onPress={onSearchButtonPress}
                     />
                     <IconButton
-                        asset={'MenuBurger'}
+                        asset={'AngleDown'}
                         color={Colors.black}
-                        onPress={onMenuButtonPress}
+                        onPress={onCollapseButtonPress}
                     />
                 </View>
             </View>
