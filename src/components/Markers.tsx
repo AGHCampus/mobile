@@ -55,14 +55,14 @@ function MapMarker({
     selectMarker,
 }: Props) {
     const { coordinate, id, category } = data;
-    const markerSize = useSharedValue(25);
+    const markerSize = useSharedValue(26);
 
     const focusMarker = useCallback(() => {
-        markerSize.value = withSpring(32, SPRING_CONFIG);
+        markerSize.value = withSpring(34, SPRING_CONFIG);
     }, [markerSize]);
 
     const blurMarker = useCallback(() => {
-        markerSize.value = withSpring(25, SPRING_CONFIG);
+        markerSize.value = withSpring(26, SPRING_CONFIG);
     }, [markerSize]);
 
     useEffect(() => {
