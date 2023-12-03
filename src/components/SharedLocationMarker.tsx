@@ -35,7 +35,6 @@ function SharedLocationMarker({
     selectMarker,
     bottomSheetModalRef,
 }: Props) {
-    // const markerSize = useSharedValue(32);
     const markerSize = useSharedValue(32);
 
     const focusMarker = useCallback(() => {

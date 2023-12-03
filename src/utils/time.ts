@@ -1,7 +1,7 @@
 import i18n from './i18n';
 
 function getLocale() {
-    return i18n.locale.replace('_', '-');
+    return i18n.locale.slice(0, 2).toLowerCase();
 }
 
 export function getEventDatetimeStringLong(date: Date) {

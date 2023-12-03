@@ -18,7 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigation, navigateFromSearch } from '../lib/Navigation';
 import { Constants } from '../lib/Constants';
-import { getMarkerImageByCategory } from '../components/Markers';
+import { getLocationImageByCategory } from '../Icons';
 import IconButton from '../components/IconButton';
 import i18n from '../utils/i18n';
 import { LocationsDataContext } from '../../App';
@@ -84,7 +84,7 @@ export default function SearchModal() {
                                     ) : (
                                         <Image
                                             style={styles.locationCategoryLogo}
-                                            source={getMarkerImageByCategory(
+                                            source={getLocationImageByCategory(
                                                 location.category,
                                             )}
                                         />

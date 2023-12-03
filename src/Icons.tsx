@@ -19,6 +19,11 @@ import Dorm from '../assets/Dorm.png';
 import Shop from '../assets/Shop.png';
 import Club from '../assets/Club.png';
 import Restaurant from '../assets/Restaurant.png';
+import FacultyMarker from '../assets/Faculty_marker.png';
+import DormMarker from '../assets/Dorm_marker.png';
+import ShopMarker from '../assets/Shop_marker.png';
+import ClubMarker from '../assets/Club_marker.png';
+import RestaurantMarker from '../assets/Restaurant_marker.png';
 import Sliders from '../assets/Sliders.png';
 import SignOut from '../assets/SignOut.png';
 import Portrait from '../assets/Portrait.png';
@@ -96,6 +101,21 @@ export const icons = {
     Restaurant: {
         src: Restaurant,
     },
+    FacultyMarker: {
+        src: FacultyMarker,
+    },
+    DormMarker: {
+        src: DormMarker,
+    },
+    ShopMarker: {
+        src: ShopMarker,
+    },
+    ClubMarker: {
+        src: ClubMarker,
+    },
+    RestaurantMarker: {
+        src: RestaurantMarker,
+    },
     Marker: {
         src: Marker,
     },
@@ -133,3 +153,20 @@ export const icons = {
         src: Instagram,
     },
 };
+
+export function getLocationImageByCategory(category: string) {
+    switch (category) {
+        case 'faculty':
+            return icons.Faculty.src;
+        case 'dormitory':
+            return icons.Dorm.src;
+        case 'shop':
+            return icons.Shop.src;
+        case 'club':
+            return icons.Club.src;
+        case 'restaurant':
+            return icons.Restaurant.src;
+        default:
+            return icons.Marker.src;
+    }
+}

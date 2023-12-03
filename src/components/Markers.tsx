@@ -20,15 +20,15 @@ import { LocationData } from '../api/locations';
 export function getMarkerImageByCategory(category: string) {
     switch (category) {
         case 'faculty':
-            return icons.Faculty.src;
+            return icons.FacultyMarker.src;
         case 'dormitory':
-            return icons.Dorm.src;
+            return icons.DormMarker.src;
         case 'shop':
-            return icons.Shop.src;
+            return icons.ShopMarker.src;
         case 'club':
-            return icons.Club.src;
+            return icons.ClubMarker.src;
         case 'restaurant':
-            return icons.Restaurant.src;
+            return icons.RestaurantMarker.src;
         default:
             return icons.Marker.src;
     }
@@ -55,14 +55,14 @@ function MapMarker({
     selectMarker,
 }: Props) {
     const { coordinate, id, category } = data;
-    const markerSize = useSharedValue(24);
+    const markerSize = useSharedValue(25);
 
     const focusMarker = useCallback(() => {
-        markerSize.value = withSpring(36, SPRING_CONFIG);
+        markerSize.value = withSpring(32, SPRING_CONFIG);
     }, [markerSize]);
 
     const blurMarker = useCallback(() => {
-        markerSize.value = withSpring(24, SPRING_CONFIG);
+        markerSize.value = withSpring(25, SPRING_CONFIG);
     }, [markerSize]);
 
     useEffect(() => {
