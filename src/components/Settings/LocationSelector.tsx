@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     },
     marker: {
         alignSelf: 'center',
-        marginTop: 150 - 36,
+        marginTop: 110 - 36,
         width: 24,
         height: 36,
     },

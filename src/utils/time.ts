@@ -33,3 +33,15 @@ export function getInfoDatetimeString(timestamp: string) {
     const locale = getLocale();
     return date.toLocaleDateString(locale).replace(/\//g, '.');
 }
+
+export function getEventDatetimeString(start: string, end: string | undefined) {
+    const startTime = new Date(start);
+    const endTime = end ? new Date(end) : null;
+    const nextDay = new Date(startTime.getTime() + 86400000); // + 1 day in ms
+    const shouldShowRange =
+        endTime &&
+        (endTime > nextDay || startTime.getDate() !== endTime.getDate());
+    return shouldShowRange
+        ? getEventDatetimeRangeString(startTime, endTime)
+        : getEventDatetimeStringLong(startTime);
+}

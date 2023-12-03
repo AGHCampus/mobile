@@ -15,10 +15,7 @@ import { VerticalSpacer } from '../Spacers';
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
 import { Shadows } from '../../lib/Shadows';
-import {
-    getEventDatetimeRangeString,
-    getEventDatetimeStringLong,
-} from '../../utils/time';
+import { getEventDatetimeString } from '../../utils/time';
 import i18n from '../../utils/i18n';
 import { LocationData } from '../../api/locations';
 import { EventData } from '../../api/events';
@@ -64,9 +61,6 @@ export default function EventTile({
     const { title, imageUrl, description, websiteUrl, startDate, endDate } =
         event;
 
-    const startTime = new Date(startDate);
-    const endTime = endDate ? new Date(endDate) : null;
-
     return (
         <View>
             {location && (
@@ -80,9 +74,7 @@ export default function EventTile({
                 <FastImage style={styles.image} source={{ uri: imageUrl }} />
                 <View style={styles.eventDetailsContainer}>
                     <Text style={styles.time}>
-                        {endTime
-                            ? getEventDatetimeRangeString(startTime, endTime)
-                            : getEventDatetimeStringLong(startTime)}
+                        {getEventDatetimeString(startDate, endDate)}
                     </Text>
                     {title && <Text style={styles.eventTitle}>{title}</Text>}
                     <VerticalSpacer
