@@ -9,6 +9,8 @@ import {
 import type { Region } from 'react-native-maps';
 import RNMapView, { LatLng } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { useNavigation } from '@react-navigation/native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import {
     areRegionsMatching,
@@ -26,7 +28,6 @@ import { Shadows } from '../lib/Shadows';
 import { LocationsDataContext } from '../../App';
 import SearchBar from '../components/SearchBar';
 import { StackNavigation, TabsParamList } from '../lib/Navigation';
-import { useNavigation } from '@react-navigation/native';
 import MapFilterButtonsRow from '../components/MapFilterButtonsRow';
 import { VerticalSpacer } from '../components/Spacers';
 import { LocationData } from '../api/locations';
@@ -275,10 +276,14 @@ export default function MapScreen({ route }: Props) {
                     onSearchPress={handleSearchPress}
                 />
                 <VerticalSpacer height={Constants.SPACING_UNIT_8} />
-                <MapFilterButtonsRow
-                    selectedCategories={selectedCategories}
-                    setSelectedCategories={setSelectedCategories}
-                />
+                {selectedMarkerID === '' && (
+                    <Animated.View entering={FadeIn} exiting={FadeOut}>
+                        <MapFilterButtonsRow
+                            selectedCategories={selectedCategories}
+                            setSelectedCategories={setSelectedCategories}
+                        />
+                    </Animated.View>
+                )}
             </SafeAreaView>
 
             <LocationDetails
