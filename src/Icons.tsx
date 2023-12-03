@@ -9,7 +9,6 @@ import AngleUp from '../assets/Angle_up.png';
 import ArrowLeft from '../assets/Arrow_left.png';
 import Back from '../assets/Back.png';
 import Search from '../assets/Search.png';
-import MenuDots from '../assets/Menu_dots.png';
 import MenuBurger from '../assets/Menu_burger.png';
 import Website from '../assets/Website.png';
 import Phone from '../assets/Phone.png';
@@ -70,9 +69,6 @@ export const icons = {
     },
     Search: {
         src: Search,
-    },
-    MenuDots: {
-        src: MenuDots,
     },
     MenuBurger: {
         src: MenuBurger,

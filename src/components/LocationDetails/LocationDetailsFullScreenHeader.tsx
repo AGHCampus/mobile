@@ -34,7 +34,7 @@ const BottomSheetFullScreenHeader = ({
                         onPress={onSearchButtonPress}
                     />
                     <IconButton
-                        asset={'MenuDots'}
+                        asset={'MenuBurger'}
                         color={Colors.black}
                         onPress={onMenuButtonPress}
                     />
