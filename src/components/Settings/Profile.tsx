@@ -1,31 +1,21 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
 import ProfileImage from '../../../assets/Profile.png';
-import { VerticalSpacer } from '../Spacers';
-import Icon from '../Icon';
-import i18n from '../../utils/i18n';
 import { Colors } from '../../lib/Colors';
 
 interface Props {
     username: string;
+    email: string;
 }
 
-export default function Profile({ username }: Props) {
+export default function Profile({ username, email }: Props) {
     return (
         <View style={styles.profileRow}>
             <Image source={ProfileImage} style={styles.profileImage} />
             <View style={styles.profileText}>
                 <Text style={styles.usernameText}>{username}</Text>
-                <VerticalSpacer height={4} />
                 <View style={styles.settingsIconRow}>
-                    <Icon
-                        asset={'Sliders'}
-                        color={Colors.black}
-                        style={styles.settingsIcon}
-                    />
-                    <Text style={styles.settingsIconText}>
-                        {i18n.t('tabs.settings')}
-                    </Text>
+                    <Text style={styles.settingsIconText}>{email}</Text>
                 </View>
             </View>
         </View>
@@ -47,22 +37,18 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     usernameText: {
-        lineHeight: 41,
-        fontSize: 34,
+        lineHeight: 36,
+        fontSize: 30,
         fontWeight: '500',
         color: Colors.accentGreen,
     },
-    settingsIcon: {
-        width: 16,
-        height: 16,
-        marginRight: 6,
-    },
     settingsIconText: {
-        fontSize: 17,
+        fontSize: 14,
         lineHeight: 20,
     },
     settingsIconRow: {
         flexDirection: 'row',
         alignItems: 'center',
+        paddingBottom: 6,
     },
 });

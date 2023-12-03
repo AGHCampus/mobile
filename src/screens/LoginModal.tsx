@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     Text,
     TextInput,
+    Image,
 } from 'react-native';
 import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
@@ -12,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { VerticalSpacer } from '../components/Spacers';
 import i18n from '../utils/i18n';
+import AghLogo from '../../assets/Agh.png';
 import { StackNavigation } from '../lib/Navigation';
 import {
     setUsername,
@@ -22,6 +24,8 @@ import {
 import { Constants } from '../lib/Constants';
 import IconButton from '../components/IconButton';
 import { login, resetPassword } from '../api/auth';
+import PageTitle from '../components/Settings/PageTitle';
+import Button from '../components/Settings/Button';
 
 function LoginForm() {
     const dispatch = useAppDispatch();
@@ -30,6 +34,7 @@ function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string>('');
+    const [success, setSuccess] = useState<string>('');
     const [loginButtonEnabled, setLoginButtonEnabled] = useState(false);
 
     const handleLogin = () => {
@@ -67,7 +72,7 @@ function LoginForm() {
         } else {
             resetPassword(email).then(res => {
                 if (res && res.status < 300) {
-                    setError(i18n.t('settings.reset_password_success'));
+                    setSuccess(i18n.t('settings.reset_password_success'));
                 }
             });
         }
@@ -76,30 +81,28 @@ function LoginForm() {
     useEffect(() => {
         setLoginButtonEnabled(email.length > 0 && password.length > 0);
         setError('');
+        setSuccess('');
     }, [email, password]);
 
     return (
-        <>
-            <IconButton
-                asset={'ArrowLeft'}
-                color={Colors.black}
-                onPress={navigation.goBack}
-                iconStyle={styles.backIcon}
-                style={styles.backButton}
-            />
-            <VerticalSpacer height={16} />
-            <Text style={styles.titleText}>{i18n.t('tabs.login')}</Text>
-            <VerticalSpacer height={40} />
+        <View style={styles.formContainer}>
+            <PageTitle title={i18n.t('tabs.login')} />
+            <VerticalSpacer height={25} />
             <Text style={styles.inputLabel}>Email</Text>
             <TextInput
+                placeholder={i18n.t('settings.email_placeholder')}
                 style={styles.input}
+                autoCorrect={false}
                 autoCapitalize="none"
+                autoComplete="email"
+                inputMode="email"
                 onChangeText={setEmail}
             />
-            <VerticalSpacer height={20} />
+            <VerticalSpacer height={14} />
             <Text style={styles.inputLabel}>{i18n.t('settings.password')}</Text>
             <View style={styles.row}>
                 <TextInput
+                    placeholder={i18n.t('settings.password_placeholder')}
                     secureTextEntry={!showPassword}
                     style={styles.input}
                     autoCapitalize="none"
@@ -112,40 +115,26 @@ function LoginForm() {
                     style={styles.passwordToggle}
                 />
             </View>
-            <VerticalSpacer height={40} />
-            <View style={styles.errorContainer}>
+            <View style={styles.messageContainer}>
                 {error && <Text style={styles.errorText}>{error}</Text>}
+                {!error && success && (
+                    <Text style={styles.successText}>{success}</Text>
+                )}
             </View>
-
+            <Button
+                text={i18n.t('settings.login_button')}
+                disabled={!loginButtonEnabled}
+                onPress={handleLogin}
+            />
             <TouchableOpacity
-                activeOpacity={0.6}
+                activeOpacity={Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY}
                 style={styles.resetButton}
                 onPress={handlePasswordReset}>
-                <Text style={styles.underline}>
+                <Text style={styles.link}>
                     {i18n.t('settings.reset_password')}
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                disabled={!loginButtonEnabled}
-                activeOpacity={0.6}
-                style={[
-                    styles.loginButton,
-                    loginButtonEnabled
-                        ? styles.loginButtonActive
-                        : styles.loginButtonInactive,
-                ]}
-                onPress={handleLogin}>
-                <Text
-                    style={[
-                        styles.loginButtonText,
-                        loginButtonEnabled
-                            ? styles.loginButtonTextActive
-                            : styles.loginButtonTextInactive,
-                    ]}>
-                    {i18n.t('settings.login')}
-                </Text>
-            </TouchableOpacity>
-        </>
+        </View>
     );
 }
 
@@ -156,6 +145,9 @@ export default function LoginModal() {
             <View style={[styles.container, Shadows.depth2]}>
                 <SafeAreaView style={styles.settingsContainer}>
                     <LoginForm />
+                    <View style={styles.logoContainer}>
+                        <Image source={AghLogo} style={styles.logo} />
+                    </View>
                 </SafeAreaView>
             </View>
             <TouchableOpacity
@@ -174,12 +166,21 @@ const styles = StyleSheet.create({
     },
     settingsContainer: {
         marginHorizontal: 22,
+        height: '100%',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
     },
-    titleText: {
-        fontSize: 20,
-        lineHeight: 24,
-        color: Colors.accentGreen,
-        textAlign: 'center',
+    formContainer: {
+        marginTop: 40,
+    },
+    logoContainer: {
+        paddingVertical: 20,
+        marginBottom: 20,
+    },
+    logo: {
+        alignSelf: 'center',
+        height: 80,
+        width: 80,
     },
     container: {
         width: '75%',
@@ -187,79 +188,55 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.bgWhite,
     },
     inputLabel: {
-        fontSize: 14,
-        lineHeight: 16,
-        paddingBottom: 4,
-        fontWeight: '500',
+        fontSize: 15,
+        lineHeight: 25,
     },
     input: {
-        borderWidth: 1,
-        borderRadius: 8,
-        borderColor: Colors.gray,
-        height: 40,
-        lineHeight: 16,
+        width: '100%',
+        height: 44,
         paddingHorizontal: 8,
         fontSize: 14,
-        width: '100%',
-    },
-    loginButton: {
-        alignSelf: 'center',
-        width: '100%',
-        height: Constants.TAP_UNIT_48,
-        justifyContent: 'center',
-        alignContent: 'center',
-        borderWidth: 2,
-
-        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
-    },
-    loginButtonInactive: {
-        backgroundColor: Colors.bgWhite,
-        borderColor: Colors.black,
-    },
-    loginButtonActive: {
-        borderColor: Colors.bgWhite,
-        backgroundColor: Colors.accentGreen,
-    },
-    loginButtonText: {
-        textAlignVertical: 'center',
-        textAlign: 'center',
-        fontSize: 20,
-        lineHeight: 22,
-        fontWeight: '500',
-    },
-    errorText: {
-        fontSize: 14,
         lineHeight: 16,
-        paddingBottom: 4,
-        fontWeight: '500',
-        color: Colors.red,
-        textAlign: 'center',
-    },
-    loginButtonTextInactive: {
-        color: Colors.black,
-    },
-    loginButtonTextActive: {
-        color: Colors.bgWhite,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: Colors.inputGray,
     },
     opacity: {
         flex: 1,
     },
-    backIcon: { width: 24, height: 24 },
-    backButton: { alignSelf: 'flex-end' },
+    backButton: {
+        height: 25,
+        width: 48,
+        alignItems: 'flex-end',
+    },
     passwordToggle: { position: 'absolute', height: 40, right: -2 },
     row: { flexDirection: 'row' },
-    underline: {
-        textDecorationLine: 'underline',
+    link: {
+        fontSize: 14,
         lineHeight: 16,
         paddingHorizontal: 8,
-        fontSize: 14,
+        color: Colors.textLink,
     },
     resetButton: {
         alignSelf: 'center',
         padding: 4,
-        marginBottom: 8,
+        marginTop: Constants.SPACING_UNIT_8,
     },
-    errorContainer: {
-        height: 40,
+    messageContainer: {
+        height: 60,
+    },
+    errorText: {
+        fontSize: 14,
+        lineHeight: 18,
+        paddingVertical: Constants.SPACING_UNIT_10,
+        color: Colors.red,
+        textAlign: 'center',
+    },
+    successText: {
+        fontSize: 14,
+        lineHeight: 18,
+        paddingVertical: Constants.SPACING_UNIT_10,
+        color: Colors.green,
+        textAlign: 'center',
     },
 });

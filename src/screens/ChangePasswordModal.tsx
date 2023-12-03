@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     Text,
     TextInput,
+    Image,
 } from 'react-native';
 import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
@@ -12,11 +13,14 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { VerticalSpacer } from '../components/Spacers';
 import i18n from '../utils/i18n';
+import AghLogo from '../../assets/Agh.png';
 import { StackNavigation, StackParamList } from '../lib/Navigation';
 import { Constants } from '../lib/Constants';
 import IconButton from '../components/IconButton';
 import { changePassword } from '../api/auth';
 import { StackScreenProps } from '@react-navigation/stack';
+import PageTitle from '../components/Settings/PageTitle';
+import Button from '../components/Settings/Button';
 interface RegisterFormProps {
     email: string;
     onSuccess: () => void;
@@ -33,7 +37,7 @@ function ChangePasswordForm({ onSuccess, email }: RegisterFormProps) {
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
     const handlePasswordChange = async () => {
-        if (oldPassword && oldPassword && newPassword === confirmNewPassword) {
+        if (oldPassword && newPassword && newPassword === confirmNewPassword) {
             changePassword(email, oldPassword, newPassword).then(res => {
                 if (res) {
                     if (res.status < 300) {
@@ -42,7 +46,7 @@ function ChangePasswordForm({ onSuccess, email }: RegisterFormProps) {
                         setError(i18n.t('settings.change_password_error'));
                     }
                 } else {
-                    setError(i18n.t('settings.server_error'));
+                    setError(i18n.t('settings.change_password_error'));
                 }
             });
         } else {
@@ -64,7 +68,9 @@ function ChangePasswordForm({ onSuccess, email }: RegisterFormProps) {
     }, [oldPassword, newPassword, confirmNewPassword]);
 
     return (
-        <>
+        <View style={styles.formContainer}>
+            <PageTitle title={i18n.t('tabs.change_password')} />
+            <VerticalSpacer height={25} />
             <Text style={styles.inputLabel}>
                 {i18n.t('settings.old_password')}
             </Text>
@@ -82,7 +88,7 @@ function ChangePasswordForm({ onSuccess, email }: RegisterFormProps) {
                     style={styles.passwordToggle}
                 />
             </View>
-            <VerticalSpacer height={20} />
+            <VerticalSpacer height={14} />
             <Text style={styles.inputLabel}>
                 {i18n.t('settings.new_password')}
             </Text>
@@ -100,8 +106,7 @@ function ChangePasswordForm({ onSuccess, email }: RegisterFormProps) {
                     style={styles.passwordToggle}
                 />
             </View>
-
-            <VerticalSpacer height={20} />
+            <VerticalSpacer height={14} />
             <Text style={styles.inputLabel}>
                 {i18n.t('settings.confirm_new_password')}
             </Text>
@@ -119,36 +124,15 @@ function ChangePasswordForm({ onSuccess, email }: RegisterFormProps) {
                     style={styles.passwordToggle}
                 />
             </View>
-
-            <VerticalSpacer height={40} />
-
-            {error ? (
-                <Text style={styles.errorText}>{error}</Text>
-            ) : (
-                <VerticalSpacer height={20} />
-            )}
-
-            <TouchableOpacity
+            <View style={styles.messageContainer}>
+                {error && <Text style={styles.errorText}>{error}</Text>}
+            </View>
+            <Button
+                text={i18n.t('settings.change_password')}
                 disabled={!buttonEnabled}
-                activeOpacity={0.6}
-                style={[
-                    styles.RegisterButton,
-                    buttonEnabled
-                        ? styles.RegisterButtonActive
-                        : styles.RegisterButtonInactive,
-                ]}
-                onPress={handlePasswordChange}>
-                <Text
-                    style={[
-                        styles.RegisterButtonText,
-                        buttonEnabled
-                            ? styles.RegisterButtonTextActive
-                            : styles.RegisterButtonTextInactive,
-                    ]}>
-                    {i18n.t('settings.change_password')}
-                </Text>
-            </TouchableOpacity>
-        </>
+                onPress={handlePasswordChange}
+            />
+        </View>
     );
 }
 
@@ -163,22 +147,19 @@ export default function ChangePasswordModal({
         <View style={styles.modal}>
             <View style={[styles.container, Shadows.depth2]}>
                 <SafeAreaView style={styles.settingsContainer}>
-                    <IconButton
-                        asset={'Left'}
-                        color={Colors.black}
-                        onPress={navigation.goBack}
-                        iconStyle={styles.backIcon}
-                        style={styles.backButton}
-                    />
-                    <VerticalSpacer height={16} />
-                    <Text style={styles.titleText}>
-                        {i18n.t('tabs.change_password')}
-                    </Text>
-                    <VerticalSpacer height={40} />
                     {passwordChangeSuccess && (
-                        <Text style={styles.inputLabel}>
-                            {i18n.t('settings.change_password_success')}
-                        </Text>
+                        <View style={styles.formContainer}>
+                            <PageTitle title={i18n.t('tabs.change_password')} />
+                            <VerticalSpacer height={14} />
+                            <Text style={styles.successTitle}>
+                                {i18n.t(
+                                    'settings.change_password_success_title',
+                                )}
+                            </Text>
+                            <Text style={styles.successText}>
+                                {i18n.t('settings.change_password_success')}
+                            </Text>
+                        </View>
                     )}
                     {!passwordChangeSuccess && (
                         <ChangePasswordForm
@@ -186,6 +167,9 @@ export default function ChangePasswordModal({
                             email={email}
                         />
                     )}
+                    <View style={styles.logoContainer}>
+                        <Image source={AghLogo} style={styles.logo} />
+                    </View>
                 </SafeAreaView>
             </View>
             <TouchableOpacity
@@ -204,12 +188,21 @@ const styles = StyleSheet.create({
     },
     settingsContainer: {
         marginHorizontal: 22,
+        height: '100%',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
     },
-    titleText: {
-        fontSize: 20,
-        lineHeight: 24,
-        color: Colors.accentGreen,
-        textAlign: 'center',
+    formContainer: {
+        marginTop: 40,
+    },
+    logoContainer: {
+        paddingVertical: 20,
+        marginBottom: 20,
+    },
+    logo: {
+        alignSelf: 'center',
+        height: 80,
+        width: 80,
     },
     container: {
         width: '75%',
@@ -217,65 +210,47 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.bgWhite,
     },
     inputLabel: {
-        fontSize: 14,
-        lineHeight: 16,
-        paddingBottom: 4,
-        fontWeight: '500',
+        fontSize: 15,
+        lineHeight: 25,
     },
     input: {
-        borderWidth: 1,
-        borderRadius: 8,
-        borderColor: Colors.gray,
-        height: 40,
-        lineHeight: 16,
+        width: '100%',
+        height: 44,
         paddingHorizontal: 8,
         fontSize: 14,
-        width: '100%',
+        lineHeight: 16,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: Colors.inputGray,
     },
-    RegisterButton: {
-        alignSelf: 'center',
-        width: '100%',
-        height: Constants.TAP_UNIT_48,
-        justifyContent: 'center',
-        alignContent: 'center',
-        borderWidth: 2,
-
-        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
-    },
-    RegisterButtonInactive: {
-        backgroundColor: Colors.bgWhite,
-        borderColor: Colors.black,
-    },
-    RegisterButtonActive: {
-        borderColor: Colors.bgWhite,
-        backgroundColor: Colors.accentGreen,
-    },
-    RegisterButtonText: {
-        textAlignVertical: 'center',
-        textAlign: 'center',
-        fontSize: 20,
-        lineHeight: 22,
-        fontWeight: '500',
+    messageContainer: {
+        height: 60,
     },
     errorText: {
         fontSize: 14,
-        lineHeight: 16,
-        paddingBottom: 4,
-        fontWeight: '500',
+        lineHeight: 18,
+        paddingVertical: Constants.SPACING_UNIT_10,
         color: Colors.red,
         textAlign: 'center',
     },
-    RegisterButtonTextInactive: {
+    successTitle: {
+        fontSize: 20,
+        fontWeight: '500',
+        lineHeight: 20,
         color: Colors.black,
+        textAlign: 'center',
+        paddingTop: 20,
     },
-    RegisterButtonTextActive: {
-        color: Colors.bgWhite,
+    successText: {
+        fontSize: 14,
+        lineHeight: 18,
+        paddingVertical: Constants.SPACING_UNIT_8,
+        color: Colors.textGray,
+        textAlign: 'center',
     },
     opacity: {
         flex: 1,
     },
-    backIcon: { width: 24, height: 24 },
-    backButton: { alignSelf: 'flex-end' },
     passwordToggle: { position: 'absolute', height: 40, right: -2 },
     row: { flexDirection: 'row' },
 });

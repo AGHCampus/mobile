@@ -44,7 +44,7 @@ export default function LocationSelector({ setCoordinates }: Props) {
 
 const styles = StyleSheet.create({
     map: {
-        height: 300,
+        height: 220,
         borderWidth: 1,
         borderRadius: Constants.BORDER_RADIUS_MEDIUM,
         borderColor: Colors.gray,

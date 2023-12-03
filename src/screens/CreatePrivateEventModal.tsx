@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     StyleSheet,
     View,
@@ -7,6 +7,7 @@ import {
     TextInput,
     ScrollView,
     Share,
+    KeyboardAvoidingView,
 } from 'react-native';
 import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
@@ -16,32 +17,13 @@ import { VerticalSpacer } from '../components/Spacers';
 import i18n from '../utils/i18n';
 import { StackNavigation } from '../lib/Navigation';
 import { Constants } from '../lib/Constants';
-import IconButton from '../components/IconButton';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import type { LatLng } from 'react-native-maps';
 import LocationSelector from '../components/Settings/LocationSelector';
 import { createPrivateEvent } from '../api/events';
-import AccentButton from '../components/AccentButton';
 import { useAppSelector } from '../lib/Store';
-
-function ScreenHeader() {
-    const navigation = useNavigation<StackNavigation>();
-
-    return (
-        <>
-            <IconButton
-                asset={'ArrowLeft'}
-                color={Colors.black}
-                onPress={navigation.goBack}
-                iconStyle={styles.backIcon}
-                style={styles.backButton}
-            />
-            <VerticalSpacer height={16} />
-            <Text style={styles.titleText}>{i18n.t('tabs.create_event')}</Text>
-            <VerticalSpacer height={40} />
-        </>
-    );
-}
+import PageTitle from '../components/Settings/PageTitle';
+import Button from '../components/Settings/Button';
 
 function EventForm({ onSuccess }: { onSuccess: (id: string) => void }) {
     const [title, setTitle] = useState('');
@@ -53,6 +35,7 @@ function EventForm({ onSuccess }: { onSuccess: (id: string) => void }) {
         longitude: 19.91969686063426,
     });
     const jwt = useAppSelector(state => state.userApiKey)!;
+    const scrollViewRef = useRef<ScrollView>(null);
 
     const handleCreateEvent = () => {
         startDateTime.setSeconds(0);
@@ -81,83 +64,81 @@ function EventForm({ onSuccess }: { onSuccess: (id: string) => void }) {
     };
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <ScreenHeader />
-            <Text style={styles.inputLabel}>
-                {i18n.t('create_event.title')}
-            </Text>
-            <TextInput
-                value={title}
-                style={styles.input}
-                onChangeText={setTitle}
-            />
-            <VerticalSpacer height={20} />
-            <Text style={styles.inputLabel}>
-                {i18n.t('create_event.start_date')}
-            </Text>
-            <View style={styles.row}>
-                <RNDateTimePicker
-                    value={startDateTime}
-                    mode="date"
-                    onChange={e => {
-                        const date = new Date(e.nativeEvent.timestamp);
-                        startDateTime.setFullYear(date.getFullYear());
-                        startDateTime.setMonth(date.getMonth());
-                        startDateTime.setDate(date.getDate());
-                    }}
-                />
-                <RNDateTimePicker
-                    value={startDateTime}
-                    mode="time"
-                    onChange={e => {
-                        const date = new Date(e.nativeEvent.timestamp);
-                        startDateTime.setHours(date.getHours());
-                        startDateTime.setMinutes(date.getMinutes());
-                    }}
-                />
-            </View>
-
-            <VerticalSpacer height={20} />
-            <Text style={styles.inputLabel}>
-                {i18n.t('create_event.location')}
-            </Text>
-            <LocationSelector setCoordinates={setLocation} />
-            <VerticalSpacer height={20} />
-            <Text style={styles.inputLabel}>
-                {i18n.t('create_event.description')}
-            </Text>
-            <TextInput
-                style={styles.descriptionInput}
-                value={description}
-                autoCapitalize="none"
-                onChangeText={setDescription}
-                multiline={true}
-            />
-            <VerticalSpacer height={40} />
-            {error ? (
-                <Text style={styles.errorText}>{error}</Text>
-            ) : (
-                <VerticalSpacer height={20} />
-            )}
-            <TouchableOpacity
-                disabled={!title}
-                activeOpacity={0.6}
-                style={[
-                    styles.button,
-                    title ? styles.buttonActive : styles.buttonInactive,
-                ]}
-                onPress={handleCreateEvent}>
-                <Text
-                    style={[
-                        styles.buttonText,
-                        title
-                            ? styles.buttonTextActive
-                            : styles.buttonTextInactive,
-                    ]}>
-                    {i18n.t('create_event.create')}
+        <KeyboardAvoidingView behavior="padding">
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                ref={scrollViewRef}
+                keyboardShouldPersistTaps="handled">
+                <VerticalSpacer height={40} />
+                <PageTitle title={i18n.t('tabs.create_event')} />
+                <VerticalSpacer height={25} />
+                <Text style={styles.inputLabel}>
+                    {i18n.t('create_event.title')}
                 </Text>
-            </TouchableOpacity>
-        </ScrollView>
+                <TextInput
+                    value={title}
+                    style={styles.input}
+                    onChangeText={setTitle}
+                />
+                <VerticalSpacer height={14} />
+                <Text style={styles.inputLabel}>
+                    {i18n.t('create_event.start_date')}
+                </Text>
+                <View style={styles.row}>
+                    <RNDateTimePicker
+                        value={startDateTime}
+                        mode="date"
+                        onChange={e => {
+                            const date = new Date(e.nativeEvent.timestamp);
+                            startDateTime.setFullYear(date.getFullYear());
+                            startDateTime.setMonth(date.getMonth());
+                            startDateTime.setDate(date.getDate());
+                        }}
+                    />
+                    <RNDateTimePicker
+                        value={startDateTime}
+                        mode="time"
+                        onChange={e => {
+                            const date = new Date(e.nativeEvent.timestamp);
+                            startDateTime.setHours(date.getHours());
+                            startDateTime.setMinutes(date.getMinutes());
+                        }}
+                    />
+                </View>
+                <VerticalSpacer height={14} />
+                <Text style={styles.inputLabel}>
+                    {i18n.t('create_event.location')}
+                </Text>
+                <LocationSelector setCoordinates={setLocation} />
+                <VerticalSpacer height={16} />
+                <Text style={styles.inputLabel}>
+                    {i18n.t('create_event.description')}
+                </Text>
+                <TextInput
+                    style={[styles.input, styles.descriptionInput]}
+                    value={description}
+                    autoCapitalize="none"
+                    onChangeText={setDescription}
+                    multiline={true}
+                    onFocus={() =>
+                        setTimeout(() => {
+                            scrollViewRef.current?.scrollToEnd({
+                                animated: true,
+                            });
+                        }, 250)
+                    }
+                />
+                <View style={styles.messageContainer}>
+                    {error && <Text style={styles.errorText}>{error}</Text>}
+                </View>
+                <Button
+                    text={i18n.t('create_event.create')}
+                    disabled={!title}
+                    onPress={handleCreateEvent}
+                />
+                <VerticalSpacer height={30} />
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -172,29 +153,26 @@ export default function CreatePrivateEventModal() {
                     {!eventID && <EventForm onSuccess={setEventID} />}
                     {eventID && (
                         <>
-                            <IconButton
-                                asset={'ArrowLeft'}
-                                color={Colors.black}
-                                onPress={navigation.goBack}
-                                iconStyle={styles.backIcon}
-                                style={styles.backButton}
-                            />
-                            <VerticalSpacer height={16} />
-                            <Text style={styles.inputLabel}>
+                            <VerticalSpacer height={40} />
+                            <PageTitle title={i18n.t('tabs.create_event')} />
+                            <VerticalSpacer height={14} />
+                            <Text style={styles.successTitle}>
+                                {i18n.t('create_event.success_title')}
+                            </Text>
+                            <Text style={styles.successText}>
                                 {i18n.t('create_event.success')}
                             </Text>
                             <VerticalSpacer height={20} />
-                            <AccentButton.Primary
+                            <Button
+                                text={i18n.t('events.share')}
+                                icon="Share"
+                                disabled={false}
                                 onPress={() =>
                                     Share.share({
                                         message:
                                             'aghmap://map?eventID=' + eventID,
                                     })
                                 }
-                                icon={'Share'}
-                                color={Colors.accentGreen}
-                                label={i18n.t('events.share')}
-                                style={styles.shareButton}
                             />
                         </>
                     )}
@@ -217,87 +195,64 @@ const styles = StyleSheet.create({
     settingsContainer: {
         marginHorizontal: 22,
     },
-    titleText: {
-        fontSize: 20,
-        lineHeight: 24,
-        color: Colors.accentGreen,
-        textAlign: 'center',
+    logoContainer: {
+        paddingVertical: 20,
+        marginBottom: 20,
+    },
+    logo: {
+        alignSelf: 'center',
+        height: 80,
+        width: 80,
     },
     container: {
-        width: '100%',
+        width: '75%',
+        height: '100%',
         backgroundColor: Colors.bgWhite,
     },
     inputLabel: {
-        fontSize: 14,
-        lineHeight: 16,
-        paddingBottom: 4,
-        fontWeight: '500',
-        textAlign: 'center',
-    },
-    shareButton: {
-        height: 36,
-        flexGrow: 2,
+        fontSize: 15,
+        lineHeight: 25,
     },
     input: {
-        borderWidth: 1,
-        borderRadius: 8,
-        borderColor: Colors.gray,
-        height: 40,
-        lineHeight: 16,
+        width: '100%',
+        height: 44,
         paddingHorizontal: 8,
         fontSize: 14,
+        lineHeight: 16,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: Colors.inputGray,
     },
     descriptionInput: {
-        borderWidth: 1,
-        borderRadius: 8,
-        borderColor: Colors.gray,
         height: 100,
-        lineHeight: 16,
-        paddingHorizontal: 8,
-        fontSize: 14,
     },
-    button: {
-        alignSelf: 'center',
-        width: '100%',
-        height: Constants.TAP_UNIT_48,
-        justifyContent: 'center',
-        alignContent: 'center',
-        borderWidth: 2,
-        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
-    },
-    buttonInactive: {
-        backgroundColor: Colors.bgWhite,
-        borderColor: Colors.black,
-    },
-    buttonActive: {
-        borderColor: Colors.bgWhite,
-        backgroundColor: Colors.accentGreen,
-    },
-    buttonText: {
-        textAlignVertical: 'center',
-        textAlign: 'center',
-        fontSize: 20,
-        lineHeight: 22,
-        fontWeight: '500',
+    messageContainer: {
+        height: 60,
     },
     errorText: {
         fontSize: 14,
-        lineHeight: 16,
-        paddingBottom: 4,
-        fontWeight: '500',
+        lineHeight: 18,
+        paddingVertical: Constants.SPACING_UNIT_10,
         color: Colors.red,
         textAlign: 'center',
     },
-    buttonTextInactive: {
+    successTitle: {
+        fontSize: 20,
+        fontWeight: '500',
+        lineHeight: 20,
         color: Colors.black,
+        textAlign: 'center',
+        paddingTop: 20,
     },
-    buttonTextActive: {
-        color: Colors.bgWhite,
+    successText: {
+        fontSize: 14,
+        lineHeight: 18,
+        paddingVertical: Constants.SPACING_UNIT_8,
+        color: Colors.textGray,
+        textAlign: 'center',
     },
     opacity: {
         flex: 1,
     },
     row: { flexDirection: 'row' },
-    backIcon: { width: 24, height: 24 },
-    backButton: { alignSelf: 'flex-end' },
 });

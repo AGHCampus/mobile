@@ -25,7 +25,7 @@ import { LocationsDataContext } from '../../App';
 import { VerticalSpacer } from '../components/Spacers';
 
 const FUSE_SEARCH_OPTIONS = {
-    threshold: 0.4,
+    threshold: 0.2,
     keys: ['name', 'address'],
 };
 
@@ -72,15 +72,7 @@ export default function SearchModal() {
                         showsVerticalScrollIndicator={false}
                         keyboardShouldPersistTaps="handled">
                         {locationsFiltered.map((location, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                style={[styles.locationRow]}
-                                onPress={
-                                    () => navigateFromSearch(location.id)
-                                    // tabNavigation.navigate('Map', {
-                                    //     id: location.id,
-                                    // })
-                                }>
+                            <View key={index} style={[styles.locationRow]}>
                                 <View style={styles.iconContainer}>
                                     {location.logoUrl ? (
                                         <FastImage
@@ -104,14 +96,23 @@ export default function SearchModal() {
                                         index !== 0 &&
                                             styles.locationColumnBorder,
                                     ]}>
-                                    <Text style={styles.locationName}>
-                                        {location.name}
-                                    </Text>
-                                    <Text style={styles.locationAddress}>
-                                        {location.address ?? '-'}
-                                    </Text>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            navigateFromSearch(location.id)
+                                        }>
+                                        <Text
+                                            style={styles.locationName}
+                                            numberOfLines={1}>
+                                            {location.name}
+                                        </Text>
+                                        <Text
+                                            style={styles.locationAddress}
+                                            numberOfLines={1}>
+                                            {location.address ?? '-'}
+                                        </Text>
+                                    </TouchableOpacity>
                                 </View>
-                            </TouchableOpacity>
+                            </View>
                         ))}
                         <VerticalSpacer height={200} />
                     </ScrollView>
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
         width: 36,
         height: 36,
         borderRadius: 18,
-        backgroundColor: Colors.bgDivider,
+        backgroundColor: Colors.bgIcon,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -195,10 +196,12 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         fontSize: 16,
         color: Colors.black,
+        paddingRight: 8,
     },
     locationAddress: {
         fontWeight: '400',
         fontSize: 15,
         color: Colors.textLightGray,
+        paddingRight: 8,
     },
 });

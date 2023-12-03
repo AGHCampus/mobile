@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     Text,
     TextInput,
+    Image,
 } from 'react-native';
 import { Colors } from '../lib/Colors';
 import { Shadows } from '../lib/Shadows';
@@ -12,10 +13,13 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { VerticalSpacer } from '../components/Spacers';
 import i18n from '../utils/i18n';
+import AghLogo from '../../assets/Agh.png';
 import { StackNavigation } from '../lib/Navigation';
 import { Constants } from '../lib/Constants';
 import IconButton from '../components/IconButton';
 import { register } from '../api/auth';
+import PageTitle from '../components/Settings/PageTitle';
+import Button from '../components/Settings/Button';
 interface RegisterFormProps {
     onSuccess: () => void;
 }
@@ -62,25 +66,32 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
     }, [email, password, confirmPassword]);
 
     return (
-        <>
+        <View style={styles.formContainer}>
+            <PageTitle title={i18n.t('tabs.register')} />
+            <VerticalSpacer height={25} />
             <Text style={styles.inputLabel}>Email</Text>
             <TextInput
+                placeholder={i18n.t('settings.email_placeholder')}
                 style={styles.input}
                 autoCorrect={false}
                 autoCapitalize="none"
+                autoComplete="email"
+                inputMode="email"
                 onChangeText={setEmail}
             />
-            <VerticalSpacer height={20} />
+            <VerticalSpacer height={14} />
             <Text style={styles.inputLabel}>{i18n.t('settings.username')}</Text>
             <TextInput
+                placeholder={i18n.t('settings.username_placeholder')}
                 style={styles.input}
                 autoCapitalize="none"
                 onChangeText={setUsername}
             />
-            <VerticalSpacer height={20} />
+            <VerticalSpacer height={14} />
             <Text style={styles.inputLabel}>{i18n.t('settings.password')}</Text>
             <View style={styles.row}>
                 <TextInput
+                    placeholder={i18n.t('settings.password_placeholder')}
                     secureTextEntry={!showPassword}
                     style={styles.input}
                     autoCapitalize="none"
@@ -93,13 +104,13 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
                     style={styles.passwordToggle}
                 />
             </View>
-
-            <VerticalSpacer height={20} />
+            <VerticalSpacer height={14} />
             <Text style={styles.inputLabel}>
                 {i18n.t('settings.confirm_password')}
             </Text>
             <View style={styles.row}>
                 <TextInput
+                    placeholder={i18n.t('settings.password_placeholder')}
                     secureTextEntry={!showConfirmPassword}
                     style={styles.input}
                     autoCapitalize="none"
@@ -112,36 +123,15 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
                     style={styles.passwordToggle}
                 />
             </View>
-
-            <VerticalSpacer height={40} />
-
-            {error ? (
-                <Text style={styles.errorText}>{error}</Text>
-            ) : (
-                <VerticalSpacer height={20} />
-            )}
-
-            <TouchableOpacity
+            <View style={styles.messageContainer}>
+                {error && <Text style={styles.errorText}>{error}</Text>}
+            </View>
+            <Button
+                text={i18n.t('settings.register_button')}
                 disabled={!RegisterButtonEnabled}
-                activeOpacity={0.6}
-                style={[
-                    styles.RegisterButton,
-                    RegisterButtonEnabled
-                        ? styles.RegisterButtonActive
-                        : styles.RegisterButtonInactive,
-                ]}
-                onPress={handleRegister}>
-                <Text
-                    style={[
-                        styles.RegisterButtonText,
-                        RegisterButtonEnabled
-                            ? styles.RegisterButtonTextActive
-                            : styles.RegisterButtonTextInactive,
-                    ]}>
-                    {i18n.t('settings.register')}
-                </Text>
-            </TouchableOpacity>
-        </>
+                onPress={handleRegister}
+            />
+        </View>
     );
 }
 
@@ -153,28 +143,26 @@ export default function RegisterModal() {
         <View style={styles.modal}>
             <View style={[styles.container, Shadows.depth2]}>
                 <SafeAreaView style={styles.settingsContainer}>
-                    <IconButton
-                        asset={'ArrowLeft'}
-                        color={Colors.black}
-                        onPress={navigation.goBack}
-                        iconStyle={styles.backIcon}
-                        style={styles.backButton}
-                    />
-                    <VerticalSpacer height={16} />
-                    <Text style={styles.titleText}>
-                        {i18n.t('tabs.register')}
-                    </Text>
-                    <VerticalSpacer height={40} />
                     {registerSuccess && (
-                        <Text style={styles.inputLabel}>
-                            {i18n.t('settings.register_success')}
-                        </Text>
+                        <View style={styles.formContainer}>
+                            <PageTitle title={i18n.t('tabs.register')} />
+                            <VerticalSpacer height={14} />
+                            <Text style={styles.successTitle}>
+                                {i18n.t('settings.register_success_title')}
+                            </Text>
+                            <Text style={styles.successText}>
+                                {i18n.t('settings.register_success')}
+                            </Text>
+                        </View>
                     )}
                     {!registerSuccess && (
                         <RegisterForm
                             onSuccess={() => setRegisterSuccess(true)}
                         />
                     )}
+                    <View style={styles.logoContainer}>
+                        <Image source={AghLogo} style={styles.logo} />
+                    </View>
                 </SafeAreaView>
             </View>
             <TouchableOpacity
@@ -193,12 +181,21 @@ const styles = StyleSheet.create({
     },
     settingsContainer: {
         marginHorizontal: 22,
+        height: '100%',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
     },
-    titleText: {
-        fontSize: 20,
-        lineHeight: 24,
-        color: Colors.accentGreen,
-        textAlign: 'center',
+    formContainer: {
+        marginTop: 40,
+    },
+    logoContainer: {
+        paddingVertical: 20,
+        marginBottom: 20,
+    },
+    logo: {
+        alignSelf: 'center',
+        height: 80,
+        width: 80,
     },
     container: {
         width: '75%',
@@ -206,65 +203,47 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.bgWhite,
     },
     inputLabel: {
-        fontSize: 14,
-        lineHeight: 16,
-        paddingBottom: 4,
-        fontWeight: '500',
+        fontSize: 15,
+        lineHeight: 25,
     },
     input: {
-        borderWidth: 1,
-        borderRadius: 8,
-        borderColor: Colors.gray,
-        height: 40,
-        lineHeight: 16,
+        width: '100%',
+        height: 44,
         paddingHorizontal: 8,
         fontSize: 14,
-        width: '100%',
+        lineHeight: 16,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: Colors.inputGray,
     },
-    RegisterButton: {
-        alignSelf: 'center',
-        width: '100%',
-        height: Constants.TAP_UNIT_48,
-        justifyContent: 'center',
-        alignContent: 'center',
-        borderWidth: 2,
-
-        borderRadius: Constants.BORDER_RADIUS_MEDIUM,
-    },
-    RegisterButtonInactive: {
-        backgroundColor: Colors.bgWhite,
-        borderColor: Colors.black,
-    },
-    RegisterButtonActive: {
-        borderColor: Colors.bgWhite,
-        backgroundColor: Colors.accentGreen,
-    },
-    RegisterButtonText: {
-        textAlignVertical: 'center',
-        textAlign: 'center',
-        fontSize: 20,
-        lineHeight: 22,
-        fontWeight: '500',
+    messageContainer: {
+        height: 60,
     },
     errorText: {
         fontSize: 14,
-        lineHeight: 16,
-        paddingBottom: 4,
-        fontWeight: '500',
+        lineHeight: 18,
+        paddingVertical: Constants.SPACING_UNIT_10,
         color: Colors.red,
         textAlign: 'center',
     },
-    RegisterButtonTextInactive: {
+    successTitle: {
+        fontSize: 20,
+        fontWeight: '500',
+        lineHeight: 20,
         color: Colors.black,
+        textAlign: 'center',
+        paddingTop: 20,
     },
-    RegisterButtonTextActive: {
-        color: Colors.bgWhite,
+    successText: {
+        fontSize: 14,
+        lineHeight: 18,
+        paddingVertical: Constants.SPACING_UNIT_8,
+        color: Colors.textGray,
+        textAlign: 'center',
     },
     opacity: {
         flex: 1,
     },
-    backIcon: { width: 24, height: 24 },
-    backButton: { alignSelf: 'flex-end' },
     passwordToggle: { position: 'absolute', height: 40, right: -2 },
     row: { flexDirection: 'row' },
 });

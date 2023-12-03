@@ -179,11 +179,11 @@ export default function MapScreen({ route }: Props) {
         if (selectedMarkerID === '') {
             navigation.navigate('Settings');
         } else {
-            setSelectedMarkerID('');
             bottomSheetModalRef.current?.forceClose();
             setSettingsButtonEnabled(false);
             setTimeout(() => {
                 navigation.navigate('Settings');
+                setSelectedMarkerID('');
                 setSettingsButtonEnabled(true);
             }, 100);
         }
@@ -198,11 +198,11 @@ export default function MapScreen({ route }: Props) {
         if (selectedMarkerID === '') {
             navigation.navigate('Search');
         } else {
-            setSelectedMarkerID('');
             bottomSheetModalRef.current?.forceClose();
             setSearchButtonEnabled(false);
             setTimeout(() => {
                 navigation.navigate('Search');
+                setSelectedMarkerID('');
                 setSearchButtonEnabled(true);
             }, 100);
         }
@@ -253,6 +253,7 @@ export default function MapScreen({ route }: Props) {
                         coordinate={sharedLocationCoordinates}
                         mapViewRef={mapViewRef}
                         bottomSheetModalRef={bottomSheetModalRef}
+                        isSelected={selectedMarkerID === 'SHARED'}
                         selectMarker={() => setSelectedMarkerID('SHARED')}
                     />
                 )}
@@ -261,6 +262,7 @@ export default function MapScreen({ route }: Props) {
                         coordinate={privateEventDetails.coordinate}
                         mapViewRef={mapViewRef}
                         bottomSheetModalRef={bottomSheetModalRef}
+                        isSelected={selectedMarkerID === 'PRIVATE_EVENT'}
                         selectMarker={() =>
                             setSelectedMarkerID('PRIVATE_EVENT')
                         }
@@ -284,7 +286,6 @@ export default function MapScreen({ route }: Props) {
                 selectedLocationID={selectedMarkerID}
                 locationCoordinates={sharedLocationCoordinates}
                 privateEventDetails={privateEventDetails}
-                clearSelectedMarker={() => setSelectedMarkerID('')}
                 onMenuPress={handleSettingsPress}
                 onSearchPress={handleSearchPress}
             />
