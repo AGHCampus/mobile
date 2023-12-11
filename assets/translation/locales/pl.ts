@@ -51,10 +51,12 @@ export default {
         longitude: 'Długość geograficzna',
     },
     share: {
-        location_id: 'Dowiedz się więcej o tym obiekcie w aplikacji AGH Map!',
+        location_id:
+            'Dowiedz się więcej o tym obiekcie w aplikacji AGH Campus Map!',
         current_location:
-            'Zobacz moją aktualną lokalizację w aplikacji AGH Map!',
+            'Zobacz moją aktualną lokalizację w aplikacji AGH Campus Map!',
         event: 'Sprawdź to wydarzenie!',
+        offer: 'Sprawdź tę ofertę!',
     },
     settings: {
         email_placeholder: 'email@example.com',

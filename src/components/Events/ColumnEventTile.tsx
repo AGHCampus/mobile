@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { PropsWithChildren, useRef } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View, Share } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
@@ -17,19 +17,49 @@ import { Colors } from '../../lib/Colors';
 import { Shadows } from '../../lib/Shadows';
 import { getEventDatetimeString } from '../../utils/time';
 import i18n from '../../utils/i18n';
+import { getEventShareText, getOfferShareText } from '../../utils/sharing';
 import { LocationData } from '../../api/locations';
 import { EventData } from '../../api/events';
 
-interface Props {
-    location?: LocationData;
-    event: EventData;
-    showEventButtonRow: boolean;
-}
-
-export default function EventTile({
+function ShareOpacityWrapper({
+    shareOnLongPress,
     location,
     event,
+    children,
+}: PropsWithChildren<{
+    shareOnLongPress: boolean;
+    location: LocationData;
+    event: EventData;
+}>) {
+    if (shareOnLongPress) {
+        return (
+            <TouchableOpacity
+                onLongPress={() =>
+                    Share.share(getOfferShareText(event, location))
+                }
+                activeOpacity={0.6}>
+                {children}
+            </TouchableOpacity>
+        );
+    }
+
+    return <>{children}</>;
+}
+
+interface Props {
+    location: LocationData;
+    event: EventData;
+    showLocationLink: boolean;
+    showEventButtonRow: boolean;
+    shareOnLongPress: boolean;
+}
+
+export default function ColumnEventTile({
+    location,
+    event,
+    showLocationLink,
     showEventButtonRow,
+    shareOnLongPress,
 }: Props) {
     const [expanded, setExpanded] = React.useState(false);
     const expandedHeight = useRef(74);
@@ -63,81 +93,98 @@ export default function EventTile({
 
     return (
         <View>
-            {location && (
+            {showLocationLink && location && (
                 <EventLocation
                     name={location.name}
                     coordinate={location.coordinate}
                     logoUrl={location.logoUrl}
                 />
             )}
-            <Animated.View style={[styles.eventContainer, Shadows.depth2]}>
-                <FastImage style={styles.image} source={{ uri: imageUrl }} />
-                <View style={styles.eventDetailsContainer}>
-                    <Text style={styles.time}>
-                        {getEventDatetimeString(startDate, endDate)}
-                    </Text>
-                    {title && <Text style={styles.eventTitle}>{title}</Text>}
-                    <VerticalSpacer
-                        height={title ? Constants.SPACING_UNIT_8 : 4}
+            <ShareOpacityWrapper
+                shareOnLongPress={shareOnLongPress}
+                location={location}
+                event={event}>
+                <Animated.View style={[styles.eventContainer, Shadows.depth2]}>
+                    <FastImage
+                        style={styles.image}
+                        source={{ uri: imageUrl }}
                     />
-                    <TouchableOpacity
-                        activeOpacity={expanded ? 1 : 0.6}
-                        onPress={() => {
-                            textAnimatedHeight.value = expandedHeight.current;
-                            showMoreAnimatedValue.value = 1;
-                            setExpanded(true);
-                        }}>
-                        <Animated.View style={textAnimatedStyles}>
-                            <MaskedView
-                                maskElement={
-                                    <Animated.View
-                                        style={[
-                                            styles.flexOne,
-                                            textMaskAnimatedStyles,
-                                        ]}>
-                                        <LinearGradient
-                                            style={styles.flexOne}
-                                            colors={['white', 'transparent']}
-                                        />
-                                    </Animated.View>
-                                }>
-                                <Text style={styles.eventDescription}>
-                                    {description}
-                                </Text>
-                            </MaskedView>
-                        </Animated.View>
-                        <Animated.View style={showMoreAnimatedStyles}>
-                            <Text style={styles.showMore}>
-                                {i18n.t('events.show_more')}
-                            </Text>
-                        </Animated.View>
-                    </TouchableOpacity>
-                    <Text
-                        style={[styles.eventDescription, styles.invisible]}
-                        onLayout={e => {
-                            const { height } = e.nativeEvent.layout;
-                            expandedHeight.current = height;
-                            if (height < 100) {
-                                textAnimatedHeight.value = height;
+                    <View style={styles.eventDetailsContainer}>
+                        <Text style={styles.time}>
+                            {getEventDatetimeString(startDate, endDate)}
+                        </Text>
+                        {title && (
+                            <Text style={styles.eventTitle}>{title}</Text>
+                        )}
+                        <VerticalSpacer
+                            height={title ? Constants.SPACING_UNIT_8 : 4}
+                        />
+                        <TouchableOpacity
+                            activeOpacity={expanded ? 1 : 0.6}
+                            onPress={() => {
+                                textAnimatedHeight.value =
+                                    expandedHeight.current;
                                 showMoreAnimatedValue.value = 1;
                                 setExpanded(true);
-                            }
-                        }}>
-                        {description}
-                    </Text>
-                    {showEventButtonRow && (
-                        <>
-                            <VerticalSpacer
-                                height={Constants.SPACING_UNIT_16}
-                            />
-                            <EventButtonRow
-                                url={websiteUrl}
-                                shareContent={{ message: 'test' }}
-                            />
-                        </>
-                    )}
-                </View>
-            </Animated.View>
+                            }}>
+                            <Animated.View style={textAnimatedStyles}>
+                                <MaskedView
+                                    maskElement={
+                                        <Animated.View
+                                            style={[
+                                                styles.flexOne,
+                                                textMaskAnimatedStyles,
+                                            ]}>
+                                            <LinearGradient
+                                                style={styles.flexOne}
+                                                colors={[
+                                                    'white',
+                                                    'transparent',
+                                                ]}
+                                            />
+                                        </Animated.View>
+                                    }>
+                                    <Text style={styles.eventDescription}>
+                                        {description}
+                                    </Text>
+                                </MaskedView>
+                            </Animated.View>
+                            <Animated.View style={showMoreAnimatedStyles}>
+                                <Text style={styles.showMore}>
+                                    {i18n.t('events.show_more')}
+                                </Text>
+                            </Animated.View>
+                        </TouchableOpacity>
+                        <Text
+                            style={[styles.eventDescription, styles.invisible]}
+                            onLayout={e => {
+                                const { height } = e.nativeEvent.layout;
+                                expandedHeight.current = height;
+                                if (height < 100) {
+                                    textAnimatedHeight.value = height;
+                                    showMoreAnimatedValue.value = 1;
+                                    setExpanded(true);
+                                }
+                            }}>
+                            {description}
+                        </Text>
+                        {showEventButtonRow && (
+                            <>
+                                <VerticalSpacer
+                                    height={Constants.SPACING_UNIT_16}
+                                />
+                                <EventButtonRow
+                                    url={websiteUrl}
+                                    shareContent={getEventShareText(
+                                        event,
+                                        location,
+                                    )}
+                                />
+                            </>
+                        )}
+                    </View>
+                </Animated.View>
+            </ShareOpacityWrapper>
         </View>
     );
 }

@@ -24,7 +24,8 @@ export default function InfoScreen() {
         <SafeView style={styles.container}>
             <DataFetchStatusWrapper
                 status={infoDataStatus}
-                padding={Constants.SPACING_UNIT_10}>
+                padding={Constants.SPACING_UNIT_10}
+                refresh={refresh}>
                 <FlatList
                     data={infoData}
                     renderItem={info => (

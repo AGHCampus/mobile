@@ -6,22 +6,40 @@ import { Share } from 'react-native';
 import { EventData } from '../api/events';
 import { getEventDatetimeStringLong } from './time';
 
+const joinRows = (rows: Array<string | undefined>) =>
+    rows.filter(row => row).join('\n');
+
+const getLocationIdDeeplink = (locationData?: LocationData) => {
+    if (locationData) {
+        return `aghmap://map?id=${locationData?.id}`;
+    }
+    return 'aghmap://map';
+};
+
 export const getLocationShareText = (locationData: LocationData) => {
-    const shareText = `
-    ${locationData.name}\n
-    ${i18n.t('share.location_id')}\n
-    ${getLocationIdDeeplink(locationData)}`;
-    return shareText;
+    const rows = [
+        locationData.name,
+        i18n.t('share.location_id'),
+        getLocationIdDeeplink(locationData),
+    ];
+    return joinRows(rows);
 };
 
 export const getEventShareText = (event: EventData, location: LocationData) => {
-    const shareText = `
-    ${i18n.t('share.event')}\n
-    ${event.title}\n
-    ${location.name}\n
-    ${getEventDatetimeStringLong(new Date(event.startDate))}\n
-    ${event.websiteUrl}`;
-    return { message: shareText };
+    const dateStr = getEventDatetimeStringLong(new Date(event.startDate));
+    const rows = [
+        i18n.t('share.event'),
+        location.name,
+        event.title,
+        dateStr,
+        event.websiteUrl,
+    ];
+    return { message: joinRows(rows) };
+};
+
+export const getOfferShareText = (offer: EventData, location: LocationData) => {
+    const rows = [i18n.t('share.offer'), location.name, offer.description];
+    return { message: joinRows(rows) };
 };
 
 export const getCurrentLocationShareText = (coordinates: LatLng) => {
@@ -31,11 +49,9 @@ export const getCurrentLocationShareText = (coordinates: LatLng) => {
     return shareText;
 };
 
-const getLocationIdDeeplink = (locationData?: LocationData) => {
-    if (locationData) {
-        return `aghmap://map?id=${locationData?.id}`;
-    }
-    return 'aghmap://map';
+export const getInfoShareText = (title: string, content: string) => {
+    const rows = [title, content];
+    return joinRows(rows);
 };
 
 export const shareCurrentLocation = async () => {

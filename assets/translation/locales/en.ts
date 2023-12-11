@@ -51,9 +51,11 @@ export default {
         longitude: 'Longitude',
     },
     share: {
-        location_id: 'Check out this location on AGH Map!',
-        current_location: 'Check out my current location in AGH Map app!',
+        location_id: 'Check out this location on AGH Campus Map!',
+        current_location:
+            'Check out my current location in AGH Campus Map app!',
         event: 'Check out this event!',
+        offer: 'Check out this offer!',
     },
     settings: {
         email_placeholder: 'email@example.com',

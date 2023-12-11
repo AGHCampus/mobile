@@ -5,16 +5,9 @@ import { VerticalSpacer } from '../Spacers';
 import { Constants } from '../../lib/Constants';
 import { Colors } from '../../lib/Colors';
 import { EventData } from '../../api/events';
+import { LocationData } from '../../api/locations';
 import useRefreshControl from '../../hooks/useRefreshControl';
 import { DataFetchingStatus } from '../../lib/CommonTypes';
-
-interface Props {
-    eventsData: ReadonlyArray<EventData>;
-    showEventButtonRow: boolean;
-    dataStatus: DataFetchingStatus;
-    emptyListText: string;
-    refresh: () => void;
-}
 
 function ListHeader() {
     return <VerticalSpacer height={Constants.SPACING_UNIT_10} />;
@@ -28,9 +21,21 @@ function ListFooter() {
     return <VerticalSpacer height={44} />;
 }
 
+interface Props {
+    eventsData: ReadonlyArray<EventData>;
+    locationData: LocationData;
+    showEventButtonRow: boolean;
+    shareOnLongPress: boolean;
+    dataStatus: DataFetchingStatus;
+    emptyListText: string;
+    refresh: () => void;
+}
+
 const LocationDetailsEventsList = ({
     eventsData,
+    locationData,
     showEventButtonRow,
+    shareOnLongPress,
     dataStatus,
     emptyListText,
     refresh,
@@ -44,8 +49,11 @@ const LocationDetailsEventsList = ({
                 scrollEnabled
                 renderItem={event => (
                     <ColumnEventTile
+                        location={locationData}
                         event={event.item}
+                        showLocationLink={false}
                         showEventButtonRow={showEventButtonRow}
+                        shareOnLongPress={shareOnLongPress}
                     />
                 )}
                 ListEmptyComponent={

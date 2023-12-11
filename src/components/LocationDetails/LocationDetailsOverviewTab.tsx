@@ -27,9 +27,18 @@ import DataFetchStatusWrapper from '../DataFetchStatusWrapper';
 import { getMarkerImageByCategory } from '../Markers';
 import { getLocationShareText } from '../../utils/sharing';
 
+function PhotosSpacerHeader() {
+    return <HorizontalSpacer width={Constants.SPACING_UNIT_10} />;
+}
+
 function PhotosSpacer() {
     return <HorizontalSpacer width={6} />;
 }
+
+function PhotosSpacerFooter() {
+    return <HorizontalSpacer width={Constants.SPACING_UNIT_10} />;
+}
+
 interface Props {
     locationData?: LocationData;
     locationDetailsData?: LocationDetailsData;
@@ -122,7 +131,13 @@ const LocationDetailsOverviewTab = ({
                                         </Text>
                                     </View>
                                 </View>
-                                <View style={styles.buttonsContainer}>
+                                <ScrollView
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    style={styles.horizontalScrollable}>
+                                    <HorizontalSpacer
+                                        width={Constants.SPACING_UNIT_10}
+                                    />
                                     <AccentButton.Primary
                                         icon={'Website'}
                                         color={Colors.accentGreen}
@@ -133,6 +148,9 @@ const LocationDetailsOverviewTab = ({
                                             )
                                         }
                                     />
+                                    <HorizontalSpacer
+                                        width={Constants.SPACING_UNIT_8}
+                                    />
                                     <AccentButton.Secondary
                                         icon={'Phone'}
                                         color={Colors.accentGreen}
@@ -142,6 +160,9 @@ const LocationDetailsOverviewTab = ({
                                                 `tel:${locationDetailsData.phoneNumber}`,
                                             );
                                         }}
+                                    />
+                                    <HorizontalSpacer
+                                        width={Constants.SPACING_UNIT_8}
                                     />
                                     <AccentButton.Secondary
                                         icon={'Share'}
@@ -156,7 +177,10 @@ const LocationDetailsOverviewTab = ({
                                             })
                                         }
                                     />
-                                </View>
+                                    <HorizontalSpacer
+                                        width={Constants.SPACING_UNIT_10}
+                                    />
+                                </ScrollView>
                                 {locationDetailsData.photos.length > 0 && (
                                     <View style={styles.sectionContainer}>
                                         <Text style={styles.sectionTitle}>
@@ -178,9 +202,16 @@ const LocationDetailsOverviewTab = ({
                                                     style={styles.image}
                                                 />
                                             )}
+                                            ListHeaderComponent={
+                                                PhotosSpacerHeader
+                                            }
                                             ItemSeparatorComponent={
                                                 PhotosSpacer
                                             }
+                                            ListFooterComponent={
+                                                PhotosSpacerFooter
+                                            }
+                                            style={styles.horizontalScrollable}
                                         />
                                     </View>
                                 )}
@@ -285,11 +316,8 @@ const styles = StyleSheet.create({
         gap: Constants.SPACING_UNIT_10,
     },
 
-    buttonsContainer: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        gap: Constants.SPACING_UNIT_10,
-        flexWrap: 'wrap',
+    horizontalScrollable: {
+        marginHorizontal: -Constants.SPACING_UNIT_10,
     },
 
     sectionContainer: {

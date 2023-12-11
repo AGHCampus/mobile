@@ -1,23 +1,25 @@
 import React from 'react';
 import { Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Autolink from 'react-native-autolink';
 import { Shadows } from '../../lib/Shadows';
 import { Colors } from '../../lib/Colors';
 import { Constants } from '../../lib/Constants';
 import { getInfoDatetimeString } from '../../utils/time';
+import { getInfoShareText } from '../../utils/sharing';
 import { InfoData } from '../../api/information';
-import Autolink from 'react-native-autolink';
 
 export default function InfoTile({ title, content, timestamp }: InfoData) {
     const shareInfoContent = () => {
         Share.share({
-            message: content,
+            message: getInfoShareText(title, content),
         });
     };
 
     return (
         <TouchableOpacity
             style={[styles.container, Shadows.depth1]}
-            onLongPress={shareInfoContent}>
+            onLongPress={shareInfoContent}
+            activeOpacity={Constants.TOUCHABLE_OPACITY_ACTIVE_OPACITY}>
             <View style={styles.titleRow}>
                 <Text style={styles.titleText}>{title}</Text>
                 <View style={styles.flexSpacer} />

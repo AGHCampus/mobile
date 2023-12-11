@@ -50,7 +50,7 @@ enum AnimationState {
 // @ts-ignore TS reports an error, but it works fine 🤷‍♂️
 const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
 
-export default function EventTile({
+export default function ExpandableEventTile({
     location,
     event,
     collapsed = true,

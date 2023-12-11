@@ -34,14 +34,17 @@ export default function OffersScreen() {
         <SafeView style={styles.container}>
             <DataFetchStatusWrapper
                 status={offersDataStatus}
-                padding={Constants.SPACING_UNIT_10}>
+                padding={Constants.SPACING_UNIT_10}
+                refresh={refresh}>
                 <FlatList
                     data={offersData}
                     renderItem={event => (
                         <ColumnEventTile
                             location={locationsData[event.item.locationId]}
                             event={event.item}
+                            showLocationLink={true}
                             showEventButtonRow={false}
+                            shareOnLongPress={true}
                         />
                     )}
                     ListHeaderComponent={ListHeader}

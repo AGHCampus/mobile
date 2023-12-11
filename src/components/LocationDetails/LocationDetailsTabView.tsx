@@ -83,6 +83,7 @@ const LocationDetailsTabView = ({
                     return (
                         <LocationDetailsEventsTab
                             eventsData={eventsData}
+                            locationData={locationData}
                             eventsDataStatus={eventsDataStatus}
                             refresh={refresh}
                         />
@@ -91,6 +92,7 @@ const LocationDetailsTabView = ({
                     return (
                         <LocationDetailsOffersTab
                             offersData={offersData}
+                            locationData={locationData}
                             offersDataStatus={offersDataStatus}
                             refresh={refresh}
                         />
