@@ -31,7 +31,7 @@ function ShareOpacityWrapper({
     location: LocationData;
     event: EventData;
 }>) {
-    if (shareOnLongPress) {
+    if (shareOnLongPress && location && event) {
         return (
             <TouchableOpacity
                 onLongPress={() =>
@@ -168,7 +168,7 @@ export default function ColumnEventTile({
                             }}>
                             {description}
                         </Text>
-                        {showEventButtonRow && (
+                        {showEventButtonRow && location && event && (
                             <>
                                 <VerticalSpacer
                                     height={Constants.SPACING_UNIT_16}
